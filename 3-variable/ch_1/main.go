@@ -5,6 +5,14 @@ import "fmt"
 // var 语句可以出现在包或函数级别
 var aa int64
 
+// 可以在 var 中定义多个变量
+var (
+	bb int8
+	cc int16
+	dd bool
+	ee string
+)
+
 func main() {
 	// var 语句用于声明一个变量列表
 	var a int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
