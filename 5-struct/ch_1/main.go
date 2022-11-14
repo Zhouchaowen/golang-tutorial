@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// 定义结构体
+// Demo 定义结构体
 type Demo struct {
 	// 小写表示不导出,包外不能引用
 	a bool

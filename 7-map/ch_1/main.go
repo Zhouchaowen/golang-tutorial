@@ -32,6 +32,11 @@ func Steps1() {
 	fmt.Printf("\tmpIntFloat32:%+v len:%d\n",
 		mpIntFloat32,
 		len(mpIntFloat32))
+
+	mpStringSliceInt := make(map[string][]int, 10)
+	fmt.Printf("\tmpStringSliceInt:%+v len:%d\n",
+		mpStringSliceInt,
+		len(mpStringSliceInt))
 }
 
 func main() {

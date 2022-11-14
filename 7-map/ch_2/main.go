@@ -14,6 +14,7 @@ func Steps2() {
 	mpIntString[0] = "Golang"
 	mpIntString[1] = "World"
 	mpIntString[1] = "Tutorial" // 修改mpIntString[1]元素
+	mpIntString[2] = "Study"
 	fmt.Printf("\tmpIntString:%+v len:%d\n",
 		mpIntString,
 		len(mpIntString))
@@ -32,6 +33,14 @@ func Steps2() {
 	// 若 key 在 mpIntString 中，ok 为 true ; 否则, ok 为 false
 	elem, ok := mpIntString[0]
 	fmt.Printf("\telem:%+v ok:%t\n", elem, ok)
+
+	// Steps 2-6: 通过range遍历map
+	fmt.Printf("\tmpIntString:%+v len:%d\n",
+		mpIntString,
+		len(mpIntString))
+	for k, v := range mpIntString {
+		fmt.Printf("\tKey:%d, Value:%s\n", k, v)
+	}
 }
 
 func main() {
