@@ -3,6 +3,8 @@ package main
 import "fmt"
 
 // 对切片中的数进行求和，将任务分配给两个 Go 程。一旦两个 Go 程完成了它们的计算，它就能算出最终的结果。
+
+// sum 求和函数
 func sum(s []int, c chan int) {
 	ans := 0
 	for _, v := range s {

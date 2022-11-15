@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 // Print 接口类型 是由一组方法签名定义的集合
+// 定义接口约定
 type Print interface {
 	print(name string)
 	// ....

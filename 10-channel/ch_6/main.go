@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// 通过 channel+select 控制 goroutine 退出
 func genNum(c, quit chan int) {
 	for i := 0; ; i++ {
 		// select 可以等待多个通信操作
@@ -21,7 +22,6 @@ func genNum(c, quit chan int) {
 	}
 }
 
-// 通过 channel+select 控制 goroutine 退出
 func main() {
 	c := make(chan int)
 	quit := make(chan int)

@@ -5,11 +5,12 @@ import (
 	"time"
 )
 
-// Go 程（goroutine）是由 Go 运行时管理的轻量级线程
+// 使用 goroutine 打印数据
 func main() {
 	language := []string{"golang", "java", "c++", "python", "rust", "js"}
 	tutorial := []string{"入门", "初级", "中级", "高级", "专家"}
 
+	// Go 程（goroutine）是由 Go 运行时管理的轻量级线程
 	go listLanguage(language) // 通过goroutine启动该函数
 	go listTutorial(tutorial)
 

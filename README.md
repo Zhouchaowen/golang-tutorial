@@ -16,3 +16,8 @@ copy    false   float32 float64 imag   int     int8      int16      uint32
 int32   int64   iota    len     make   new     nil       panic      uint64
 print   println real    recover string true    uint      uint8      uintptr
 ```
+
+
+## 参考
+https://gobyexample-cn.github.io/
+https://go-zh.org/doc/effective_go.html

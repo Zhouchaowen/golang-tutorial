@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 // 类型断言
+// 断言 interface
 func main() {
 	var i interface{} = "hello"
 

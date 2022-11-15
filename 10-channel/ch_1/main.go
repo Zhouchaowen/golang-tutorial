@@ -5,9 +5,10 @@ import (
 	"time"
 )
 
-// channel 是带有类型的管道，你可以通过它用信道操作符 <- 来发送或者接收值。<- “箭头”就是数据流的方向
+// 定义 channel, channel 是带有类型的管道，可以通过信道操作符 <- 来发送或者接收值
 func main() {
 	// 信道在使用前必须通过内建函数 make 来创建
+
 	// make(chan T,size)  标识用内建函数 make 来创建 一个T类型的缓冲大小为 size 的 channel
 	// 如下: make(chan int) 用内建函数 make 来创建 一个 int 类型的缓冲大小为 0 的 channel
 	c := make(chan int)
