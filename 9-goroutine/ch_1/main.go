@@ -11,6 +11,7 @@ func main() {
 	tutorial := []string{"入门", "初级", "中级", "高级", "专家"}
 
 	// Go 程（goroutine）是由 Go 运行时管理的轻量级线程
+	// 在函数调⽤语句前添加 go 关键字，就可创建一个 goroutine
 	go listLanguage(language) // 通过goroutine启动该函数
 	go listTutorial(tutorial)
 
