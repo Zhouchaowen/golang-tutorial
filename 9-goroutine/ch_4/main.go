@@ -15,14 +15,14 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 10000; i++ {
+		for i := 0; i < 10000000; i++ {
 			sum++
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 10000; i++ {
+		for i := 0; i < 10000000; i++ {
 			sum++
 		}
 	}()
