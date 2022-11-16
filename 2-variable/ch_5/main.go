@@ -4,6 +4,12 @@ import (
 	"fmt"
 )
 
+/*
+	定义函数变量
+	var variableName = func
+
+*/
+
 type Handler func(x, y int) int
 
 func compute(x, y int, handler Handler) int {

@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+/*
+	通过 var 定义指针变量
+	var variableName *T
+	var variableName *T = Value
+	var variableName = &Value
+	variableName := &Value
+*/
+
 // Steps1 定义指针变量
 func Steps1() {
 	var a *int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr

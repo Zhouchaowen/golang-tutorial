@@ -5,7 +5,12 @@ import (
 	"reflect"
 )
 
-// 类型转换
+/*
+	类型转换
+	variableName2 := T(variableName1)
+
+*/
+
 func main() {
 	var a int = 1
 

@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+/*
+	通过 var 定义变量
+	var variableName T
+	var variableName T = Value
+	var variableName = Value
+	variableName := Value
+*/
+
 // var 语句可以声明全局变量
 var aa int64
 
