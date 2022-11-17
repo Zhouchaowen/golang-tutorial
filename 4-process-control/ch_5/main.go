@@ -6,12 +6,13 @@ import "fmt"
 func main() {
 	defer func() {
 		if err := recover(); err != nil {
+			// 捕捉错误 run err: runtime error: integer divide by zero
 			fmt.Println("run err:", err)
 		}
 	}()
 
 	a := 10
 	b := 0
-	i := a / b
+	_ = a / b
 	fmt.Println("return")
 }

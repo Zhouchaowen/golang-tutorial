@@ -15,7 +15,7 @@ func Steps1() {
 	fmt.Printf("\tsum: %d\n", sum)
 }
 
-// Steps2 初始化语句和后置语句不是必须的
+// Steps2 for循环初始化语句和后置语句不是必须的
 func Steps2() {
 	sum := 0
 	// 初始化语句和后置语句是可选的
@@ -45,6 +45,33 @@ func Steps4() {
 	}
 }
 
+// Steps5 for 循环中的 break 和 continue
+func Steps5() {
+	for i := 0; i < 10; i++ {
+		if i == 5 { // 下一小节介绍
+			fmt.Printf("\ti:%d, continue\n", i)
+			continue
+		}
+
+		if i == 6 {
+			fmt.Printf("\ti:%d, break\n", i)
+			break
+		}
+	}
+}
+
+// Steps6 goto 实现循环
+func Steps6() {
+	i := 0
+
+Next: // 跳转标签声明
+	fmt.Printf("\ti:%d\n", i)
+	i++
+	if i < 5 {
+		goto Next // 跳转
+	}
+}
+
 func main() {
 	fmt.Println("Steps1():")
 	Steps1()
@@ -54,4 +81,8 @@ func main() {
 	Steps3()
 	fmt.Println("Steps4():")
 	Steps4()
+	fmt.Println("Steps5():")
+	Steps5()
+	fmt.Println("Steps6():")
+	Steps6()
 }
