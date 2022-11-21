@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+// 并发与并行：https://gfw.go101.org/article/control-flows-more.html
+
 // 使用 goroutine 打印数据
 func main() {
 	language := []string{"golang", "java", "c++", "python", "rust", "js"}
