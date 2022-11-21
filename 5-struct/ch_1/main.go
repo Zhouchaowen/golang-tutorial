@@ -13,9 +13,10 @@ type Demo struct {
 	E string
 	F []int
 	G map[string]int
+	H *int64
 }
 
-func main() {
+func Steps1() {
 	d := Demo{ // 创建一个 Demo 类型的结构体
 		a: true,
 		B: 'b',
@@ -34,4 +35,28 @@ func main() {
 	fmt.Printf("%+v\n", d)
 
 	fmt.Printf("dome.B: %c\n", d.B)
+}
+
+func Steps2() {
+	// 结构体也可以定义在函数内
+	type Demo struct {
+		a int
+		B string
+	}
+
+	d := Demo{ // 创建一个 Demo 类型的结构体
+		a: 1,
+	}
+
+	fmt.Printf("%+v\n", d)
+
+	// 结构体字段使用点号来访问
+	d.a = 2 // 修改a字段的值
+
+	fmt.Printf("%+v\n", d)
+}
+
+func main() {
+	Steps1()
+	Steps2()
 }

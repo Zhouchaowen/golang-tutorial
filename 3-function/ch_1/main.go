@@ -24,6 +24,13 @@ func swap2(x, y int) (a int, b int) {
 	return
 }
 
+func variableCut(x int, y ...int) int {
+	for _, v := range y {
+		x += v
+	}
+	return x
+}
+
 // 值传递
 func modifyValue(x int) {
 	x = x * 10
@@ -36,17 +43,19 @@ func modifyPointer(x *int) {
 
 func main() {
 	print()
-	fmt.Println(add(1, 2))
-	fmt.Println(swap(1, 2))
+	fmt.Printf("add() return: %d\n", add(1, 2))
+	x, y := swap(1, 2)
+	fmt.Printf("swap() x: %d, y: %d \n", x, y)
+	fmt.Printf("advariableCutd() return: %d\n", variableCut(1, 2, 3, 4, 5))
 
 	// 值传递与指针传递的区别
 	//		值传递是指在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数
 	//		指针传递(引用传递)是指在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数
-	x := 1
+	x = 1
 	modifyValue(x)
-	fmt.Println(x)
+	fmt.Printf("modifyValue() return: %d\n", x)
 
 	x = 1
 	modifyPointer(&x)
-	fmt.Println(x)
+	fmt.Printf("modifyPointer() return: %d\n", x)
 }

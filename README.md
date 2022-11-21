@@ -21,3 +21,5 @@ print   println real    recover string true    uint      uint8      uintptr
 ## 参考
 https://gobyexample-cn.github.io/
 https://go-zh.org/doc/effective_go.html
+https://www.bogotobogo.com/GoLang/GoLang_Web_Application_7.php
+https://www.practical-go-lessons.com/chap-20-arrays

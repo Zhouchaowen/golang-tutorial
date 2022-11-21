@@ -13,33 +13,37 @@
 - 浮点数类型：float32、float64。
 - 复数类型：complex64、complex128。
 - 字符串类型：string。
-- 应用类型 [Size]T、[]T、map[T]T、struct、func
+- 指针持有者类型：[Size]T、[]T、map[T]T、struct、func
 
 ```bigquery
-*T         // 一个指针类型
-[5]T       // 一个元素类型为T、元素个数为5的数组类型
-[]T        // 一个元素类型为T的切片类型
-map[Tkey]T // 一个键值类型为Tkey、元素类型为T的映射类型
+bool
+string
 
-// 一个结构体类型
-struct {
-	name string
-	age  int
-}
+Numeric types:
 
-// 一个函数类型
-func(int) (bool, string)
+uint        either 32 or 64 bits
+int         same size as uint
+uintptr     an unsigned integer large enough to store the uninterpreted bits of
+            a pointer value
+uint8       the set of all unsigned  8-bit integers (0 to 255)
+uint16      the set of all unsigned 16-bit integers (0 to 65535)
+uint32      the set of all unsigned 32-bit integers (0 to 4294967295)
+uint64      the set of all unsigned 64-bit integers (0 to 18446744073709551615)
 
-// 一个接口类型
-interface {
-	Method0(string) int
-	Method1() (int, bool)
-}
+int8        the set of all signed  8-bit integers (-128 to 127)
+int16       the set of all signed 16-bit integers (-32768 to 32767)
+int32       the set of all signed 32-bit integers (-2147483648 to 2147483647)
+int64       the set of all signed 64-bit integers
+            (-9223372036854775808 to 9223372036854775807)
 
-// 几个通道类型
-chan T
-chan<- T
-<-chan T
+float32     the set of all IEEE-754 32-bit floating-point numbers
+float64     the set of all IEEE-754 64-bit floating-point numbers
+
+complex64   the set of all complex numbers with float32 real and imaginary parts
+complex128  the set of all complex numbers with float64 real and imaginary parts
+
+byte        alias for uint8
+rune        alias for int32 (represents a Unicode code point)
 ```
 ## 运算符
 Go支持五个基本二元算术运算符：+、-、*、/、%

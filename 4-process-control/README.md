@@ -7,5 +7,19 @@
 
 
 
+## 思考题
+1.通过For循环打印如下图形
+```bigquery
+*
+**
+***
+****
+*****
+******
+```
+2.通过For和If打印100内的偶数
+
+3.通过For和Switch打印100内2的倍数和5的倍数
+
 ## 参考
 https://gfw.go101.org/article/control-flows.html
