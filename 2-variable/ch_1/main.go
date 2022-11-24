@@ -22,7 +22,7 @@ var (
 )
 
 func main() {
-	// var 语句用于声明一个变量列表,默认值为对应零值
+	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误
 	var a int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b float32 // float64
 	var c bool

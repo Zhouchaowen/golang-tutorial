@@ -248,3 +248,5 @@ func main() {
 https://blog.boot.dev/golang/gos-waitgroup-javascripts-promiseall/
 
 https://gfw.go101.org/article/control-flows-more.html
+
+https://larrylu.blog/race-condition-in-golang-c49a6e242259

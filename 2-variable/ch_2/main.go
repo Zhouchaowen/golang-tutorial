@@ -17,7 +17,7 @@ func main() {
 	var d = "hello"
 
 	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明
-	// 但 := 结构不能在函数外使用
+	// 但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
 	e := true
 
 	var f byte = 'a'
@@ -25,6 +25,7 @@ func main() {
 
 	var h interface{} = "golang"
 	var i interface{} = true
+	//var j,k = 1,"Golang Tutrial" // 多变量声明并赋值
 
 	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
 	fmt.Printf("aa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
@@ -36,4 +37,9 @@ func main() {
 	fmt.Printf("g value:%c  g type:%s\n", g, reflect.TypeOf(g))
 	fmt.Printf("h value:%s  h type:%s\n", h, reflect.TypeOf(h))
 	fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
+
+	// 定义字符串变量并初始化为 Golang Tutorial
+	str := "Golang Tutorial"
+	strLength := len(str) // len() 函数可以获取字符串的长度
+	fmt.Printf("str value:%s  str length:%d  str type:%s\n", str, strLength, reflect.TypeOf(i))
 }
