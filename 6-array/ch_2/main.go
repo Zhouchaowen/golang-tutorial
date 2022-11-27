@@ -13,6 +13,12 @@ func Steps1() {
 	// Steps 1-1: 类型 []T 表示一个元素类型为 T 的切片
 	// 切片拥有长度和容量, 切片在添加数据时会自动扩容, 可以通过len(),cap()获取切片长度和容量
 	var sliceInt []int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+		sliceInt,
+		len(sliceInt),
+		cap(sliceInt))
+
+	//sliceInt[0] // 在未初始化长度前直接通过下标读取或赋值数据将会报错, 只能通过 append 添加元素
 
 	// Steps 1-2: append 向切片中添加元素（可能会导致内存重新分配）
 	for i := 0; i < 10; i++ {
@@ -50,13 +56,25 @@ func Steps2() {
 // Steps3 通过 make 创建切片
 func Steps3() {
 	// Steps 3-1: 用内建函数 make 来创建切片
-	// make([]T,len,cap)
+	// make([]T,len,cap) 如下：创建一个 float32 类型, 长度为 5 的数组
 	sliceFloat32 := make([]float32, 5)
+	for i := 0; i < len(sliceFloat32); i++ {
+		sliceFloat32[i] = float32(i)
+	}
+
 	fmt.Printf("\tsliceFloat32:%+v len:%d cap:%d\n",
 		sliceFloat32,
 		len(sliceFloat32),
 		cap(sliceFloat32))
+
+	// 创建一个 float64 类型, 长度为 5, 容量为 10 的数组
 	sliceFloat64 := make([]float64, 5, 10)
+	//for i := 0 ;i < cap(sliceFloat64);i++ { // cap-len的部分并没有分配，不能直接赋值
+	//	sliceFloat64[i] = float64(i) // panic: runtime error: index out of range [5] with length 5
+	//}
+	for i := 0; i < len(sliceFloat64); i++ {
+		sliceFloat64[i] = float64(i)
+	}
 	fmt.Printf("\tsliceFloat64:%+v len:%d cap:%d\n",
 		sliceFloat64,
 		len(sliceFloat64),
@@ -134,6 +152,20 @@ func Steps5() {
 	fmt.Printf("\tsliceInt[1]:%d\n", sliceInt[1])
 }
 
+// Steps6 range 遍历切片
+func Steps6() {
+	// Steps 6-1: 初始化切片
+	sliceString := []string{"Golang", "Tutorial"}
+
+	for idx := range sliceString {
+		fmt.Printf("\tindex: %d, value:%s\n", idx, sliceString[idx])
+	}
+
+	for idx, v := range sliceString {
+		fmt.Printf("\tindex: %d, value:%s\n", idx, v)
+	}
+}
+
 // 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
 func main() {
 	fmt.Println("Steps1():")
@@ -146,12 +178,6 @@ func main() {
 	Steps4()
 	fmt.Println("Steps5():")
 	Steps5()
+	fmt.Println("Steps6():")
+	Steps6()
 }
-
-// 参考:
-//   https://tour.go-zh.org/moretypes/7
-//   https://blog.go-zh.org/go-slices-usage-and-internals
-
-// 小实验:
-//    1.定义一个切片并初始化11以内的偶数,然后打印这些数字和切片的长度和容量
-//    2.

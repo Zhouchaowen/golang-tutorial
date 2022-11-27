@@ -22,6 +22,12 @@ func Steps2() {
 	for sum < 5 {
 		sum++
 	}
+
+	// 死循环
+	//for {
+	//
+	//}
+
 	fmt.Printf("\tsum: %d\n", sum)
 }
 

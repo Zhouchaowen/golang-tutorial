@@ -531,3 +531,4 @@ https://gfw.go101.org/article/type-system-overview.html
 
 https://github.com/jincheng9/go-tutorial/blob/main/workspace/lesson2/readme.md
 
+https://github.com/jincheng9/go-tutorial/blob/main/workspace/lesson9/readme.md

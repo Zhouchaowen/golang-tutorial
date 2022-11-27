@@ -29,7 +29,7 @@ func Steps1() {
 
 	fmt.Printf("%+v\n", d)
 
-	// 结构体字段使用点号来访问
+	// 访问结构体内的成员使用点. , 格式为：结构体变量.成员
 	d.a = false // 修改a字段的值
 
 	fmt.Printf("%+v\n", d)

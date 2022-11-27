@@ -11,6 +11,7 @@ import "fmt"
 */
 
 // var 语句可以声明全局变量
+// 全局变量: 函数外声明的变量，全局变量作用域可以在当前的整个包甚至外部包(被导出后)使用
 var aa int64
 
 // 可以在 var 中定义多个全局变量
@@ -23,6 +24,8 @@ var (
 
 func main() {
 	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误
+	// 如下 var a int 定义了一个 int 类型的局部变量 a, 局部变量：函数内声明的变量，作用域只在函数体内。
+	// 这意味着 a 只能在 main 函数内使用（函数的参数和返回值也是局部变量）
 	var a int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b float32 // float64
 	var c bool

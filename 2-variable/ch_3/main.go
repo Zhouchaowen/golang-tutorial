@@ -41,4 +41,10 @@ func main() {
 
 	fmt.Printf("g value:%d  g type:%s\n", g, reflect.TypeOf(g))
 	fmt.Printf("h value:%d  h type:%s\n", h, reflect.TypeOf(h))
+
+	j := 10
+	l := 100.1
+	// 不同类型在golang中不能计算，需进行类型转换
+	p := float64(j) * l
+	fmt.Printf("p value:%f  p type:%s\n", p, reflect.TypeOf(p))
 }
