@@ -9,7 +9,7 @@ import (
 func genNum(c, quit chan int) {
 	for i := 0; ; i++ {
 		// select 可以等待多个通信操作
-		// select 会阻塞等待可执行分支。当多个分支都准备好时会随机选择一个执行。
+		// select 会阻塞等待可执行分支, 当多个分支都准备好时会随机选择一个执行。
 		select {
 		case <-quit:
 			// 发送者可通过 close 关闭一个信道来表示没有需要发送的值了。

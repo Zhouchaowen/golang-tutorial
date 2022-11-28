@@ -406,21 +406,49 @@ func main() {
 
 
 
-
-
-
-
-
-
 ## 思考题
 
-1. 定义一个int型大小为5的自定义类型数组，并定义打印所有元素的方法和求和方法
-```bigquery
+1. 定义一个方法求出数组中奇数和偶数的和, 并同时返回。
+2. 定义一个int型大小为5的自定义类型数组, 并定义打印所有元素的方法和求和方法。
+```go
 type myInt []int
 ```
 
+3. 计算任意两个20位的整数的加减乘除
+
+```go
+12345678912345678912+12345678912345678912
+```
+
+4. 通过slice,struct,func实现求一个班级所有学生最高总分,最低总分,各学科最高,最低分,平均分
+
+```go
+type Student struct {
+  name     string
+	language float32
+	math     float32
+	english  float32
+}
+
+type class struct {
+	students []Student
+}
+
+func ClassMaxScore(students []Student) float64 {
+
+	return 0
+}
+
+func ClassLanguageMaxScore(students []Student) float64 {
+
+	return 0
+}
+
+func .....
+```
 
 ## 参考
+
 https://gfw.go101.org/article/value-part.html
 
 https://tour.go-zh.org/moretypes/7

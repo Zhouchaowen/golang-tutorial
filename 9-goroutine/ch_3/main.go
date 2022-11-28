@@ -16,6 +16,7 @@ func getImageData(url, name string) {
 	// 创建一个缓存读取返回的 response 数据
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
+	resp.Body.Close()
 
 	dir, _ := os.Getwd()             // 获取当前执行程序目录
 	fileName := path.Join(dir, name) // 拼接保存图片的文件地址

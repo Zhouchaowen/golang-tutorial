@@ -370,7 +370,21 @@ func main() {
 
 ## 思考题
 
-1.通过For循环打印如下图形
+1. 计算 100000 以内不是奇数, 不是 4 的倍数外的所有数值和
+2. 定义函数`Calculation`通过`Switch`实现加减乘除
+
+```go
+// 参考
+func Calculation(option byte, a float64,b float64) float64{
+	switch option {
+	case '-':
+	.......	
+	}
+}
+```
+
+3. 通过`For`循环打印如下图形
+
 ```bigquery
 *
 **
@@ -379,9 +393,5 @@ func main() {
 *****
 ******
 ```
-2.通过For和If打印100内的偶数
-
-3.通过For和Switch打印100内2的倍数和5的倍数
-
 ## 参考
 https://gfw.go101.org/article/control-flows.html

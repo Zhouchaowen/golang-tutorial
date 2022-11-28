@@ -237,7 +237,7 @@ func main() {
 
 ## 思考题
 1. 通过结构体方法的形式实现加减乘除
-```bigquery
+```go
 type numb struct {
 	a,b int
 }
@@ -248,6 +248,12 @@ func (n numb) add() int {
 ```
 
 2. 定义一个圆结构体,并定义求圆面积,周长和输入角度求弧长等方法。
+
+```go
+type circle struct{
+  radius float64
+}
+```
 
 ## 参考
 

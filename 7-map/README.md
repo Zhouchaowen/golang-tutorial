@@ -128,6 +128,38 @@ func main() {
     1.5. 实现打印所有名字
 
     1.6. 实现统计总人数
+    
+2. 通过map,struct,func实现求一个班级所有学生最高总分,最低总分,各学科最高,最低分,平均分,打印所有学生所有学科成绩
+
+```go
+type Student struct {
+	language float32
+	math     float32
+	english  float32
+}
+
+type class struct {
+	mp map[string]Student
+}
+
+func (c class)ClassMaxScore() float64 {
+
+	return 0
+}
+
+func (c class)ClassLanguageMaxScore() float64 {
+
+	return 0
+}
+
+func (c class)PrintAllStudent()  {
+	
+}
+
+func .....
+```
+
+
 
 ## 参考
 https://www.cnblogs.com/qcrao-2018/p/10903807.html#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%89%A9%E5%AE%B9
