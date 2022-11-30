@@ -2,20 +2,46 @@ package main
 
 import "fmt"
 
-// Print 接口类型 是由一组方法签名定义的集合
+// Duck 接口类型 定义一组方法签名的集合
 // 定义接口约定
-type Print interface {
-	print(name string)
+type Duck interface {
+	GaGaga()
 	// ....
 }
 
-type Float float64
+type DonaldDuck string
 
-func (f Float) print(name string) {
-	fmt.Printf("%s, score:%f", name, f)
+func (d DonaldDuck) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d)
+}
+
+type RubberDuck string
+
+func (d RubberDuck) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d)
+}
+
+type Dog struct {
+	Name string
+	age  int
+}
+
+func (d Dog) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d.Name)
 }
 
 func main() {
-	f := Float(80.5)
-	f.print("Golang")
+	var d Duck
+
+	d = DonaldDuck("🦆 唐老鸭")
+	d.GaGaga()
+
+	d = RubberDuck("🦆 小黄鸭")
+	d.GaGaga()
+
+	d = Dog{
+		Name: "小狗",
+		age:  5,
+	}
+	d.GaGaga()
 }

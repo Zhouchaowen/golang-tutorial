@@ -1,5 +1,7 @@
 # Interface
 
+
+
 ## 目录
 
 - ch_1 interface 基本用法
@@ -7,29 +9,55 @@
 
 ## 定义接口
 
-golang中interface是非常重要的一个特性，接口定义了一组方法签名的集合
+`golang`中`interface{}`是一个非常重要的特性，`interface{}`定义了一组方法签名的集合, 用于抽象同一类事物的行为。如下：`type Duck interface{}`定义了一个名字为`GaGaga()`的方法, `DonaldDuck`实现了`GaGaga()`方法, 可以说`DonaldDuck就是Duck`, 所有可以将`DonaldDuck`赋值给`Duck`;  `Dog`也实现了GaGaga()方法，所有也可以将`Dog`赋值给`Duck`。
 
 ```go
 package main
 
 import "fmt"
 
-// Print 接口类型 是由一组方法签名定义的集合
+// Duck 接口类型 定义一组方法签名的集合
 // 定义接口约定
-type Print interface {
-	print(name string)
+type Duck interface {
+	GaGaga()
 	// ....
 }
 
-type Float float64
+type DonaldDuck string
 
-func (f Float) print(name string) {
-	fmt.Printf("%s, score:%f", name, f)
+func (d DonaldDuck) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d)
+}
+
+type RubberDuck string
+
+func (d RubberDuck) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d)
+}
+
+type Dog struct {
+	Name string
+	age  int
+}
+
+func (d Dog) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d.Name)
 }
 
 func main() {
-	f := Float(80.5)
-	f.print("Golang")
+	var d Duck
+
+	d = DonaldDuck("🦆 唐老鸭")
+	d.GaGaga()
+
+	d = RubberDuck("🦆 小黄鸭")
+	d.GaGaga()
+
+	d = Dog{
+		Name: "小狗",
+		age:  5,
+	}
+	d.GaGaga()
 }
 ```
 

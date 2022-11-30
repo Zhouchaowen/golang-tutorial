@@ -8,11 +8,13 @@
 
 
 ## 入门 
-`package main`表示当前代码隶属于`main`包下, `main`包下定义`func main()` 函数可以独立运行，并且所有`golang`函数的启动入口都是`main`包下的`func main() `函数.
+每个 `Golang` 文件都必须以 `package namexxx` 语句开头, 如下代码中`package main`表示当前代码隶属于`main`包下。
 
-`import()`表示要导入的标准库或第三方包, 在实际开发者会引用许多标准库和第三方包来加简化业务开发.
+`main`包下定义`func main()` 函数可以独立运行，并且所有`Golang`函数的启动入口都是`main`包下的`func main() `函数。
 
-`func main()`函数是程序入口.
+`import()`表示要导入的标准库或第三方包, 在实际开发者会引用许多标准库和第三方包来加简化业务开发。
+
+`func main()`函数是程序入口。
 
 ```go
 package main // 定义了包名,只有定义了main的包才能独立运行

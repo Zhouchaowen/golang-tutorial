@@ -7,6 +7,12 @@
 - 本教程中许多编程概念默认读者已经了解或知道, 编程 0 基础读者不建议食用。
 - 本教程重点讲解在实战中`golang`常用的语法和特性，系统全面学习`golang`需要读者持续学习其余教程。
 
+## 安装Golang
+
+
+
+
+
 ## 目录
 
 - [Package](https://github.com/Zhouchaowen/golang-tutorial/tree/master/1-package)
