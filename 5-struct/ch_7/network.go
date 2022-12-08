@@ -8,6 +8,6 @@ type NetWork struct {
 	rate int
 }
 
-func (n NetWork) InteractiveData() {
-	fmt.Printf("%s %s %d is interactive data\n", n.name, n.typ, n.rate)
+func (n NetWork) TransferData() {
+	fmt.Printf("%s %s %d is transfer data\n", n.name, n.typ, n.rate)
 }

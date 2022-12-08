@@ -92,9 +92,30 @@ func main() {
 }
 ```
 
+
+
+## 为什么需要接口
+
+- 接口允许 Go 具有多态性, 在需要多态性的 Go 中使用接口。
+- 在可以传递多种类型的函数中，可以使用接口。
+
+- 接口还用于帮助减少重复/样板代码。
+
+在需要动态类型参数的函数和方法的情况下，接口非常有用，例如接受任何类型值的 Println 函数。
+
+
+
 ## 思考题
 
 
 
 ## 参考
+
+https://blog.knoldus.com/how-to-use-interfaces-in-golang/
+
+https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
+
+https://stackoverflow.com/questions/23148812/whats-the-meaning-of-interface
+
+https://blog.boot.dev/golang/golang-interfaces/
 

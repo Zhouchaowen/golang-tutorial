@@ -1,4 +1,4 @@
-package main
+package _interface
 
 import "fmt"
 
@@ -42,5 +42,5 @@ func (c Computer) RUN() {
 	c.Memory.InteractiveData()
 	c.NetWork.TransferData()
 	c.Display.Display()
-	fmt.Println("computer running")
+	fmt.Println("\tcomputer running")
 }

@@ -2,46 +2,23 @@ package main
 
 import "fmt"
 
-// Duck 接口类型 定义一组方法签名的集合
-// 定义接口约定
-type Duck interface {
-	GaGaga()
-	// ....
-}
-
-type DonaldDuck string
-
-func (d DonaldDuck) GaGaga() {
-	fmt.Printf("%s, ga ga ga\n", d)
-}
-
-type RubberDuck string
-
-func (d RubberDuck) GaGaga() {
-	fmt.Printf("%s, ga ga ga\n", d)
-}
-
-type Dog struct {
-	Name string
-	age  int
-}
-
-func (d Dog) GaGaga() {
-	fmt.Printf("%s, ga ga ga\n", d.Name)
-}
-
+// 类型断言
+// 断言 interface
 func main() {
-	var d Duck
+	var i interface{} = "hello"
 
-	d = DonaldDuck("🦆 唐老鸭")
-	d.GaGaga()
+	s := i.(string)
+	fmt.Println(s)
 
-	d = RubberDuck("🦆 小黄鸭")
-	d.GaGaga()
+	// 类型断言, 断言失败一般会导致panic的发生, 所以为了防止panic的发生, 我们需要在断言前进行一定的判断。
+	// 如果断言失败, 那么ok的值将会是false
+	// 如果断言成功, 那么ok的值将会是true, 同时s将会得到正确类型的值。
+	s, ok := i.(string)
+	fmt.Println(s, ok)
 
-	d = Dog{
-		Name: "小狗",
-		age:  5,
-	}
-	d.GaGaga()
+	f, ok := i.(float64)
+	fmt.Println(f, ok)
+
+	f = i.(float64) // 报错(panic)
+	fmt.Println(f)
 }
