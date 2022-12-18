@@ -4,12 +4,13 @@
 
 ## 目录
 
-- ch_1 channel 定义
-- ch_2 channel 阻塞发送 
-- ch_3 小实验: 通过 goroutine+channel 求数组和 
-- ch_4 非缓冲和缓冲 channel 的对比
-- ch_5 遍历和关闭 channel 
-- ch_6 channel+select 控制 goroutine 退出
+- channel 定义
+- channel 阻塞发送 
+
+- 非缓冲和缓冲 channel 的对比
+- 关闭 channel 
+- 遍历 channel
+- channel+select 控制 goroutine 退出
 
 ## 定义Channel
 channel 是解决 goroutine 的同步问题以及 goroutine 之间数据共享（数据传递）的问题。

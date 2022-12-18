@@ -69,3 +69,21 @@ https://github.com/gobyexample-cn/gobyexample
 https://github.com/NanXiao/golang-101-hacks
 
 https://github.com/jincheng9/go-tutorial
+
+https://github.com/GoesToEleven/GolangTraining
+
+https://github.com/xinliangnote/Go
+
+https://github.com/ardanlabs/gotraining
+
+https://github.com/cyent/golang/
+
+https://github.com/FeiChaiCom/go-netdisk
+
+https://github.com/xiaogao67/gin-cloud-storage
+
+https://github.com/yddeng/filecloud
+
+https://github.com/saltbo/zpan
+
+https://www.yuque.com/qyuhen/go/gfe2k0

@@ -4,8 +4,9 @@
 
 ## 目录
 
-- ch_1 interface 基本用法
-- ch_2 通 interface 定义方法约定
+- 定义接口
+- 接口断言
+- 
 
 ## 定义接口
 
@@ -118,4 +119,3 @@ https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
 https://stackoverflow.com/questions/23148812/whats-the-meaning-of-interface
 
 https://blog.boot.dev/golang/golang-interfaces/
-
