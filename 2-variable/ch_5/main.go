@@ -10,9 +10,7 @@ import (
 
 */
 
-type Handler func(x, y int) int
-
-func compute(x, y int, handler Handler) int {
+func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10
 	return handler(x, y)
@@ -23,10 +21,10 @@ func main() {
 	var add = func(x, y int) int {
 		return x + y
 	}
-	fmt.Println(add(1, 2))
+	fmt.Println("add", add(1, 2))
 
 	Multi := func(x, y int) int {
 		return x * y
 	}
-	fmt.Println(compute(1, 2, Multi))
+	fmt.Println("Multi", compute(1, 2, Multi))
 }

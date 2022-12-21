@@ -1,6 +1,10 @@
-package _struct
+package v2_interface
 
 import "fmt"
+
+type CPU interface {
+	operation()
+}
 
 type IntelCPU struct {
 	Name       string

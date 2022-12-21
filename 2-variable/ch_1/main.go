@@ -4,10 +4,10 @@ import "fmt"
 
 /*
 	通过 var 定义变量
-	var variableName T
-	var variableName T = Value
-	var variableName = Value
-	variableName := Value
+	var variableName T			// 初始化为零值
+	var variableName T = Value	// 初始化为Value
+	var variableName = Value	// 初始化为Value
+	variableName := Value		// 初始化为Value
 */
 
 // var 语句可以声明全局变量
@@ -23,7 +23,7 @@ var (
 )
 
 func main() {
-	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误
+	// var 语句用于声明一个变量列表,默认值为对应零值，并且[声明变量后不使用该变量的话将会抛出错误]
 	// 如下 var a int 定义了一个 int 类型的局部变量 a, 局部变量：函数内声明的变量，作用域只在函数体内。
 	// 这意味着 a 只能在 main 函数内使用（函数的参数和返回值也是局部变量）
 	var a int         // 整型 uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr

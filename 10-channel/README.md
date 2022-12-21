@@ -252,7 +252,8 @@ func main() {
 
 ## 思考题
 
-
+1. 通过goroutine+channel统计文本文件中每个单词的数量。
+2. 
 
 ## 参考
 

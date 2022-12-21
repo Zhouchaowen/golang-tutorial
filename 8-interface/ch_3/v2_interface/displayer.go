@@ -1,4 +1,4 @@
-package _interface
+package v2_interface
 
 import "fmt"
 

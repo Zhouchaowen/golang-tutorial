@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// Steps1 通过 for 循环打印 0-9
+// Steps1 通过 for 循环累加 0-9
 func Steps1() {
 	sum := 0
 	// for 循环

@@ -16,7 +16,7 @@ import (
 // 常量定义的时候必须赋值，定义后值不能被修改
 // 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
 
-// const NameOfVariable [type] = value  type 可以省略然编译器推导
+// const NameOfVariable [type] = value  type 可以省略让编译器推导
 
 // 全局常量
 const PI = 3.14

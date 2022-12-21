@@ -1,6 +1,10 @@
-package _struct
+package v2_interface
 
 import "fmt"
+
+type Memory interface {
+	InteractiveData()
+}
 
 type KingstonMemory struct {
 	Name string

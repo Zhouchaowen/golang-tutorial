@@ -1,6 +1,6 @@
 # 变量与常量
 
-
+变量和常量简单来说就是给内存中某一个地址起一个名字, 然后用这个地址存储某个特定类型的值。
 
 ## 目录
 
@@ -16,11 +16,9 @@
 
 ## 定义变量
 
-变量简单来说就是给内存中某一个地址起一个名字, 然后用这个地址存储某个特定类型的值。
+在`Golang`通过`var`关键字定义变量, 格式有多种最常用的两种为`var variableName T`和`variableName := Value`。
 
-在`golang`通过`var`关键字定义变量, 格式有多种最常用的两种为`var variableName T`和`variableName := Value`。
-
-变量可以定义在函数外当做该包下的全局变量, 也可以定义在函数内当做该函数内的局部变量。
+变量可以定义在函数外当做该`package`下的全局变量, 也可以定义在函数内当做该函数内的局部变量。
 
 ```go
 package main
@@ -29,13 +27,14 @@ import "fmt"
 
 /*
 	通过 var 定义变量
-	var variableName T
-	var variableName T = Value
-	var variableName = Value
-	variableName := Value
+	var variableName T			// 初始化为零值
+	var variableName T = Value	// 初始化为Value
+	var variableName = Value	// 初始化为Value
+	variableName := Value		// 初始化为Value
 */
 
 // var 语句可以声明全局变量
+// 全局变量: 函数外声明的变量，全局变量作用域可以在当前的整个包甚至外部包(被导出后)使用
 var aa int64
 
 // 可以在 var 中定义多个全局变量
@@ -47,14 +46,16 @@ var (
 )
 
 func main() {
-	// var 语句用于声明一个变量列表,默认值为对应零值
-	var a int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
-	var b float32 // float64
-	var c bool
-	var d string
-	var e byte // 等同于 uint8
-	var f rune // 等同于 int32,表示一个 Unicode 码点
-	var g interface{}
+	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误
+	// 如下 var a int 定义了一个 int 类型的局部变量 a, 局部变量：函数内声明的变量，作用域只在函数体内。
+	// 这意味着 a 只能在 main 函数内使用（函数的参数和返回值也是局部变量）
+	var a int         // 整型 uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	var b float32     // float64
+	var c bool        // 布尔型
+	var d string      // 字符串
+	var e byte        // 等同于 uint8
+	var f rune        // 等同于 int32,表示一个 Unicode 码点
+	var g interface{} // 接口型
 
 	// 多变量声明
 	var h, i string
@@ -64,6 +65,7 @@ func main() {
 	//    数值类型为 0
 	//    布尔类型为 false
 	//    字符串为 ""（空字符串）
+	// 	  接口为 nil
 
 	// 打印对应零值
 	fmt.Println("int zero value: ", a)
@@ -123,7 +125,7 @@ rune        alias for int32 (represents a Unicode code point)
 ```
 ## 变量赋值
 
-`Golang`中通过 `=` 对变量进行赋值, `=` 可以在变量初始化时赋值也可以在变量定义时赋值。还一种上文提到的简洁赋值 `:=`, `:=` 表示定义变量并赋值, 可以替代`Var`。
+`Golang`中通过 `=` 对变量进行赋值, `=` 可以在变量初始化时赋值也可以在变量定义时赋值。可以通过上文提到的简洁赋值 `:=`, `:=` 表示定义变量并赋值, 可以替代`Var`。
 
 ```go
 package main
@@ -169,7 +171,7 @@ func main() {
 
 ## 类型转换
 
-`Golang`中可以将相近类型的数据进行强转格式为`variableName2 := T(variableName1)`, 注意强转可能导致数据溢出或精度丢失.
+`Golang`中可以将相近类型的数据进行强转, 格式为`variableName2 := T(variableName1)`, 注意强转可能导致数据溢出或精度丢失.
 
 ```go
 package main
@@ -182,6 +184,7 @@ import (
 /*
 	类型转换
 	variableName2 := T(variableName1)
+
 */
 
 func main() {
@@ -202,6 +205,7 @@ func main() {
 
 	d := uint8(255)
 
+	fmt.Printf("d value:%d  d type:%s\n", d, reflect.TypeOf(d))
 	// 类型转换 不能超过转换类型的范围
 	//e := uint8(256) // 编译错误, 常量256溢出了uint8
 
@@ -210,18 +214,23 @@ func main() {
 	g := uint8(f)
 	h := uint8(f + 1)
 
-	fmt.Printf("d value:%d  d type:%s\n", d, reflect.TypeOf(d))
-
 	fmt.Printf("g value:%d  g type:%s\n", g, reflect.TypeOf(g))
 	fmt.Printf("h value:%d  h type:%s\n", h, reflect.TypeOf(h))
+
+	j := 10
+	l := 100.1
+	// 不同类型在golang中不能计算，需进行类型转换
+	p := float64(j) * l
+
+	fmt.Printf("p value:%f  p type:%s\n", p, reflect.TypeOf(p))
 }
 ```
 
 ## 定义常量
 
-`Golang`中通过const定义常量, 格式为`const constantName = value`和`const constantName T = value`。
+`Golang`中通过`const`定义常量, 格式为`const constantName = value`或`const constantName T = value`。
 
-常量可以定义在函数外当做该包下的全局变量, 也可以定义在函数内当做该函数内的局部常量。
+常量可以定义在函数外当做该包下的全局常量, 也可以定义在函数内当做该函数内的局部常量。
 
 ```go
 package main
@@ -239,11 +248,12 @@ import (
 
 */
 
-// 常量是在程序运行时，不会被修改的量
+// 常量定义的时候必须赋值，定义后值不能被修改
 // 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
 
-// const NameOfVariable [type] = value  type 可以省略然编译器推导
+// const NameOfVariable [type] = value  type 可以省略让编译器推导
 
+// 全局常量
 const PI = 3.14
 const NAME = "Golang-tutorial"
 const OK bool = true
@@ -254,13 +264,26 @@ const (
 	MaxUint16 = math.MaxUint16
 )
 
+// iota 定义常量
+// iota的值是const语句块里的行索引，行索引从0开始
+const (
+	One = iota
+	Two
+	Three
+)
+
 func main() {
-	// 函数内也可以定义常量
+	// 函数内也可以定义常量（局部常量）
 	const World = "World"
 	fmt.Println("Hello", World)
 
 	fmt.Printf("MaxUint8 value:%d  MaxUint8 type:%s\n", MaxUint8, reflect.TypeOf(MaxUint8))
 	fmt.Printf("MaxUint16 value:%d  MaxUint16 type:%s\n", MaxUint16, reflect.TypeOf(MaxUint16))
+
+	fmt.Printf("One value:%d  One type:%s\n", One, reflect.TypeOf(One))
+	fmt.Printf("Two value:%d  Two type:%s\n", Two, reflect.TypeOf(Two))
+	fmt.Printf("Three value:%d  Three type:%s\n", Three, reflect.TypeOf(Three))
+
 }
 ```
 
@@ -278,13 +301,9 @@ import (
 /*
 	定义函数变量
 	var variableName = func
-
 */
 
-// 定义一个自定义类型的函数, 用 Handler 表示这个自定义类型
-type Handler func(x, y int) int
-
-func compute(x, y int, handler Handler) int {
+func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10
 	return handler(x, y)
@@ -295,14 +314,13 @@ func main() {
 	var add = func(x, y int) int {
 		return x + y
 	}
-	fmt.Println(add(1, 2))
+	fmt.Println("add",add(1, 2))
 
 	Multi := func(x, y int) int {
 		return x * y
 	}
-	fmt.Println(compute(1, 2, Multi))
+	fmt.Println("Multi",compute(1, 2, Multi))
 }
-
 ```
 
 ## 定义指针变量
@@ -524,7 +542,7 @@ Go支持六种位运算符：&、|、^、&^、<<、>>
 
 
 ## 思考题
-1. 定义一个值为 1024 的`int`变量`a`, 再定义一个值为 10.1 的`float64`的变量`b`,将这两个变量加减乘除并打印结果。
+1. 定义一个值为 1024 的`int`变量`a`, 再定义一个值为 0.1 的`float64`的变量`b`,将这两个变量加减乘除并打印结果。
 
 ## 参考
 https://gfw.go101.org/article/operators.html

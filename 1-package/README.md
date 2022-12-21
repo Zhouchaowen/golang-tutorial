@@ -1,5 +1,7 @@
 # 包
 
+Package是golang中用来划分模块的，编写代码时我们通常将相同模块的代码划分到一个package中。我们首先来看第一个示例。
+
 ## 目录
 
 - 入门
@@ -8,13 +10,11 @@
 
 
 ## 入门 
-每个 `Golang` 文件都必须以 `package namexxx` 语句开头, 如下代码中`package main`表示当前代码隶属于`main`包下。
+在`golang`中每个 `go` 文件都必须以 `package xxxname` 语句开头, 如代码中`package main`表示当前代码隶属于`main`包。`main`包是一个特殊的包，我们的启动函数`func main()`必须要定义在`package main`下才能执行。
 
-`main`包下定义`func main()` 函数可以独立运行，并且所有`Golang`函数的启动入口都是`main`包下的`func main() `函数。
+`import()`表示要导入标准库(也可以叫做导入一个包)或第三方包, 在实际开发者会引用许多标准库和第三方包来简化业务开发。这里我们导入一个`fmt`的标准库，这个标准库定义了一些函数在控制台输出一些信息，如`Println()`函数。
 
-`import()`表示要导入的标准库或第三方包, 在实际开发者会引用许多标准库和第三方包来加简化业务开发。
-
-`func main()`函数是程序入口。
+`func main()`函数是程序入口。我们可以通过这个函数来运行我们编写的代码，我们在`func main()`函数中调用`fmt`标准库的`Println()`函数在控制台打印一个字串`hello world`。
 
 ```go
 package main // 定义了包名,只有定义了main的包才能独立运行
@@ -36,6 +36,8 @@ func main() {
 ```
 
 ## 导入标准库
+
+上一节简单提了一下`import()`,这一节我们详细介绍`import()`。`import()`函数用来导入标准库和第三方库，只有通过`import()`导入的标准库和第三方库我们才能在当前`package`下调用并且只能调用改`package`下已经导出的属性和函数。
 
 通过`import`到入了`math/rand`标准库,在`func main()`函数中调用标准库的函数`rand.Intn(n)`获取一个`[0,n)`的伪随机`int`值.
 
@@ -88,9 +90,9 @@ package math
 
 // Integer limit values.
 const (
-	intSize = 32 << (^uint(0) >> 63) // 32 or 64 // 未导出
+	intSize = 32 << (^uint(0) >> 63) // 32 or 64 // 未导出, 其余package不能调用
 
-	MaxInt    = 1<<(intSize-1) - 1 // 导出
+	MaxInt    = 1<<(intSize-1) - 1 // 导出, 其余package能调用
 	MinInt    = -1 << (intSize - 1)
   
   .........

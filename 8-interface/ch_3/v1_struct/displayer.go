@@ -1,4 +1,4 @@
-package _struct
+package v1_struct
 
 import "fmt"
 

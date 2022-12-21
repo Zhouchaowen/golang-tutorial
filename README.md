@@ -1,6 +1,8 @@
 # golang-tutorial
 > Golang入门教程
 
+
+
 ## 食用指南
 
 - 本教程适合想快速了解和上手`golang`的读者, 尤为适合学习过其它语言后想学习`golang`的读者。
@@ -87,3 +89,11 @@ https://github.com/yddeng/filecloud
 https://github.com/saltbo/zpan
 
 https://www.yuque.com/qyuhen/go/gfe2k0
+
+https://learnku.com/articles/58970
+
+https://github.com/rocboss/paopao-ce
+
+https://github.com/weirubo/intermediate_go
+
+https://github.com/mlogclub/bbs-go
