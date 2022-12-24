@@ -3,6 +3,12 @@ package main
 import "fmt"
 
 /*
+	1.声明局部变量
+	2.声明全局变量
+	3.声明多变量
+*/
+
+/*
 	通过 var 定义变量
 	var variableName T			// 初始化为零值
 	var variableName T = Value	// 初始化为Value

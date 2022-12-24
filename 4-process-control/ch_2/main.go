@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+/*
+	1.If 分支
+	2.If-Else 分支
+*/
+
 // if 分支打印不同字符
 func main() {
 	flag := 10

@@ -6,6 +6,12 @@ import (
 	"reflect"
 )
 
+/**
+1.声明局部常量
+2.声明全局变量
+3.iota赋值
+*/
+
 /*
 	定义常量
 	const constantName = value

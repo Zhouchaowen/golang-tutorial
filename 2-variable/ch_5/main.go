@@ -4,6 +4,11 @@ import (
 	"fmt"
 )
 
+/* 函数章节讲解
+1.声明函数变量
+2.传递函数变量
+*/
+
 /*
 	定义函数变量
 	var variableName = func

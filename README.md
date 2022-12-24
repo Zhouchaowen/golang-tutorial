@@ -97,3 +97,5 @@ https://github.com/rocboss/paopao-ce
 https://github.com/weirubo/intermediate_go
 
 https://github.com/mlogclub/bbs-go
+
+https://github.com/hyper0x/Golang_Puzzlers

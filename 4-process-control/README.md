@@ -4,7 +4,7 @@
 
 ## 目录
 
-- for 循环
+- for/range 循环
 - if 分支判断
 - switch 分支选择
 - defer 函数延时调用(栈)
@@ -12,7 +12,7 @@
 
 ## For循环
 
-Golang中通过For关键字来定义一个循环并且只有For关键字(Golang中没有while关键字)
+`Golang`中通过`For`关键字来定义一个循环并且只有`For`关键字(`Golang`中没有`while`关键字)
 
 ```go
 package main
@@ -38,7 +38,7 @@ func main() {
 }
 ```
 
-通过For实现类似while的语义
+通过`For`实现类似`while`的语义
 
 ```go
 package main
@@ -61,7 +61,7 @@ func main() {
 }
 ```
 
-通过range关键字来遍历字符串,数组,切片或映射
+通过`Range`关键字来遍历字符串,数组,切片或映射
 
 ```go
 package main
@@ -82,7 +82,7 @@ func main() {
 }
 ```
 
-range和for遍历的区别
+`Range`和`for`遍历的区别
 
 ```go
 package main
@@ -107,7 +107,7 @@ func main() {
 }
 ```
 
-for循环中的break和continue
+`For`循环中的`break`和`continue`
 
 ```go
 package main
@@ -135,7 +135,7 @@ func main() {
 }
 ```
 
-goto实现循环
+`Goto`实现循环
 
 ```go
 package main
@@ -161,6 +161,8 @@ func main() {
 ```
 
 ## If判断
+
+`Golang`中`If`语句和其它语言语义相同
 
 ```go
 package main
@@ -190,7 +192,7 @@ func main() {
 
 ## Switch选择
 
-`golang`中可以通过`switch-case`来实现分支选择, 每一个`case`分支都是唯一的，从上往下逐一判断，直到匹配为止，如果某些`case`分支条件重复了，编译会报错。
+`Golang`中可以通过`switch-case`来实现分支选择, 每一个`case`分支都是唯一的，从上往下逐一判断，直到匹配为止，如果某些`case`分支条件重复了，编译会报错。
 
 每个`case`分支最后自带`break`效果，匹配成功就不会执行其它`case`; 如果所有分支都没有匹配成功并且又定义了`default`分支, 那最终会走`default`分支
 
@@ -295,7 +297,7 @@ func main() {
 
 ## Defer
 
-golang中通过defer来实现延时调用,常用来做一些收尾工作: 关闭连接,清理资源
+` Golang`中通过`defer`来实现延时调用, 常用来做一些收尾工作: **关闭连接,清理资源**
 
 ```go
 package main
@@ -347,7 +349,7 @@ func main() {
 
 ## recover
 
-通过defer+recover来拦截程序保存或panic
+通过`defer+recover`来拦截程序捕获`panic`
 
 ```go
 package main
@@ -372,7 +374,7 @@ func main() {
 
 ## 思考题
 
-1. 计算 100000 以内不是奇数, 不是 4 的倍数外的所有数值和
+1. 计算 100000 以内偶数,并且不是 4 的倍数外的所有数值和
 2. 定义函数`Calculation`通过`Switch`实现加减乘除
 
 ```go

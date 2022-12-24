@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+/*
+	1.定义无参函数
+	2.定义有参函数
+	3.定义多返回参数函数
+	4.定义不定长参数函数
+	5.定义指针参数函数
+*/
+
 /* 定义函数格式
 func name([parameter list]) [return_types list] {
   do some things

@@ -6,6 +6,12 @@ import (
 )
 
 /*
+	1.相近类型强转
+	2.数据溢出与精度丢失
+	3.不同类型的数据计算
+*/
+
+/*
 	类型转换
 	variableName2 := T(variableName1)
 

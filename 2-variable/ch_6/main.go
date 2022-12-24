@@ -3,6 +3,12 @@ package main
 import "fmt"
 
 /*
+	1.声明局部指针变量
+	2.指针变量的赋值与取值
+	3.通过new()创建指针变量
+*/
+
+/*
 	通过 var 定义指针变量
 	var variableName *T
 	var variableName *T = Value

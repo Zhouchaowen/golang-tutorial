@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+/*
+	1.基本 for 循环
+	2.类似 while 循环
+	3.range循环，range循环和for循环区别
+	4.continue和break
+	5.goto
+*/
+
 // Steps1 通过 for 循环累加 0-9
 func Steps1() {
 	sum := 0
