@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+/*
+	1.switch
+	2.多条件switch
+*/
+
 // Steps1 基础用法
 func Steps1() {
 	flag := 1

@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+/*
+	1.并发打印
+*/
+
 // 并发与并行：https://gfw.go101.org/article/control-flows-more.html
 // goroutine是轻量级的用户态线程，可以在代码里创建成千上万个goroutine来并发工作
 

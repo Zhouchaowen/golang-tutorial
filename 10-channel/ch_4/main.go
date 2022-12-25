@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+/*
+	1.阻塞channel与非阻塞channel
+*/
+
 // 不带缓冲的 channel
 func NoBufferChan() {
 	ch := make(chan int)

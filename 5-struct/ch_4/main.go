@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+/*
+	1.自定义类型
+	2.自定义类型方法
+*/
+
 // ResponseStatus 自定义类型的方法
 type ResponseStatus int
 

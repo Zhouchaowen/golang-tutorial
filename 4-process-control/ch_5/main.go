@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+/*
+	1.defer+recovery()异常处理
+*/
+
 // 捕捉处理异常 recover
 func main() {
 	defer func() {

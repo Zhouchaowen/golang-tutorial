@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+/*
+	1.通过make定义channel
+	2.读和写channel
+*/
+
 // 定义 channel, channel 是带有类型的管道，可以通过信道操作符 <- 来发送或者接收值
 func main() {
 	// 信道在使用前必须通过内建函数 make 来创建

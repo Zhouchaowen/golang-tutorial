@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+/**
+1.map当做参数传递
+*/
+
 func addMap(mp map[int]string) {
 	fmt.Printf("\tmp value addr:%p\n", mp)
 	fmt.Printf("\tmp addr:%p\n", &mp)

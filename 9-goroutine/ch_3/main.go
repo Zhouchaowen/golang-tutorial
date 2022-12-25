@@ -10,6 +10,10 @@ import (
 	"sync"
 )
 
+/*
+	1.并发下载图片案例
+*/
+
 func getImageData(url, name string) {
 	resp, _ := http.Get(url) // 通过 http.get 请求读取 url 的数据
 

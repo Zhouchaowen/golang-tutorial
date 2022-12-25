@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+/*
+	1.通过接口定义方法
+	2.实现接口定义方法
+*/
+
 // Duck 接口类型 定义一组方法签名的集合
 // 定义接口约定
 type Duck interface {

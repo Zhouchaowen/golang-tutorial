@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+/*
+	1.sync.WaitGroup的使用
+*/
+
 func listLanguage(items []string, wg *sync.WaitGroup) { // 一般不建议这样使用
 	defer wg.Done()
 

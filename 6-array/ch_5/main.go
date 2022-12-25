@@ -5,7 +5,9 @@ import (
 	"unsafe"
 )
 
-// 切片参数和指针切片参数的区别
+/*
+	1.切片参数和指针切片参数的区别
+*/
 
 func appendValueSlice(slice []int) {
 	fmt.Printf("\tslice value addr: %p\n", slice)

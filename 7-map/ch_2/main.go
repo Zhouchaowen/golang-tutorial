@@ -2,6 +2,15 @@ package main
 
 import "fmt"
 
+/*
+	1.用内建函数 make 来创建map
+	2.赋值
+	3.获取元素
+	4.删除元素
+	5.通过双赋值检测某个key是否存在
+	6.通过range遍历map
+*/
+
 // Steps2 map的基础使用
 func Steps2() {
 	// Steps 2-1: 用内建函数 make 来创建map

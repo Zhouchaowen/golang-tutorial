@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+/*
+	1.defer
+*/
+
 // defer作用:
 //    释放占用的资源
 //    捕捉处理异常 recover

@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+/*
+	1.定义interface并赋值
+	2.断言interface
+*/
+
 // 类型断言
 // 断言 interface
 func main() {

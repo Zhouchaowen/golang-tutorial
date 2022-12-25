@@ -5,6 +5,11 @@ import (
 	"sync"
 )
 
+/*
+	1.并发操作同一变量的安全问题
+	2.sync.Mutex解决并发安全问题
+*/
+
 // NoConcurrence 并发操作一个变量是不安全的，需要加锁
 func NoConcurrence() {
 	sum := 0

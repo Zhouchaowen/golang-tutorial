@@ -4,6 +4,11 @@ import (
 	"fmt"
 )
 
+/*
+	1.切片传参
+	2.数组传参
+*/
+
 // 数组参数和切片参数的区别
 
 func modifySlice0(slice []int) {

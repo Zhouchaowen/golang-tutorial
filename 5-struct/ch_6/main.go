@@ -5,6 +5,12 @@ import (
 	"golang-tutorial/5-struct/person"
 )
 
+/*
+	1.跨包内引用结构体和结构体方法
+	2.跨包内引用导出属性和非导出属性
+	3.跨包内引用导出方法和非导出方法
+*/
+
 func main() {
 	p := person.Person{
 		Name: "golang",

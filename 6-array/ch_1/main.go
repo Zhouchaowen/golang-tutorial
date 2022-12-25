@@ -2,10 +2,19 @@ package main
 
 import "fmt"
 
+/*
+	1.定义局部数组
+	2.定义局部数组并赋值
+	3.通过下标赋值
+	4.定义全局数组
+*/
+
 type dome struct {
 	a int
 	b float32
 }
+
+var arrayUInt [3]uint
 
 // 定义数组, 数组必须指定大小
 func main() {

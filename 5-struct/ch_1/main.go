@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+/*
+	1.定义全局结构体
+	2.结构体赋值
+	3.定义局部结构体
+*/
+
 // Demo 定义结构体
 type Demo struct {
 	// 小写表示不导出,包外不能引用

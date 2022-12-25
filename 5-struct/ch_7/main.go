@@ -1,5 +1,9 @@
 package main
 
+/*
+	1.结构体组合
+*/
+
 func main() {
 	cb := &ComputerBuilder{}
 	cpu := CPU{

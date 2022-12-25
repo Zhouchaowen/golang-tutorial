@@ -2,6 +2,13 @@ package main
 
 import "fmt"
 
+/*
+	1.定义map
+	2.定义map并赋值
+	3.通过key赋值
+	4.通过make创建map
+*/
+
 // Steps1 定义映射
 func Steps1() {
 	// Steps 1-1: map[T]X 表示定义了一个 Key 类型为 T，Value 类型为 X 的映射

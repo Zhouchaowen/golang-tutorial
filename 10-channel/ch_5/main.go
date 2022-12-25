@@ -5,7 +5,9 @@ import (
 	"time"
 )
 
-// 通过 range 遍历 channel, 并通过关闭 channel 来退出循环
+/*
+	1.通过 range 遍历 channel, 并通过关闭 channel 来退出循环
+*/
 
 // 复制一个 channel 或用于函数参数传递时, 只是拷贝了一个 channel 的引用, 因此调用者和被调用者将引用同一个channel对象
 func genNum(c chan int) {
