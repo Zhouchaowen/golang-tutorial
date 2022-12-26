@@ -37,7 +37,7 @@ func main() {
 
 	fmt.Printf("d value:%d  d type:%s\n", d, reflect.TypeOf(d))
 	// 类型转换 不能超过转换类型的范围
-	//e := uint8(256) // 编译错误, 常量256溢出了uint8
+	//e := uint8(256) // 编译错误, 常量256溢出了uint8-
 
 	// 超过转换类型的范围溢出
 	var f int = 256
