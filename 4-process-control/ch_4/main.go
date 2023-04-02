@@ -28,11 +28,37 @@ func Steps2() {
 	fmt.Println("\tend")
 }
 
+func Steps3() {
+	fmt.Println("\tbegin")
+	x := 2
+	defer func() {
+		x = x * x
+		fmt.Println("\tx =", x) // x = 9
+	}()
+	fmt.Println("\tend")
+	x = 3
+}
+
+func Steps4() {
+	fmt.Println("\tbegin")
+	x := 2
+	defer func(x int) {
+		x = x * x
+		fmt.Println("\tx =", x) // x = 4
+	}(x)
+	fmt.Println("\tend")
+	x = 3
+}
+
 func main() {
 	fmt.Println("Steps1():")
 	Steps1()
 	fmt.Println("Steps2():")
 	Steps2()
+	fmt.Println("Steps3():")
+	Steps3()
+	fmt.Println("Steps4():")
+	Steps4()
 }
 
 /*

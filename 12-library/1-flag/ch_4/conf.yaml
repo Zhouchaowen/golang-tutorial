@@ -1,0 +1,11 @@
+StringKey: "golang tutorial"
+IntKey: 101
+Float64Key: 101.101
+BoolKey: false
+IntSliceKey:
+  - 1
+  - 2
+  - 3
+MapKey:
+  host: 127.0.0.1
+  port: 8080

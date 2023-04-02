@@ -77,6 +77,20 @@ func Steps3() {
 	fmt.Println("\t*int value: ", b)
 }
 
+// Steps4 判断指针是否为nil
+func Steps4() {
+	var ptr *int
+	if ptr == nil {
+		fmt.Println("\tptr is nil")
+	}
+
+	var a int = 42
+	var ptr2 *int = &a
+	if ptr2 != nil {
+		fmt.Println("\tptr2 is not nil")
+	}
+}
+
 func main() {
 	fmt.Println("Steps1():")
 	Steps1()
@@ -84,4 +98,6 @@ func main() {
 	Steps2()
 	fmt.Println("Steps3():")
 	Steps3()
+	fmt.Println("Steps4():")
+	Steps4()
 }

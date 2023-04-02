@@ -1,6 +1,6 @@
 # 函数
 
-函数用来划分不同功能。 我们可以将不同的功能封装成不同的函数，减少主干逻辑的复杂度。
+在 Go 语言中，函数是一种基本的代码块，用于执行某些操作并返回结果。函数用来划分不同功能， 我们可以将不同的功能封装成不同的函数，减少主干逻辑的复杂度。
 
 ## 目录
 
@@ -10,7 +10,7 @@
 
 ## 函数定义
 
-`Golang`中通过关键字`func`定义一个函数, 格式`func functionName(parameterName T,....) resultName T ...{}`
+`Golang`中通过关键字`func`定义一个函数, 并指定函数名称、参数列表和返回类型。 格式`func functionName(parameterName T,....) resultName T ...{}`
 
 ```go
 package main
@@ -39,7 +39,7 @@ func swap2(x, y int) (a int, b int) {
 	return
 }
 
-// 传递必定长参数
+// 传递不定长参数
 func variableCut(x int, y ...int) int {
 	for _, v := range y {
 		x += v
@@ -81,7 +81,7 @@ func main() {
 
 ## Init函数
 
-`Golang`中想在`main()`函数启动前初始化一些配置或调用需要通过`init()`函数。在运行程序时会先调用`init()`中的语句执行完成后再继续执行`main()`函数
+在 `Go` 语言中，`init` 函数是一个特殊的函数，用于在程序执行前自动执行一些初始化操作，例如初始化全局变量或加载配置文件等。`init` 函数没有任何参数和返回值，并且不能被显式调用。当程序启动时，Go 会自动在主函数执行之前调用所有包中的 `init` 函数，包括导入的所有包的 `init` 函数, `init()`函数执行完成后再执行`main()`函数
 
 ```go
 package main
@@ -120,7 +120,7 @@ func main() {
 }
 ```
 
-
+注意，Go 语言的初始化顺序是先导入所有包，然后按照包导入的顺序依次初始化每个包中的 `const`、`var` 和 `init`，最后调用 `main` 函数。
 
 ## 思考题
 

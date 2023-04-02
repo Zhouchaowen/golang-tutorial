@@ -17,7 +17,7 @@ func modifySlice0(slice []int) {
 	slice[0] = 1000
 }
 
-// 切片作为函数参数时传递的是指针类型的全拷贝(array的uintptr指针，len，cap)
+// Steps3 切片作为函数参数时传递的是指针类型的全拷贝(array的uintptr指针，len，cap)
 func Steps3() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
@@ -42,7 +42,7 @@ func modifyArr0(arr [10]int) {
 	arr[0] = 1000
 }
 
-// 数组作为函数参数时传递的是值类型的全拷贝([10]int的全部数据)
+// Steps4 数组作为函数参数时传递的是值类型的全拷贝([10]int的全部数据)
 func Steps4() {
 	var arrInt = [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 

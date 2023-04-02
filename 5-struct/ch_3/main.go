@@ -39,11 +39,11 @@ func (d *Demo) ModifyE() {
 }
 
 func (d *Demo) printAddr1() {
-	fmt.Printf("%p\n", &d.a)
+	fmt.Printf("%p\n", d)
 }
 
 func (d *Demo) printAddr2() {
-	fmt.Printf("%p\n", &d.a)
+	fmt.Printf("%p\n", d)
 }
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 
 	// 指针接收者 可以通过方法改变接收者内部值
 	v.ModifyE()
-	v.print()
+	fmt.Printf("%+v\n", v)
 
 	v.printAddr1()
 	v.printAddr1()

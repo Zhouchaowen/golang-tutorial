@@ -1,11 +1,13 @@
 # Channel
 
+Channel 是 Go 语言中一种用于在 Goroutine 之间传递数据的机制。Channel 通过通信实现共享内存，可以安全地传递数据，避免了多个 Goroutine 访问共享内存时出现的竞争和死锁问题。
 
+Channel 可以是有缓冲或无缓冲的。无缓冲的 Channel，也称为同步 Channel，发送操作和接收操作必须同时准备就绪，否则会被阻塞。有缓冲的 Channel，也称为异步 Channel，发送操作会在 Channel 缓冲区未满的情况下立即返回，接收操作也会在 Channel 缓冲区不为空的情况下立即返回，否则会被阻塞。
 
 ## 目录
 
 - channel 定义
-- channel 阻塞发送 
+- 无缓冲channel 
 
 - 非缓冲和缓冲 channel 的对比
 - 关闭 channel 
@@ -13,8 +15,6 @@
 - channel+select 控制 goroutine 退出
 
 ## 定义Channel
-channel 是解决 goroutine 的同步问题以及 goroutine 之间数据共享（数据传递）的问题。
-
 ```go
 package main
 
@@ -46,9 +46,23 @@ func main() {
 }
 ```
 
-## 阻塞Channel
+首先通过 `make` 函数创建了一个无缓冲的 `int` 类型的 `Channel c`，即：`c := make(chan int)`。
 
-golang中无缓存channel的收发都需要对端(发送端，接收端)准备好，如果有一短未准备好接收，则另一端将会阻塞。
+然后通过 `go` 关键字定义了一个匿名的 `Goroutine`，用于从 `Channel c` 中接收数据。匿名 `Goroutine` 中，使用 `<-` 语法从 `Channel c` 中接收值，并将其赋值给变量 `num`。接收完值后，使用 `fmt.Printf` 打印出接收到的值。
+
+接着，在 `main`函数 中，使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中，即：`c <- 1`。
+
+最后，为了保证 `Goroutine` 有足够的时间去接收 `Channel` 中的值，通过 `<-time.After(time.Second * 3)` 等待 3 秒钟之后，打印出 "return"。如果将 `<-time.After(time.Second * 3)` 去掉，那么程序可能在打印 "return" 之前就结束了，因为 `Goroutine` 没有足够的时间去接收 `Channel` 中的值。
+
+## 无缓冲Channel
+
+无缓冲的 Channel通过定义：
+
+```go
+make(chan T)
+```
+
+在无缓冲的 Channel 中，发送和接收操作是同步的。如果一个 Goroutine 向一个无缓冲的 Channel 发送数据，它将一直阻塞，直到另一个 Goroutine 从该 Channel 中接收到数据。同样地，如果一个 Goroutine 从一个无缓冲的 Channel 中接收数据，它将一直阻塞，直到另一个 Goroutine 向该 Channel 中发送数据。
 
 ```go
 package main
@@ -75,6 +89,10 @@ func main() {
 	fmt.Printf("recover: %s\n", num)
 }
 ```
+
+上面代码创建了一个无缓冲的字符串类型的 `Channel c`，然后启动了一个新的 `Goroutine`，该 `Goroutine` 会在 10 秒后发送一个字符串 `"ping"` 到 `Channel c` 中。在主 `main` 中，接收操作 `<-c` 会阻塞，直到有值从 `Channel c` 中被接收到为止。因为发送端需要 10 秒后才会发送数据，所以接收端会在 `<-c` 处阻塞 10 秒。接收到 `"ping"` 后，主 `main` 继续执行，输出 `"recover: ping"`。
+
+
 
 小练习：通过goroutine+channel计算数组之和。
 
@@ -108,7 +126,57 @@ func main() {
 
 ## 缓冲Channel
 
-缓冲channel通过make(chan T, size)定义。缓冲channel可以储存一定的数据，当数据未达到上限时写入端可以非阻塞的一直写；当到达上限后，写入端会阻塞。当缓冲区有数据时，读取端可以一直读；没有数据时，读取端将阻塞。
+缓冲channel定义：
+
+```go
+make(chan T,size)
+```
+
+缓冲 Channel 是带有缓冲区的 Channel，创建时需要指定缓冲区大小，例如 `make(chan int, 10)` 创建了一个缓冲区大小为 10 的整型 Channel。
+
+缓冲 Channel 中, 当缓冲区未满时，发送操作是非阻塞的，如果缓冲区已满，则发送操作会阻塞，直到有一个接收操作接收了一个值, 才能继续发送。当缓冲区非空时，接收操作是非阻塞的，如果缓冲区为空，则接收操作会阻塞，直到有一个发送操作发送了一个值。
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func producer(c chan int, n int) {
+	for i := 0; i < n; i++ {
+		c <- i
+		fmt.Printf("producer sent: %d\n", i)
+	}
+	close(c)
+}
+
+func consumer(c chan int) {
+	for {
+		num, ok := <-c
+		if !ok {
+			fmt.Println("consumer closed")
+			return
+		}
+		fmt.Printf("consumer received: %d\n", num)
+	}
+}
+
+func main() {
+	c := make(chan int, 5)
+	go producer(c, 10)
+	go consumer(c)
+	time.Sleep(time.Second * 1)
+	fmt.Println("main exited")
+}
+```
+
+在上面代码中，我们创建了一个缓冲区大小为 5 的整型 Channel，生产者向 Channel 中发送了 10 个整数，消费者从 Channel 中接收这些整数，并将它们打印出来。由于缓冲区大小为 5，因此生产者只有在 Channel 中有 5 个或更少的元素时才会被阻塞。在该示例中，由于消费者从 Channel 中接收元素的速度比生产者发送元素的速度快，因此生产者最终会被阻塞，直到消费者接收完所有的元素并关闭 Channel。
+
+需要注意的是，当 Channel 被关闭后，仍然可以从 Channel 中接收剩余的元素，但不能再向 Channel 中发送任何元素。因此，在消费者函数中，我们使用了 `for` 循环和 `ok` 标志来检查 Channel 是否已经被关闭。
+
+非缓冲channel和缓冲channel的对比：
 
 ```go
 package main
@@ -138,7 +206,7 @@ func main() {
 
 ## 关闭channel
 
-channle可以通过close()函数关闭，关闭一个channel后，可以从中读取数据不过读取的数据全是当前channel类型的零值，但不能向这个channel写入数据会发送panic。
+Close 函数可以用于关闭 Channel，关闭一个channel后，可以从中读取数据不过读取的数据全是当前channel类型的零值，但不能向这个channel写入数据会发送panic。
 
 ```go
 package main
@@ -157,7 +225,7 @@ func main() {
 | 发送数据 | 永久阻塞        | 产生恐慌                 | 阻塞或者成功发送           |
 | 接收数据 | 永久阻塞        | 永不阻塞                 | 阻塞或者成功接收           |
 
-## 持续读取Channel
+## 遍历 Channel
 
 可以通过range持续读取channel，直到channel关闭。
 
@@ -253,7 +321,6 @@ func main() {
 ## 思考题
 
 1. 通过goroutine+channel统计文本文件中每个单词的数量。
-2. 
 
 ## 参考
 

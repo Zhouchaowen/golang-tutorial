@@ -38,7 +38,7 @@ func swap2(x, y int) (a int, b int) {
 	return
 }
 
-// 传递必定长参数
+// 传递不定长参数
 func variableCut(x int, y ...int) int {
 	for _, v := range y {
 		x += v

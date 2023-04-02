@@ -99,3 +99,5 @@ https://github.com/weirubo/intermediate_go
 https://github.com/mlogclub/bbs-go
 
 https://github.com/hyper0x/Golang_Puzzlers
+
+https://github.com/duanbiaowu/go-examples-for-beginners

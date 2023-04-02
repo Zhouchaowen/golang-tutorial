@@ -1,15 +1,52 @@
 # Map
 
-
+map是Go语言中的一种内置数据结构，也称为哈希表或字典。它是一种无序的键值对集合，其中每个键唯一对应一个值，通过键来快速查找对应的值。在map中，所有的键都必须是同一类型，所有的值也必须是同一类型。
 
 ## 目录
 
-- 定义 Map
-- 初始化 Map 与赋值
+- 定义 Map与赋值
 
-## 定义映射
+## 定义 Map与赋值
 
-golang中通过map关键字定义映射, 格式`var mpIntInt map[T]T`表示定义了一个 Key 类型为 T，Value 类型为 T 的映射。
+map的声明方式为：
+
+```go
+var mapName map[keyType]valueType
+```
+
+其中，`keyType`表示键的类型，`valueType`表示值的类型。需要注意的是，这里声明的map变量并没有被初始化，如果直接使用将会引发运行时错误。正确的初始化方式是使用`make`函数：
+
+```go
+mapName := make(map[keyType]valueType)
+```
+
+或者直接初始化：
+
+```go
+mapName := map[keyType]valueType{
+    key1: value1,
+    key2: value2,
+    ...
+}
+```
+
+在map中添加或修改键值对可以直接使用下标运算符`[]`，例如：
+
+```go
+mapName[key] = value
+```
+
+如果键值对中的键已经存在，那么它所对应的值就会被更新；如果不存在，就会添加一个新的键值对。
+
+查找map中的键值对也可以使用下标运算符`[]`，例如：
+
+```go
+value := mapName[key]
+```
+
+这个操作会返回键所对应的值，如果该键不存在，会返回该值类型的零值。
+
+具体示例：
 
 ```go
 package main
@@ -59,7 +96,15 @@ func main() {
 }
 ```
 
-## 映射初始化与赋值
+map还有一些其他的特性：
+
+- `delete(mapName, key)`：删除指定键的键值对。
+- `len(mapName)`：返回map中键值对的数量。
+- `for key, value := range mapName`：遍历map中的键值对。
+
+需要注意的是，由于map是无序的，所以遍历时不能保证顺序。
+
+具体示例：
 
 ```go
 package main

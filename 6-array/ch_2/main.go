@@ -148,6 +148,15 @@ func Steps5() {
 
 	// Steps 5-4: 切片并不存储任何数据，它只是描述了底层数组中的一段
 	// 更改切片的元素会修改其底层数组中对应的元素,与它共享底层数组的切片都会观测到这些修改
+	interceptionSliceIntCap[0] = 111
+	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+		sliceInt,
+		len(sliceInt),
+		cap(sliceInt))
+	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
+		interceptionSliceInt,
+		len(interceptionSliceInt),
+		cap(interceptionSliceInt))
 
 	// interceptionSliceIntCap[2] 超出当前len, 打印报错 panic: runtime error: index out of range [2] with length 2
 	//fmt.Printf("interceptionSliceIntCap[2]:%d",interceptionSliceIntCap[2])
