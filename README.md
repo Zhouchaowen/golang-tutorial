@@ -101,3 +101,7 @@ https://github.com/mlogclub/bbs-go
 https://github.com/hyper0x/Golang_Puzzlers
 
 https://github.com/duanbiaowu/go-examples-for-beginners
+
+https://github.com/xusenlin/forest-blog
+
+https://github.com/go-sonic/sonic

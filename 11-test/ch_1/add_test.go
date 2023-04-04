@@ -2,7 +2,34 @@ package ch_1
 
 import "testing"
 
-func TestAdd(t *testing.T) {
+// go test
+func TestAdd0(t *testing.T) {
+	result := add(2, 3)
+	expected := 5
+	if result != expected {
+		t.Errorf("add(2, 3) returned %d, expected %d", result, expected)
+	}
+}
+
+func TestAdd1(t *testing.T) {
+	t.Run("test case 1", func(t *testing.T) {
+		result := add(2, 3)
+		expected := 5
+		if result != expected {
+			t.Errorf("add(2, 3) returned %d, expected %d", result, expected)
+		}
+	})
+
+	t.Run("test case 2", func(t *testing.T) {
+		result := add(3, 3)
+		expected := 6
+		if result != expected {
+			t.Errorf("add(3, 3) returned %d, expected %d", result, expected)
+		}
+	})
+}
+
+func TestAdd2(t *testing.T) {
 	type args struct {
 		a int
 		b int
