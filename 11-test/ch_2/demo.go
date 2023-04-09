@@ -4,6 +4,7 @@ func add(x, y int) int {
 	return x + y
 }
 
-func memoryAllocation(x int) []int {
-	return make([]int, x)
+func memoryAllocation(x int) {
+	_ = make([]int, x)
+	return
 }
