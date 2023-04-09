@@ -16,19 +16,19 @@ import (
 	8.原样字符串输出
 */
 
-// var 语句可以声明全局变量并赋值
+// var 语句声明全局变量并赋值
 var aa int64 = 3
 
 func main() {
-	// 声明变量并赋初始值
+	// 声明局部变量并赋初始值
 	var a int = 1
-	// 如果初始化值已存在，则可以省略类型，go编辑器会自动推导类型
-	var b = 2
-	var c = 3.2
-	var d = "hello"
 
-	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明
-	// 但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
+	// 如果初始化值已存在，则可以省略类型，Go编译器会自动推导类型
+	var b = 2       // 自动推导为int型
+	var c = 3.2     // 自动推导为float64型
+	var d = "hello" // 自动推导为string型
+
+	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明, 但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
 	e := true
 
 	var f byte = 'a'
@@ -52,5 +52,5 @@ func main() {
 	// 定义字符串变量并初始化为 Golang Tutorial
 	str := "Golang Tutorial"
 	strLength := len(str) // len() 函数可以获取字符串的长度
-	fmt.Printf("str value:%s  str length:%d  str type:%s\n", str, strLength, reflect.TypeOf(i))
+	fmt.Printf("str value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(i))
 }

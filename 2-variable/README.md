@@ -1,6 +1,6 @@
 # 变量与常量
 
-变量和常量简单来说就是给内存中某一个地址起一个名字, 然后用这个地址存储某个特定类型的值。
+变量和常量简单来说就是给**内存中某一个地址**起一个名字, 然后用这个地址**存储某个特定类型的值**。
 
 ## 目录
 
@@ -60,7 +60,7 @@ rune        alias for int32 (represents a Unicode code point)
 
 ## 定义变量
 
-在`Golang`通过`var`关键字定义变量, 格式有多种最常用的两种为`var variableName T`和`variableName := Value`。
+在`Golang`中, 通过`var`关键字定义变量, 格式有多种最常用的两种为`var variableName T`和`variableName := Value`（简短声明，定义变量并赋值）。
 
 变量可以定义在函数外, 当做该`package`下的全局变量, 也可以定义在函数内当, 做该函数内的局部变量。
 
@@ -90,26 +90,27 @@ var (
 )
 
 func main() {
-	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误
-	// 如下 var a int 定义了一个 int 类型的局部变量 a, 局部变量：函数内声明的变量，作用域只在函数体内。
+	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误。
+  
+  // 如下 var a int 定义了一个 int 类型的局部变量 a (局部变量：函数内声明的变量，作用域只在函数体内)
 	// 这意味着 a 只能在 main 函数内使用（函数的参数和返回值也是局部变量）
 	var a int         // 整型 uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
-	var b float32     // float64
+	var b float32     // 浮点型 float64
 	var c bool        // 布尔型
 	var d string      // 字符串
 	var e byte        // 等同于 uint8
 	var f rune        // 等同于 int32,表示一个 Unicode 码点
-	var g interface{} // 接口型
+	var g interface{} // 接口型 类似于java中的Object 可以存储任意类型的值
 
-	// 多变量声明
+	// 多变量声明 通过 , 隔开
 	var h, i string
 
-	// 没有明确初始值的变量声明会被赋予它们的 零值
-	// 零值是:
-	//    数值类型为 0
-	//    布尔类型为 false
-	//    字符串为 ""（空字符串）
-	// 	  接口为 nil
+	// 没有明确初始值的变量声明编译时会被赋予 零值
+	// 不同类型的零值:
+	//    数值类型为   0
+	//    布尔类型为   false
+	//    字符串类型为 ""（空字符串）
+	// 	  接口类型为   nil
 
 	// 打印对应零值
 	fmt.Println("int zero value: ", a)
@@ -128,9 +129,9 @@ func main() {
 
 ## 变量赋值
 
-`Golang`中通过 `=` 对变量进行赋值, `=` 可以在变量初始化时赋值也可以在变量定义后赋值。可以通过上文提到的简洁赋值 `:=`, `:=` 表示定义变量并赋值, 可以替代`Var`。
+在`Golang`中通过 `=` 对变量进行赋值, `=` 可以在变量初始化时赋值也可以在变量定义后赋值。还可以通过上文提到的简洁赋值 `:=`, `:=` 表示定义变量并赋值, 可以**替代**`Var`。
 
-需要注意的是，如果您在定义变量时不指定类型，Go 会自动推断其类型, 如下`var b = 2`。
+需要注意的是，如果您在定义变量时不指定类型，`Go`编译器会**自动推断**其类型, 如下`var b = 2`会自动推导`b`为`int`型。
 
 ```go
 package main
@@ -140,19 +141,19 @@ import (
 	"reflect"
 )
 
-// var 语句可以声明全局变量并赋值
+// var 语句声明全局变量并赋值
 var aa int64 = 3
 
 func main() {
-	// 声明变量并赋初始值
+	// 声明局部变量并赋初始值
 	var a int = 1
-	// 如果初始化值已存在，则可以省略类型，go编辑器会自动推导类型
-	var b = 2
-	var c = 3.2
-	var d = "hello"
 
-	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明
-	// 但 := 结构不能在函数外使用
+	// 如果初始化值已存在，则可以省略类型，Go编译器会自动推导类型
+	var b = 2       // 自动推导为int型
+	var c = 3.2     // 自动推导为float64型
+	var d = "hello" // 自动推导为string型
+
+	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明, 但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
 	e := true
 
 	var f byte = 'a'
@@ -160,6 +161,7 @@ func main() {
 
 	var h interface{} = "golang"
 	var i interface{} = true
+	//var j,k = 1,"Golang Tutrial" // 多变量声明并赋值
 
 	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
 	fmt.Printf("aa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
@@ -171,14 +173,19 @@ func main() {
 	fmt.Printf("g value:%c  g type:%s\n", g, reflect.TypeOf(g))
 	fmt.Printf("h value:%s  h type:%s\n", h, reflect.TypeOf(h))
 	fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
+
+	// 定义字符串变量并初始化为 Golang Tutorial
+	str := "Golang Tutorial"
+	strLength := len(str) // len() 函数可以获取字符串的长度
+	fmt.Printf("str value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(i))
 }
 ```
 
 ## 类型转换
 
-`Golang`中可以将相近类型的数据进行强转, 格式为`variableName2 := T(variableName1)`。 需要注意的是，不是所有类型之间都可以进行转换。例如，您不能将一个字符串转换为一个整数，除非该字符串表示一个整数。
+在`Golang`中可以将**相近类型的数据进行强转**, 格式为`variableName2 := T(variableName1)`。 需要注意的是，**不是所有类型之间都可以进行转换**。例如，您不能将一个字符串转换为一个整数或浮点型等。
 
-当进行类型转换时，必须确保类型转换是安全的，如果转换失败，则会引发一个运行时错误。另外，由于类型转换可能导致精度损失或溢出，因此在进行类型转换时应特别小心。
+当进行类型转换时，必须**确保类型转换是安全的**，如果转换失败，则会引发一个**运行时错误**导致程序崩溃。另外，由于类型转换可能导致精度**损失或溢出**，因此在进行类型转换时应特别小心。
 
 ```go
 package main
@@ -191,18 +198,17 @@ import (
 /*
 	类型转换
 	variableName2 := T(variableName1)
-
 */
 
 func main() {
 	var a int = 1
 
 	// 表达式 T(v) 将值 v 转换为类型 T
-	// 如下将 int 类型的值转换为 float64 类型的值
-  // float64(a) 将值 a 转换为类型 float64
+
+	// 如下将 int 类型的值转换为 float64 类型的值, float64(a) 将值 a 转换为 float64 类型并赋值给 b
 	var b float64 = float64(a)
 
-	// 简洁形式
+	// 简洁形式 uint(b) 将值 b 转换为 uint 类型并赋值给 c
 	c := uint(b)
 
 	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
@@ -211,36 +217,37 @@ func main() {
 
 	fmt.Printf("*************************************************************\n")
 
-	d := uint8(255)
-
+	d := uint8(255) // 将常量值 255 转换为 uint8 类型并赋值给 d
 	fmt.Printf("d value:%d  d type:%s\n", d, reflect.TypeOf(d))
-	// 类型转换 不能超过转换类型的范围
-	//e := uint8(256) // 编译错误, 常量256溢出了uint8
 
-	// 超过转换类型的范围溢出
+	// 注意：类型转换 不能超过转换类型的范围
+	//e := uint8(256) // 编译错误, 常量256超出了uint8最大存储限制, 不能转换
+
+	// 转换时, 超过转换的类型范围时将导致数据溢出
 	var f int = 256
-	g := uint8(f)
-	h := uint8(f + 1)
+	g := uint8(f)     // uint8最大为255, 溢出后从0开始, 所以g等于0
+	h := uint8(f + 1) // 如上可知h等于1
 
 	fmt.Printf("g value:%d  g type:%s\n", g, reflect.TypeOf(g))
 	fmt.Printf("h value:%d  h type:%s\n", h, reflect.TypeOf(h))
 
-	j := 10
-	l := 100.1
-	// 不同类型在golang中不能计算，需进行类型转换
+	j := 10    // 自动推导为int型
+	l := 100.1 // 自动推导为float64型
+
+	// 在Go中不同类型的数据不能直接计算，需进行类型转换
 	p := float64(j) * l
 
 	fmt.Printf("p value:%f  p type:%s\n", p, reflect.TypeOf(p))
 }
 ```
 
-注意：如果要在类型之间进行转换，但不确定是否能够安全地进行转换，可以使用类型断言。类型断言可以判断**一个接口类型的值是否属于指定的类型**，如果是，则返回转换后的值，否则返回一个错误。（该知识点将在`Interface`知识点讲解）
+注意：如果要在类型之间进行转换，但不确定是否能够安全地进行转换，可以使用**类型断言**。类型断言可以判断**一个接口类型(interface{})的值是否属于指定类型**。如果是，则返回转换后的值，否则返回一个错误。（该知识点将在`Interface{}`章节讲解）
 
 ## 定义常量
 
-`Golang`中通过`const`定义常量, 格式为`const constantName = value`或`const constantName T = value`, 其中 `constantName` 表示常量的名称，`T` 表示常量的类型（可以省略，此时类型会根据值自动推导），`value` 表示常量的值。
+在`Golang`中通过`const`定义常量, 格式为`const constantName = value`或`const constantName T = value`, 其中 `constantName` 表示常量的名称，`T` 表示常量的类型（可以省略，省略后类型会根据值自动推导），`value` 表示常量的值。
 
-常量可以定义在函数外当做该包下的全局常量, 也可以定义在函数内当做该函数内的局部常量。注意：常量定义的时候必须赋值，定义后值不能被修改。
+常量可以定义在函数外当做该包下的**全局常量**, 也可以定义在函数内当做该函数内的**局部常量**。注意：常量定义的时候必须赋值，**定义后值不能被修改**。
 
 ```go
 package main
@@ -251,17 +258,14 @@ import (
 	"reflect"
 )
 
-/*
-	定义常量
-	const constantName = value
-	const constantName T = value
+// const NameOfVariable [type] = value  type 可以省略让编译器推导
 
+/* 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
+  const constantName = value
+  const constantName T = value
 */
 
 // 常量定义的时候必须赋值，定义后值不能被修改
-// 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
-
-// const NameOfVariable [type] = value  type 可以省略让编译器推导
 
 // 全局常量
 const PI = 3.14
@@ -274,12 +278,11 @@ const (
 	MaxUint16 = math.MaxUint16
 )
 
-// iota 定义常量
-// iota的值是const语句块里的行索引，行索引从0开始
+// iota 定义常量, iota的值是const语句块里的行索引，行索引从0开始
 const (
-	One = iota
-	Two
-	Three
+	One   = iota // 第一行 One值等于0
+	Two          // 第二行 Two值等于1
+	Three        // 第三行 Three值等于2
 )
 
 func main() {
@@ -293,7 +296,6 @@ func main() {
 	fmt.Printf("One value:%d  One type:%s\n", One, reflect.TypeOf(One))
 	fmt.Printf("Two value:%d  Two type:%s\n", Two, reflect.TypeOf(Two))
 	fmt.Printf("Three value:%d  Three type:%s\n", Three, reflect.TypeOf(Three))
-
 }
 ```
 
@@ -301,7 +303,7 @@ func main() {
 
 ## 定义函数变量
 
-在`Golang`中，函数可以像普通变量一样被声明和使用。这意味着可以将一个函数赋值给一个变量, 也可以将一个函数作为另一个函数的参数或返回值。**(函数定义将在下一节)**
+在`Golang`中，**函数可以像普通类型一样被声明和使用**。这意味着可以将一个函数赋值给一个变量, 也可以将一个函数作为另一个函数的参数或返回值。**(函数定义将在下一章讲解)**
 
 ```go
 package main
@@ -315,25 +317,30 @@ import (
 	var variableName = func
 */
 
+// compute有名函数接收2个int型参数和一个匿名函数(该匿名函数接收2个int类型参数返回一个int类型值)
 func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10
-	return handler(x, y)
+  result := handler(x, y) // 调用匿名函数 handler
+	return result
+  //return handler(x, y) //可以直接这样调用
 }
 
 // 函数也可以当做类型,可以像其它值一样传递
 func main() {
-  // 1
+  // 第1部分 将一个匿名函数赋值给变量 add
 	var add = func(x, y int) int {
 		return x + y
 	}
-	fmt.Println("add",add(1, 2))
+  result := add(1, 2) // 调用函数变量
+	fmt.Println("add result",result)
 
-  // 2
+  // 第2部分
 	Multi := func(x, y int) int {
 		return x * y
 	}
-	fmt.Println("Multi",compute(1, 2, Multi))
+  result = compute(1, 2, Multi) // 调用函数compute并传递2个int参数和函数变量参数Multi
+	fmt.Println("Multi result",result)
 }
 /*
 func(x, y int) int {
@@ -342,7 +349,7 @@ func(x, y int) int {
 */
 ```
 
-在上面的示例中第1部分，我们在 `main` 函数中声明了一个名为 `add` 的函数变量，它接受两个整数作为参数并返回它们的和。然后调用 `add` 变量，将其作为一个普通的函数来计算 1 和 2 的和，最后将结果输出到控制台上。
+在上面的示例中第1部分，我们声明了一个名为 `add` 的函数变量，它接受两个整数作为参数并返回它们的和。然后调用 `add` 变量，将其作为一个普通的函数来计算 1 和 2 的和，最后将结果输出到控制台上。
 
 在上面的示例中第2部分，我们定义了一个函数变量`Multi`，它接受两个整数作为参数并返回它们的乘积。然后，我们定义了一个函数 `compute`，它接受两个整数，以及一个函数作为参数。`compute` 函数会调用传入的函数`handler`，并将两个整数+10后作为参数传递给它。最后，我们在 `main` 函数调用 `compute` 函数，将两个整数和 `Multi`函数作为参数传递给它，然后将结果输出到控制台上。
 
@@ -350,7 +357,13 @@ func(x, y int) int {
 
 ## 定义指针变量
 
-`Golang`中也是通过`var`定义指针变量, 格式有多种选择常用的三种`var variableName *T`, `variableName := &Value`, `variableName := new(T)`，指针变量还可以与 `nil` 进行比较，以检查它们是否指向了某个地址。如果一个指针变量为 `nil`，则表示它没有指向地址。
+在`Golang`中通过`var`定义指针变量, 格式有多种选择常用的三种
+
+- `var variableName *T` 定义一个指针变量, 默认值为`nil`。
+- `variableName := &Value` 通过简单语句定义一个指针变量并赋默认值(`&Value`代表去`Value`值的地址)。
+-  `variableName := new(T)` 通过内置函数`new()`初始化指针变量，会默认分配一个地址,并存储对应类型的0值。
+
+指针变量还可以与 `nil` 进行比较，以检查它们**是否指向了某个地址**。如果一个指针变量为 `nil`，则表示它没有指向地址。
 
 ```go
 package main
@@ -367,7 +380,7 @@ import "fmt"
 
 // Steps1 定义指针变量
 func Steps1() {
-	// 定义一个 int 的指针类型, 并且未指定任何地址
+	// 定义一个 int 类型的指针变量, 默认值为nil
 	var a *int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b *float32 // float64
 	var c *bool
@@ -389,12 +402,11 @@ func main() {
 	fmt.Println("Steps1():")
 	Steps1()
 }
-
 ```
 
 - 指针变量的赋值
 
-在 Go 中，还可以通过取地址符 `&` 来获取一个变量的内存地址，并将其赋值给指针变量
+在 `Golang` 中可以通过取地址符 `&` 来获取一个变量的内存地址，并将其赋值给指针变量
 
 ```go
 package main
@@ -409,24 +421,25 @@ func Steps2() {
 	// 定义了一个指针变量 a, 指针变量只能存储地址
 	var a *int
 
-	fmt.Println("\ta addr:", a) // 打印 a 存储的地址值
-	// 取空指针变量存储地址上的值会导致 
-  // panic: runtime error: invalid memory address or nil pointer dereference
-  
-	//fmt.Println("a value:", *a) // *a 取出 a 存储的地址上的数据并打印
+	fmt.Println("\ta value:", a) // 打印 a 存储的地址值
+	fmt.Println("\ta addr:", a)  // 打印 a 自己的地址值
 
+	// 取空指针变量存储地址上的值会导致 panic: runtime error: invalid memory address or nil pointer dereference
+	//fmt.Println("a value:", *a) // *a 代表取出 a 存储的地址, 并获取该地址上存储的值
+
+	fmt.Println("\tb value:", b)  // 打印 b 的值
+	fmt.Println("\tb addr :", &b) // 打印 b 的地址
+
+	// & 表示取 b 变量的地址并赋值给 a, 改动 a 就相当于改动 b
+	a = &b
+	fmt.Println("\ta value:", a)             // 打印 a 存储的地址值
+	fmt.Println("\ta value over value:", *a) // *a 代表取出 a 存储的地址, 并获取该地址上存储的值
+
+	*a = 2                       // *a 取出a存储的地址，并修该地址上存储的值(赋值为 2)
+	fmt.Println("\ta value:", a) // 打印 a 存储的地址值
 	fmt.Println("\tb value:", b) // 打印 b 的值
 
-	// 注释 ② & 表示取 b 变量的地址并赋值给 a, 改动 a 就相当于改动 b
-	a = &b
-	fmt.Println("\ta addr:", a)   // 打印 a 存储的地址值
-	fmt.Println("\ta value:", *a) // *a 取出 a 存储的地址上的数据并打印
-
-	*a = 2                       // *a 取出a存储的地址上并给他赋上新值 2
-	fmt.Println("\ta addr:", a)  // 打印 a 存储的地址值
-	fmt.Println("\tb addr:", &b) // 打印 a 存储的地址值
-	fmt.Println("\tb value:", b) // *a 取出 a 存储的地址上的数据 并打印
-
+  // 注释②
 	c := &a
 	// Go指针不支持算术运算, 下面这两行编译不通过。
 	// c++
@@ -442,13 +455,13 @@ func main() {
 }
 ```
 
-在上面的代码中，(注释①) 我们定义了一个整数变量 `b`，并将其初始化为 1。 (注释②) 然后，我们使用取地址符 `&` 来获取变量 `b` 的内存地址，并将其赋值给指针变量 `a`。现在，指针变量 `a` 指向了变量 `b` 的内存地址，打印a存储的地址和地址上的具体值。
+在上面的代码中，注释① 我们定义了一个整数变量 `b`，并将其初始化为 1。 注释② 我们使用取地址符 `&` 来获取变量 `b` 的内存地址，并将其赋值给指针变量 `a`。现在，指针变量 `a` 指向了变量 `b` 的内存地址，打印`a`存储的地址和地址上的具体值。
 
 需要注意的是，指针变量只能指向相同类型的变量。例如，如果我们定义了一个整数类型的指针变量，那么它只能指向整数类型的变量，而不能指向字符串、浮点数或其他类型的变量。
 
 - 通过内置函数new创建指针
 
-使用 `new` 函数创建的变量是零值，也就是说，它们的值为 0、false 或者空指针，具体取决于变量类型。
+使用 `new` 函数创建的变量是**零值**，也就是说，它们的值为 **0、false、空字符或者空指针**，具体取决于变量类型。
 
 ```go
 package main
@@ -460,8 +473,15 @@ func Steps3() {
 	// 通过内置函数 new 创建一个 int 的指针类型
 	a := new(int)
 	var b *int
-	fmt.Println("\tnew(int) value: ", a) // 有默认值
-	fmt.Println("\t*int value: ", b) // nil
+	fmt.Println("\tnew(int) value: ", a)
+	fmt.Println("\tnew(int) value over value: ", *a) // 值为 0
+	fmt.Println("\t*int value: ", b)
+
+	c := new(string)
+	var d *string
+	fmt.Println("\tnew(string) value: ", c)
+	fmt.Println("\tnew(string) value over value: ", *c) // 值为 ""
+	fmt.Println("\t*string value: ", d)
 }
 
 func main() {
@@ -481,13 +501,13 @@ import "fmt"
 
 // Steps4 判断指针是否为nil
 func Steps4() {
-	var ptr *int
+	var ptr *int // 指向nil
 	if ptr == nil {
 		fmt.Println("\tptr is nil")
 	}
 
 	var a int = 42
-	var ptr2 *int = &a
+	var ptr2 *int = &a // 指向a的地址内存空间
 	if ptr2 != nil {
 		fmt.Println("\tptr2 is not nil")
 	}
@@ -501,11 +521,11 @@ func main() {
 
 在上面的代码中，我们首先定义了一个指针变量 `ptr`，并检查它是否为 `nil`。由于它没有指向任何变量，因此应该输出 "ptr is nil"。然后，我们定义了一个整数变量 `a`，并使用 `&a` 获取它的内存地址，并将其赋值给指针变量 `ptr2`。由于 `ptr2` 指向了变量 `a`，因此应该输出 "ptr2 is not nil"。
 
-需要注意的是，指针变量可能会产生空指针异常。如果我们在访问指针变量所指向的变量之前没有检查指针变量是否为 `nil`，则可能会出现空指针异常，导致程序崩溃。因此，在使用指针变量之前，应该先检查它是否为 `nil`，以避免出现空指针异常。
+需要注意的是，指针变量可能会产生**空指针异常**。如果我们在访问指针变量所指向的变量之前没有检查指针变量是否为 `nil`，则可能会**出现空指针异常，导致程序崩溃**。因此，在使用指针变量之前，应该先检查它是否为 `nil`，以避免出现空指针异常。
 
 ## 占位符
 
-`Golang`中常用占位符为`%d,%f,%s,%T,%+v`
+`Golang`中常用占位符为`%d、%f、%s、%T、%+v`
 
 ```go
 package main
@@ -597,8 +617,8 @@ func main() {
 
 ## 运算符
 
-Go支持五个基本二元算术运算符：+、-、*、/、%
-Go支持六种位运算符：&、|、^、&^、<<、>>
+Go支持五个基本二元算术运算符：`+、-、*、/、%`
+Go支持六种位运算符：`&、|、^、&^、<<、>>`
 
 ## 思考题
 1. 定义一个值为 1024 的`int`变量`a`, 再定义一个值为 0.1 的`float64`的变量`b`,将这两个变量加减乘除并打印结果。

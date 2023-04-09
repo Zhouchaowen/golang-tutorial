@@ -21,7 +21,7 @@ func print() {
 	fmt.Println("hello world")
 }
 
-// 定义一个 add 函数, 它接受两个 int 类型的参数,返回 一个 int 类型的值 （参数的声明请看下一章）
+// 定义一个 add 函数, 它接受两个 int 类型的参数,返回 一个 int 类型的值
 func add(x int, y int) int {
 	return x + y
 }

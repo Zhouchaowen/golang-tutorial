@@ -6,23 +6,20 @@ import (
 	"reflect"
 )
 
-/**
-1.声明局部常量
-2.声明全局变量
-3.iota赋值
+/*
+	1.声明局部常量
+	2.声明全局变量
+	3.iota赋值
 */
 
-/*
-	定义常量
-	const constantName = value
-	const constantName T = value
+// const NameOfVariable [type] = value  type 可以省略让编译器推导
 
+/* 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
+const constantName = value
+const constantName T = value
 */
 
 // 常量定义的时候必须赋值，定义后值不能被修改
-// 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
-
-// const NameOfVariable [type] = value  type 可以省略让编译器推导
 
 // 全局常量
 const PI = 3.14
@@ -35,12 +32,11 @@ const (
 	MaxUint16 = math.MaxUint16
 )
 
-// iota 定义常量
-// iota的值是const语句块里的行索引，行索引从0开始
+// iota 定义常量, iota的值是const语句块里的行索引，行索引从0开始
 const (
-	One = iota
-	Two
-	Three
+	One   = iota // 第一行 One值等于0
+	Two          // 第二行 Two值等于1
+	Three        // 第三行 Three值等于2
 )
 
 func main() {
@@ -54,5 +50,4 @@ func main() {
 	fmt.Printf("One value:%d  One type:%s\n", One, reflect.TypeOf(One))
 	fmt.Printf("Two value:%d  Two type:%s\n", Two, reflect.TypeOf(Two))
 	fmt.Printf("Three value:%d  Three type:%s\n", Three, reflect.TypeOf(Three))
-
 }
