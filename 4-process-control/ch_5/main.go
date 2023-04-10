@@ -17,6 +17,6 @@ func main() {
 
 	a := 10
 	b := 0
-	_ = a / b
+	_ = a / b // 发生 panic
 	fmt.Println("return")
 }

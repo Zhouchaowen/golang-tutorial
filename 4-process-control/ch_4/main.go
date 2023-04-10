@@ -32,7 +32,7 @@ func Steps3() {
 	fmt.Println("\tbegin")
 	x := 2
 	defer func() {
-		x = x * x
+		x = x * x               // 引用外部的x,将以外部函数返回时最新值计算
 		fmt.Println("\tx =", x) // x = 9
 	}()
 	fmt.Println("\tend")
@@ -43,7 +43,7 @@ func Steps4() {
 	fmt.Println("\tbegin")
 	x := 2
 	defer func(x int) {
-		x = x * x
+		x = x * x               // 引用参数中的x,将以外部函数返回时最新值计算
 		fmt.Println("\tx =", x) // x = 4
 	}(x)
 	fmt.Println("\tend")
@@ -61,7 +61,7 @@ func main() {
 	Steps4()
 }
 
-/*
+/*   压栈和弹栈
      -----   -----
     |     | |     |
     |   | V | |   |

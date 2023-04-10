@@ -29,9 +29,9 @@ import "fmt"
 func Steps1() {
 	sum := 0
 	// for 循环
-	// i := 0 初始化语句：在第一次迭代前执行
-	// i < 10 条件表达式：在每次迭代前求值
-	// i++    后置语句：在每次迭代的结尾执行
+  // initialization i := 0 初始化语句：在第一次迭代前执行
+	// condition      i < 10 条件表达式：在每次迭代前求值
+	// post           i++    后置语句：在每次迭代的结尾执行
 	for i := 0; i < 10; i++ {
 		sum += i
 	}
@@ -69,7 +69,7 @@ func main() {
 
 - **Range**
 
-通过`Range`关键字来遍历字符串,数组,切片或映射
+`Golang`中`Range`也可以实现循环语义, 通过`Range`关键字可以遍历字符串, 数组, 切片或映射。
 
 ```go
 package main
@@ -90,7 +90,7 @@ func main() {
 }
 ```
 
-`Range`和`for`遍历的区别
+`Range`和`For`遍历的区别
 
 ```go
 package main
@@ -158,7 +158,7 @@ Next: // 跳转标签声明
 	fmt.Printf("\ti:%d\n", i)
 	i++
 	if i < 5 {
-		goto Next // 跳转
+		goto Next // 跳转到Next标签
 	}
 }
 
@@ -168,7 +168,7 @@ func main() {
 }
 ```
 
- `goto` 语句用于无条件跳转到程序的另一个位置。其中，`Next` 是一个标识符，用于指定要跳转到的位置。注意，`Next` 必须在当前函数内部定义。
+ `Goto` 语句用于无条件跳转到程序的另一个位置。其中`Next` 是一个标识符，用于指定要跳转到的位置。注意，`Next` **必须在当前函数内部定义**。
 
 ## If判断
 
@@ -202,9 +202,9 @@ func main() {
 
 ## Switch选择
 
-`Golang`中可以通过`switch-case`来实现分支选择, 每一个`case`分支都是唯一的，从上往下逐一判断，直到匹配为止，如果某些`case`分支条件重复了，编译会报错。
+在`Golang`中可以通过`switch-case`来实现分支选择, 每一个`case`分支都是**唯一**的，从上往下逐一判断，直到匹配为止，如果某些`case`分支条件重复了，编译会报错。
 
-每个`case`分支最后自带`break`效果，匹配成功就不会执行其它`case`; 如果所有分支都没有匹配成功并且又定义了`default`分支, 那最终会走`default`分支。
+每个`case`分支最后**自带`break`效果**，匹配成功就不会执行其它`case`; 如果所有分支都没有匹配成功并且又定义了`default`分支, 那最终会走`default`分支。
 
 `case` 后面的值可以是任何常量表达式，例如字符串、数字、布尔值等等。
 
@@ -226,7 +226,7 @@ func Steps1() {
 	switch flag { // flag 待判断条件
 	case 1: // 条件 flag 是否等于 1。是：执行该case下的流程，否：选择其它满足条件的 case
 		fmt.Println("\tcase:", flag)
-		// Golang 中每个 case 后面不需要 break 语句。当然 return 是可选的
+		// Golang 中每个 case 后面不需要 break 语句。但 return 是可选的
 	case 2:
 		fmt.Println("\tcase:", flag)
 	case 3, 4: // case 可以设置多个条件。只要 flag 等于3或4都能执行当前case流程
@@ -323,7 +323,7 @@ func main() {
 
 ## Defer
 
-` Golang`中通过`defer`来实现延时调用, 用于指定一个函数调用在函数返回之前执行。常用来做一些收尾工作: **关闭连接,清理资源**
+在` Golang`中通过`defer`来实现**延时调用**, 用于指定一个函数调用在函数返回之前执行。常用来做一些收尾工作: **关闭连接, 清理资源** (可以把`defer`看成是一个**压栈**的操作)
 
 ```go
 package main
@@ -350,7 +350,7 @@ func main() {
 
 在上面的示例中，`defer` 语句都在函数中定义，它们会在函数返回之前执行。`defer fmt.Printf(" world\n")`，会在`func Steps1()`返回前执行。
 
-通过defer延时打印数字：
+通过`defer`延时打印数字：
 
 ```go
 package main
@@ -372,7 +372,7 @@ func main() {
 	Steps2()
 }
 
-/*
+/* 压栈和弹栈
    ----- -----
   |   | |    |
   | | V | |  |
@@ -396,7 +396,7 @@ end
 */
 ```
 
-`defer` 语句中**引用函数中的变量**，会在函数调用是根据最新的值计算（`Steps3`）; `defer` 语句中的**函数参数**会在 `defer` 语句定义时计算，而不是在函数调用时计算（`Steps4`）。
+如下代码`defer` 语句中**引用函数中的变量**，会在函数调用是根据最新的值计算（`Steps3`）; `defer` 语句中的**函数参数**会在 `defer` 语句定义时计算，而不是在函数调用时计算（`Steps4`）。
 
 ```go
 package main
@@ -407,7 +407,7 @@ func Steps3() {
 	fmt.Println("\tbegin")
 	x := 2
 	defer func() {
-		x = x * x
+		x = x * x               // 引用外部的x,将以外部函数返回时最新值计算
 		fmt.Println("\tx =", x) // x = 9
 	}()
 	fmt.Println("\tend")
@@ -418,7 +418,7 @@ func Steps4() {
 	fmt.Println("\tbegin")
 	x := 2
 	defer func(x int) {
-		x = x * x
+		x = x * x               // 引用参数中的x,将以外部函数返回时最新值计算
 		fmt.Println("\tx =", x) // x = 4
 	}(x)
 	fmt.Println("\tend")
@@ -433,11 +433,33 @@ func main() {
 }
 ```
 
+需要注意只有`return`退出或者`panic`导致的程序异常退出才会调用`defer`。如果使用`os.Exit`退出，程序会立即停止不会调用`defer`函数。
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+// 注意：如果函数因为执行了os.Exit而退出
+// 而不是正常return退出或者panic退出，那程序会立即停止，被defer的函数调用不会执行。
+func Steps1() {
+	fmt.Println("Steps1")
+}
+
+func main() {
+	fmt.Println("start")
+	defer Steps1()
+	fmt.Println("stop")
+	os.Exit(0)
+}
+```
+
 ## recover
 
-`recover`是 `Go `语言中用于从 `panic` 恢复的内置函数。
-
-当函数中发生 `panic` 时，程序会停止执行当前函数的代码，但是会继续执行当前函数的 `defer` 语句，直到所有的 `defer` 语句都执行完毕。如果其中某个 `defer` 语句调用了 `recover`，则程序会停止向上传递 `panic`，并在调用 `recover` 的地方继续执行代码，而不是终止程序的运行。
+`recover`是 `Go `语言中用于从 `panic` 恢复的内置函数。当函数中发生 `panic` 时，程序会**停止执行当前函数**的代码，但是**会继续执行当前函数的 `defer` 语句**，直到所有的 `defer` 语句都执行完毕。如果其中某个 `defer` 语句调用了 `recover`，则程序会**停止向上传递 `panic`**，并在调用 `recover` 的地方继续执行代码，而不是终止程序的运行。
 
 ```go
 package main
@@ -455,14 +477,14 @@ func main() {
 
 	a := 10
 	b := 0
-	_ = a / b
+	_ = a / b // 发生 panic
 	fmt.Println("return")
 }
 ```
 
 在这个示例中，我们通过`a/b`，因为`b` 是 0 所以会导致程序 `panic`。但是，我们在 `defer` 语句中使用了 `recover`，当程序 `panic` 时，会执行 `defer` 语句中的匿名函数。这个匿名函数调用 `recover` 函数，如果有错误信息，则输出错误信息，并恢复程序的正常执行。
 
-需要注意的是，`recover` 函数只能在 `defer` 函数中使用，否则会引发运行时错误。此外，`recover` 函数只会在发生 `panic` 时返回错误信息，如果没有 `panic `，则会返回 `nil`。
+需要注意的是，**`recover` 函数只能在 `defer` 函数中使用**，否则会引发运行时错误。此外，**`recover` 函数只会在发生 `panic` 时返回错误信息**，如果没有 `panic `，则会返回 `nil`。
 
 ## 思考题
 

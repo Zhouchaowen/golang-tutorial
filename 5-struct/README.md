@@ -5,6 +5,7 @@
 ## 目录
 
 - 结构体定义
+- 结构体Tag
 - 定义结构体值方法
 - 定义结构体指针方法
 - 自定义类型
@@ -46,7 +47,7 @@ type Demo struct {
 }
 
 func Steps1() {
-	d := Demo{ // 创建一个 Demo 类型的结构体
+	d := Demo{ // 创建一个 Demo 类型的结构体实例
 		a: true,
 		B: 'b',
 		C: 1,
@@ -56,22 +57,28 @@ func Steps1() {
 		G: map[string]int{"GOLANG": 1},
 	}
 
-	fmt.Printf("%+v\n", d) // 打印整个结构体
+	fmt.Printf("\td value %+v\n", d)
 
-	// 结构体字段使用点号来访问
+	// 访问结构体内的成员使用点. , 格式为：结构体变量.成员
 	d.a = false // 修改a字段的值
 
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("\td value %+v\n", d)
 
-	fmt.Printf("dome.B: %c\n", d.B)
+	fmt.Printf("\tdome.B: %c\n", d.B)
 }
 
 func main() {
 	Steps1()
 }
+/* 控制台结果
+Steps1():
+        d value {a:true B:98 C:1 D:1 E:E F:[1] G:map[GOLANG:1] H:<nil>}
+        d value {a:false B:98 C:1 D:1 E:E F:[1] G:map[GOLANG:1] H:<nil>}
+        dome.B: b
+*/
 ```
 
-以上代码，我们定义了一个Demo结构体，包含了一些常见字段。在定义结构体类型之后，我们可以通过结构体字面量的方式来创建结构体变量, 并初始化一些数据。
+以上代码，我们定义了一个`Demo`结构体，包含了一些常见字段。在定义结构体类型之后，我们可以通过结构体字面量的方式来创建结构体变量, 并初始化一些数据。
 
 ```go
 d := Demo{ // 创建一个 Demo 类型的结构体
@@ -85,13 +92,13 @@ d := Demo{ // 创建一个 Demo 类型的结构体
 }
 ```
 
-在创建结构体变量之后，我们可以通过`.`运算符来修改或访问结构体的数据字段。
+在创建结构体变量之后，我们可以**通过`.`运算符来修改或访问结构体的数据字段**。
 
 ```go
 // 结构体字段使用点号来访问
 d.a = false // 修改a字段的值
 
-fmt.Printf("%+v\n", d)
+fmt.Printf("%+v\n", d) // 打印整个结构体字段和值
 
 fmt.Printf("dome.B: %c\n", d.B)
 ```
@@ -110,26 +117,119 @@ func Steps2() {
 		B string
 	}
 
-	d := Demo{ // 创建一个 Demo 类型的结构体
+	d := Demo{ // 创建一个 Demo 类型的结构体实例
 		a: 1,
 	}
 
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("\td value %+v\n", d)
 
 	// 结构体字段使用点号来访问
 	d.a = 2 // 修改a字段的值
 
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("\td value %+v\n", d)
 }
 
 func main() {
 	Steps2()
 }
+/* 控制台结果
+Steps2():
+        d value {a:1 B:}
+        d value {a:2 B:}
+*/
 ```
+
+## 结构体Tag
+
+在` Go` 语言中，可以为结构体中的字段设置 `tag`，`tag` 是结构体中的一个特殊字段，它可以用来指定某些字段的元数据信息，比如 `JSON` 序列化时的字段名、`ORM` 映射时的表名、字段类型等。`tag` 是一个字符串，通常以 `key:"value"` 的形式表示，多个 `tag` 之间使用空格分隔。
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type User struct {
+	UserName string `json:"user_name"`
+	PassWord string `json:"pass_word"`
+}
+
+func Steps3() {
+	u := User{ // 创建一个 Demo 类型的结构体
+		UserName: "golang",
+		PassWord: "tutorial",
+	}
+
+	fmt.Printf("\tu value %+v\n", u)
+
+	bytes, err := json.Marshal(u)
+	if err != nil {
+		fmt.Printf("\tjson.Marshal error %s\n", err.Error())
+	}
+	fmt.Printf("\tjson user %s", string(bytes))
+}
+
+func main() {
+	fmt.Println("Steps3():")
+	Steps3()
+}
+/* 控制台结果
+Steps3():
+        u value {UserName:golang PassWord:tutorial}
+        json user {"user_name":"golang","pass_word":"tutorial"}
+*/        
+```
+
+在上面的代码中，`User` 结构体中的 `UserName` 和 `PassWord` 字段都有 `tag`，`UserName` 字段的 `json tag`  表示在将`User` 结构体序列化为 `JSON` 格式时，使用 `user_name` 作为字段名；`PassWord` 字段的 `json tag` 表示在将 `User` 结构体序列化为 `JSON` 格式时，使用 `pass_word` 作为字段名。
+
+可以使用 `reflect` 包中的 `Type` 和 `Field` 方法来获取结构体的 tag。
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"reflect"
+)
+
+type User struct {
+	UserName string `json:"user_name"`
+	PassWord string `json:"pass_word"`
+}
+
+func Steps4() {
+	u := User{ // 创建一个 User 类型的结构体实例
+		UserName: "golang",
+		PassWord: "tutorial",
+	}
+	t := reflect.TypeOf(u) // 反射获取u的类型
+	for i := 0; i < t.NumField(); i++ { // 通过类型获取结构体字段索引
+		field := t.Field(i)
+		fmt.Printf("\tfield %d: name=%s, json=%s \n", i, field.Name, field.Tag.Get("json"))
+	}
+}
+
+func main() {
+	fmt.Println("Steps4():")
+	Steps4()
+}
+/* 控制台结果
+Steps4():
+        field 0: name=UserName, json=user_name 
+        field 1: name=PassWord, json=pass_word
+*/
+```
+
+
+
+除了用于序列化和反序列化时的字段名，tag 还可以用于其他场景，比如表单验证、ORM 映射、日志记录等等。在这些场景下，可以使用 tag 来指定不同的元数据信息，方便程序的开发和维护。
 
 ## 结构体方法
 
-除了定义数据字段之外，结构体类型还可以定义相关的方法。方法是一种与特定类型相关联的函数，可以对该类型的值进行操作。在 Go 语言中，可以通过 `func` 关键字和结构体类型的名称来定义方法，语法如下：
+除了定义数据字段之外，结构体类型还可以定义相关的方法。**方法是一种与特定类型相关联的函数**，可以对该类型的值进行操作。在 Go 语言中，可以通过 `func` 关键字和结构体类型的名称来定义方法，语法如下：
 
 ```go
 func (p StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnType {
@@ -137,7 +237,15 @@ func (p StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnTy
 }
 ```
 
-其中，`StructName` 表示当前方法属于这结构体。方法名和参数列表后面的部分与普通函数的定义类似，用于指定方法的输入和输出。
+其中`p`是定义的结构体局部变量名称(**接收者**)，`StructName` 表示当前方法属于这结构体。后面依次是方法名和参数列表，这些与普通函数的定义类似，用于指定方法的输入和输出。
+
+其实结构体方法等同于如下的`MethodName`函数 (方法只是函数的另外一种写法并且必须和类型绑定)。
+
+```go
+func MethodName(p StructName, parameter1 Type1, parameter2 Type2, ...) ReturnType {
+    // 函数的实现代码
+}
+```
 
 ### 值方法
 
@@ -148,13 +256,7 @@ import (
 	"fmt"
 )
 
-/*
-	1.定义值结构体方法
-	2.值结构体方法中调用属性值
-	3.值结构体方法改变属性值
-*/
-
-// 方法就是一类带特殊的 接收者 参数的函数
+// 方法就是一类带特殊的 接收者 参数的函数,
 // 接收者(可以是struct或自定义类型) 分为：
 //  	1.值接收者
 // 		2.指针接收者
@@ -198,7 +300,7 @@ func main() {
 
 	// 值接收者 无法通过方法改变接收者内部值
 	v.ModifyE()
-	fmt.Printf("%+v\n", v)
+	fmt.Printf("value %+v\n", v)
 
 	// 值接收者
 	v.printAddr1()
@@ -209,20 +311,24 @@ func main() {
 
 在上面的代码中， `print(),printB(),ModifyE(),printAddr1 (),printAddr2()` 方法绑定到 `Demo` 结构体上，并且只能通过`Demo`结构体的实例才能调用。
 
-每个方法中都使用 `d` 作为接收者名称 (当然接收者d可以任意取名)，表示当 `Demo` 类型的实例调用该方法时，实例本身的数据会被赋值给接收者 `d` ，从而可以通过接收者`d`在结构体方法中访问该实例的数据字段,  例如：
+每个方法中都使用 `d` 作为接收者名称 (当然接收者`d`可以任意取名)，表示当 `Demo` 类型的实例调用该方法时，实例本身的数据会被赋值给接收者 `d` ，从而可以通过接收者`d`在结构体方法中访问该实例的数据字段,  例如：
 
 ```go
+func (d Demo) printB() {
+	fmt.Printf("%+v\n", d.B)
+}
+
 v := Demo{true, 'G', 1, 1.0, "Golang Tutorial", []int{1, 2}, map[string]int{"Golang": 0, "Tutorial": 1}}
 v.printB() // 打印 G
 ```
 
-`v`是`Demo`结构体的一个实例，当调用`v.printB()`结构体方法时，`v`实例中的数据会拷贝一份给`d`, 这样在`printB()`中调用`d.B`时就可以获取到`G`这个数据了。
+`v`是`Demo`结构体的一个实例，当调用`v.printB()`结构体方法时，`v`实例中的数据会拷贝一份给结构体方法`printB()`中的接收者`d`, 这样在`printB()`中调用`d.B`时就可以获取到`G`这个字符了。
 
-需要注意的是，上面定义的这些方法都是值方法。`v`实例赋值到接收者`d`也是通过拷贝一份数据的方式，所以在方法中修改接收者`d`的数据并不会影响到`v`实例的数据。
+需要注意的是，上面定义的这些方法都是值方法。**`v`实例赋值给接收者`d`是通过拷贝一份数据的方式**，所以在方法中**修改接收者`d`的数据并不会影响到`v`实例的数据**。
 
 ```go
 v.ModifyE()
-fmt.Printf("%+v\n", v)
+fmt.Printf("value %+v\n", v)
 
 // 执行结果
 {a:true B:71 C:1 D:1 E:Golang Tutorial F:[1 2] G:map[Golang:0 Tutorial:1]}
@@ -232,18 +338,25 @@ fmt.Printf("%+v\n", v)
 
 ### 指针方法
 
+指针方法和值方法使用方式基本一致，只是在定义接收者的时候需要定义为指针。
+
+```go
+func (p *StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnType {
+    // 方法的实现代码
+}
+
+// 等同于如上代码
+func MethodName(p *StructName, parameter1 Type1, parameter2 Type2, ...) ReturnType {
+    // 函数的实现代码
+}
+```
+
 ```go
 package main
 
 import (
 	"fmt"
 )
-
-/*
-	1.定义指针结构体方法
-	2.指针结构体方法中调用属性值
-	3.指针结构体方法改变属性值
-*/
 
 // 使用指针接收者的原因：
 // 		首先，方法能够修改其接收者指向的值。
@@ -261,6 +374,7 @@ type Demo struct {
 	G map[string]int
 }
 
+// d *Demo 指针接收者
 func (d *Demo) print() {
 	fmt.Printf("%+v\n", d)
 }
@@ -299,7 +413,7 @@ func main() {
 
 在上面的代码中， `print(),printB(),ModifyE(),printAddr1 (),printAddr2()` 这些方法都是定义的指针方法，与值方法不同的是定义方法时结构体使用指针类型：`func (p *StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnType {}`
 
-并且 `v`实例赋值到接收者`d`是通过传递指针的方式，所以通过接收者`d`修改数据会影响`v`实例的数据。
+并且 **`v`实例赋值给接收者`d`是通过传递指针的方式**，所以通过**接收者`d`修改数据会影响`v`实例的数据**。
 
 ```go
 v.ModifyE()
