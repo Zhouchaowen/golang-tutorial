@@ -1,5 +1,6 @@
-# golang-tutorial
-Golang入门教程
+# Golang快速上手教程
+
+
 
 ## 食用指南
 
@@ -7,11 +8,15 @@ Golang入门教程
 - 本教程中许多编程概念默认读者已经了解或知道, 编程 0 基础读者不建议食用。
 - 本教程重点讲解在实战中`golang`常用的语法和特性，系统全面学习`golang`需要读者持续学习其余教程。
 
-## 安装Golang
+## 安装
 
+- 安装golang环境
 
+>  [windows 10 安装go环境](https://juejin.cn/post/7082380901329403918)
 
+- 获取项目
 
+> git clone git@github.com:Zhouchaowen/golang-tutorial.git
 
 ## 目录
 
@@ -48,70 +53,5 @@ print   println real    recover string true    uint      uint8      uintptr
 
 ## 参考
 
-https://gobyexample-cn.github.io/
+[参考文件](https://github.com/Zhouchaowen/golang-tutorial/REFERENCE.md)
 
-https://go-zh.org/doc/effective_go.html
-
-https://www.bogotobogo.com/GoLang/GoLang_Web_Application_7.php
-
-https://www.practical-go-lessons.com/chap-20-arrays
-
-https://github.com/hyper0x/Golang_Puzzlers
-
-https://github.com/Tinywan/golang-tutorial
-
-https://github.com/callicoder/golang-tutorials
-
-https://github.com/novalagung/dasarpemrogramangolang
-
-https://github.com/gobyexample-cn/gobyexample
-
-https://github.com/NanXiao/golang-101-hacks
-
-https://github.com/jincheng9/go-tutorial
-
-https://github.com/GoesToEleven/GolangTraining
-
-https://github.com/xinliangnote/Go
-
-https://github.com/ardanlabs/gotraining
-
-https://github.com/cyent/golang/
-
-https://github.com/FeiChaiCom/go-netdisk
-
-https://github.com/xiaogao67/gin-cloud-storage
-
-https://github.com/yddeng/filecloud
-
-https://github.com/saltbo/zpan
-
-https://www.yuque.com/qyuhen/go/gfe2k0
-
-https://learnku.com/articles/58970
-
-https://github.com/rocboss/paopao-ce
-
-https://github.com/weirubo/intermediate_go
-
-https://github.com/mlogclub/bbs-go
-
-https://github.com/hyper0x/Golang_Puzzlers
-
-https://github.com/duanbiaowu/go-examples-for-beginners
-
-https://github.com/xusenlin/forest-blog
-
-https://github.com/go-sonic/sonic
-
-https://github.com/congz666/cmall-vue
-
-https://github.com/mnt-ltd/moredoc
-
-https://github.com/gnimli/go-web-mini
-
-https://github.com/Junvary/gin-quasar-admin
-
-https://github.com/bodhiye/paste
-
-https://github.com/hhandhuan/ku-bbs
