@@ -65,3 +65,5 @@ https://github.com/Junvary/gin-quasar-admin
 https://github.com/bodhiye/paste
 
 https://github.com/hhandhuan/ku-bbs
+
+https://github.com/cloudreve/Cloudreve

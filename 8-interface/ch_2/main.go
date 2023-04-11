@@ -38,6 +38,7 @@ func (d Dog) GaGaga() {
 func main() {
 	var d Duck
 
+	// 可以将DonaldDuck具体类型赋值给接口Duck类型，因为实现了接口类型的方法集合
 	d = DonaldDuck("🦆 唐老鸭")
 	d.GaGaga()
 

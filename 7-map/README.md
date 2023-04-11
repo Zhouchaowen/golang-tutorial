@@ -1,6 +1,6 @@
 # Map
 
-map是Go语言中的一种内置数据结构，也称为哈希表或字典。它是一种无序的键值对集合，其中每个键唯一对应一个值，通过键来快速查找对应的值。在map中，所有的键都必须是同一类型，所有的值也必须是同一类型。
+`map`是`Go`语言中的一种内置数据结构，也称为**哈希表或字典**。它是一种**无序的键值对集合**，其中每个键唯一对应一个值，通过键来快速查找对应的值。在`map`中，所有的键都必须是同一类型，所有的值也必须是同一类型。
 
 ## 目录
 
@@ -8,21 +8,22 @@ map是Go语言中的一种内置数据结构，也称为哈希表或字典。它
 
 ## 定义 Map与赋值
 
-map的声明方式为：
+`map`的声明方式：
 
 ```go
 var mapName map[keyType]valueType
 ```
 
-其中，`keyType`表示键的类型，`valueType`表示值的类型。需要注意的是，这里声明的map变量并没有被初始化，如果直接使用将会引发运行时错误。正确的初始化方式是使用`make`函数：
+其中`mapName`表示变量名称，`keyType`表示键的类型，`valueType`表示值的类型。需要注意的是，这里只是声明了`map`变量并没有初始化，如果直接使用将会引发运行时错误。正确的初始化方式是使用`make`函数：
 
 ```go
-mapName := make(map[keyType]valueType)
+mapName := make(map[keyType]valueType,[size]) // size 可选
 ```
 
-或者直接初始化：
+或者直接定义或初始化默认值：
 
 ```go
+mapName := map[keyType]valueType{}
 mapName := map[keyType]valueType{
     key1: value1,
     key2: value2,
@@ -61,7 +62,7 @@ func Steps1() {
 	fmt.Printf("\tmpIntInt:%+v len:%d\n",
 		mpIntInt,
 		len(mpIntInt)) // len 可以获取当前 map 存储的映射数量
-	// mpIntInt[1] =1 // nil 映射不能添加键,添加报错 panic: assignment to entry in nil map
+	// mpIntInt[1] =1 // 未初始化的映射不能添加键,添加报错 panic: assignment to entry in nil map
 
 	// Steps 1-2: 定义一个 int->string 的map并初始化
 	mpIntString := map[int]string{1: "Golang", 2: "Tutorial"}
@@ -96,13 +97,13 @@ func main() {
 }
 ```
 
-map还有一些其他的特性：
+`map`还有一些其他的函数：
 
 - `delete(mapName, key)`：删除指定键的键值对。
 - `len(mapName)`：返回map中键值对的数量。
 - `for key, value := range mapName`：遍历map中的键值对。
 
-需要注意的是，由于map是无序的，所以遍历时不能保证顺序。
+需要注意的是，由于`map`是无序的，所以遍历时不能保证顺序。
 
 具体示例：
 
@@ -204,11 +205,9 @@ func (c class)PrintAllStudent()  {
 func .....
 ```
 
-
-
 ## 参考
-https://www.cnblogs.com/qcrao-2018/p/10903807.html#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%89%A9%E5%AE%B9
+https://www.cnblogs.com/qcrao-2018/p/10903807.html
 
 https://jonny.website/posts/go-map-bmap/
 
-https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/#332-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84
+https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap

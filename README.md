@@ -1,22 +1,22 @@
-# Golang快速上手教程
+# Go快速上手
 
 
 
 ## 食用指南
 
-- 本教程适合想快速了解和上手`golang`的读者, 尤为适合学习过其它语言后想学习`golang`的读者。
+- 本教程适合想快速了解和上手`Golang`的读者, 尤为适合学习过其它语言后想学习`Golang`的读者。
 - 本教程中许多编程概念默认读者已经了解或知道, 编程 0 基础读者不建议食用。
-- 本教程重点讲解在实战中`golang`常用的语法和特性，系统全面学习`golang`需要读者持续学习其余教程。
+- 本教程重点讲解在实战中`Golang`常用的语法和特性，系统全面学习`Golang`需要读者持续学习其余教程。
 
 ## 安装
 
-- 安装golang环境
-
->  [windows 10 安装go环境](https://juejin.cn/post/7082380901329403918)
+- [windows10 安装Go环境](https://juejin.cn/post/7082380901329403918)
 
 - 获取项目
 
-> git clone git@github.com:Zhouchaowen/golang-tutorial.git
+```bash
+git clone git@github.com:Zhouchaowen/golang-tutorial.git
+```
 
 ## 目录
 
@@ -31,6 +31,7 @@
 - [Goroutine](https://github.com/Zhouchaowen/golang-tutorial/tree/master/9-goroutine)
 - [Channel](https://github.com/Zhouchaowen/golang-tutorial/tree/master/10-channel)
 - [Test](https://github.com/Zhouchaowen/golang-tutorial/tree/master/11-channel)
+- [Library](https://github.com/Zhouchaowen/golang-tutorial/tree/master/12-library)
 
 ## 关键字
 
@@ -53,5 +54,4 @@ print   println real    recover string true    uint      uint8      uintptr
 
 ## 参考
 
-[参考文件](https://github.com/Zhouchaowen/golang-tutorial/REFERENCE.md)
-
+[参考文件](https://github.com/Zhouchaowen/golang-tutorial/blob/master/REFERENCE.md)

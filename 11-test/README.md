@@ -79,6 +79,19 @@ go test -v .
 go test -run="Add$" -v 
 ```
 
+执行`go test -run="Add$" -v`后得到结果
+
+```bash
+$ go test -run="Add$" -v
+=== RUN   TestAdd
+--- PASS: TestAdd (0.00s)
+PASS
+ok      golang-tutorial/11-test/ch_1    0.009s
+```
+
+- === RUN 表示运行的测试函数
+- --- PASS 表示测试结果为通过
+
 ### 子测试
 
 除了基本的测试外，Go 语言的测试框架还提供了一些高级功能，以帮助更好地组织和管理测试代码。
@@ -105,7 +118,19 @@ func TestAdd(t *testing.T) {
 }
 ```
 
-如上就是子测试的相关代码，他可以分别运行每个`t.Run`,也可以通过`go test -run="TestAdd"`全部运行。
+如上就是子测试的相关代码，他可以分别运行每个`t.Run`,也可以通过`go test -run="TestAdd"`全部运行, 结果如下：
+
+```bash
+$ go test -run="TestAdd$" -v
+=== RUN   TestAdd
+=== RUN   TestAdd/test_case_1
+=== RUN   TestAdd/test_case_2
+--- PASS: TestAdd (0.00s)
+    --- PASS: TestAdd/test_case_1 (0.00s) # 子测试 1 通过
+    --- PASS: TestAdd/test_case_2 (0.00s) # 子测试 2 通过
+PASS
+ok      golang-tutorial/11-test/ch_1    0.008s
+```
 
 ### 表驱动测试
 
@@ -149,7 +174,20 @@ func TestAdd(t *testing.T) {
 }
 ```
 
-如上代码`tests`是一个结构体数组,存储测试用的参数和预期结果。通过 `for` 循环遍历数组中的每一行并运行测试。
+如上代码`tests`是一个结构体数组,存储测试用的参数和预期结果。通过 `for` 循环遍历数组中的每一行并运行测试。测试结果如下：
+
+```bash
+$ go test -run="TestAdd$" -v
+=== RUN   TestAdd
+=== RUN   TestAdd/1+2
+=== RUN   TestAdd/10+10
+--- PASS: TestAdd (0.00s)
+    --- PASS: TestAdd/1+2 (0.00s)
+    --- PASS: TestAdd/10+10 (0.00s)
+PASS
+ok      golang-tutorial/11-test/ch_1    0.009s
+
+```
 
 ### 测试覆盖率
 
@@ -235,13 +273,23 @@ go test -bench="Add$" -benchmem
 
 其中 `Add$` 表示运行当前目录下文件中函数结尾为`Add`的基准测试函数。执行命令后，`Golang` 会自动运行多次测试并输出每次测试的结果，包括测试次数、每次测试的时间、平均执行时间、内存分配等信息。例如：
 
-```
+```bash
 cpu: Intel(R) Core(TM) i5-5250U CPU @ 1.60GHz
 BenchmarkAdd-4          1000000000               0.3756 ns/op          0 B/op          0 allocs/op
 PASS
 ```
 
-该结果表示，在执行 1000000000 次测试中，每次测试平均需要 0.3756 纳秒，可以用来评估 `add` 函数的性能。
+该结果表示，在执行 1000000000 次测试中，每次测试平均需要 0.3756 纳秒 (可以用来评估 `add` 函数的性能) 如下是每项的含义：
+
+- BenchmarkAdd-4：被测试的基准测试函数的名称。
+
+- 1000000000：每个基准测试函数运行的迭代次数。
+
+- 0.3756 ns/op：每个操作的平均纳秒数。
+
+- 0 B/op：每个操作分配的平均字节数。
+
+- 0 allocs/op：每个操作分配的平均内存数。
 
 总结一些常用的基准测试命令：
 
@@ -255,7 +303,7 @@ PASS
 
 ## pprof
 
-上一小节提到，可以通过-memprofile和-cpuprofile生成内存分配文件和cpu分析文件。我们可以使用 Go 自带的 `pprof` 工具来查看 `mem.out` 和 `cpu.out` 文件中的分析结果。
+上一小节提到，可以通过`-memprofile`和`-cpuprofile`生成内存分配文件和`cpu`分析文件。我们可以使用 `Go` 自带的 `pprof` 工具来查看 `mem.out` 和 `cpu.out` 文件中的分析结果。
 
 具体的步骤如下：
 

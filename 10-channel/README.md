@@ -1,20 +1,26 @@
 # Channel
 
-Channel 是 Go 语言中一种用于在 Goroutine 之间传递数据的机制。Channel 通过通信实现共享内存，可以安全地传递数据，避免了多个 Goroutine 访问共享内存时出现的竞争和死锁问题。
+`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现共享内存，可以安全地传递数据，避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
 
-Channel 可以是有缓冲或无缓冲的。无缓冲的 Channel，也称为同步 Channel，发送操作和接收操作必须同时准备就绪，否则会被阻塞。有缓冲的 Channel，也称为异步 Channel，发送操作会在 Channel 缓冲区未满的情况下立即返回，接收操作也会在 Channel 缓冲区不为空的情况下立即返回，否则会被阻塞。
+`Channel` 可以是有缓冲或无缓冲的。**无缓冲的 `Channel`，**也称为同步 `Channel`，**发送操作和接收操作必须同时准备就绪**，否则会被阻塞。**有缓冲的 `Channel`，**也称为异步 `Channel`，**发送操作会在 `Channel` 缓冲区未满的情况下立即返回**，接收操作也会在 `Channel` 缓冲区不为空的情况下立即返回，否则会被阻塞。
 
 ## 目录
 
-- channel 定义
-- 无缓冲channel 
+- `Channel` 定义
+- 无缓冲`Channel`
 
-- 非缓冲和缓冲 channel 的对比
-- 关闭 channel 
-- 遍历 channel
-- channel+select 控制 goroutine 退出
+- 非缓冲和缓冲`Channel` 的对比
+- 关闭 `Channel`
+- 遍历 `Channel`
+- `Channel`+`select` 控制 `Goroutine` 退出
 
 ## 定义Channel
+
+```go
+c := make(chan T)
+c := make(chan T,size)
+```
+
 ```go
 package main
 
@@ -48,21 +54,21 @@ func main() {
 
 首先通过 `make` 函数创建了一个无缓冲的 `int` 类型的 `Channel c`，即：`c := make(chan int)`。
 
-然后通过 `go` 关键字定义了一个匿名的 `Goroutine`，用于从 `Channel c` 中接收数据。匿名 `Goroutine` 中，使用 `<-` 语法从 `Channel c` 中接收值，并将其赋值给变量 `num`。接收完值后，使用 `fmt.Printf` 打印出接收到的值。
+然后通过 `go` 关键字定义了一个匿名的 `Goroutine`，用于从 `Channel c` 中接收数据。匿名函数 `Goroutine` 中，使用 `<-` 语法从 `Channel c` 中接收值，并将其赋值给变量 `num`。接收完值后，使用 `fmt.Printf` 打印出接收到的值。
 
-接着，在 `main`函数 中，使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中，即：`c <- 1`。
+接着，在 `main`函数 中，使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中，即`c <- 1`。
 
-最后，为了保证 `Goroutine` 有足够的时间去接收 `Channel` 中的值，通过 `<-time.After(time.Second * 3)` 等待 3 秒钟之后，打印出 "return"。如果将 `<-time.After(time.Second * 3)` 去掉，那么程序可能在打印 "return" 之前就结束了，因为 `Goroutine` 没有足够的时间去接收 `Channel` 中的值。
+最后，为了保证 `Goroutine` 有足够的时间去接收 `Channel` 中的值，通过 `<-time.After(time.Second * 3)` 等待 3 秒钟之后，打印出 "return"。如果将 `<-time.After(time.Second * 3)` 去掉，那么程序可能在打印 "return" 之前就结束了，因为 `Goroutine` 没有足够的时间执行接收 `Channel` 中的值。
 
 ## 无缓冲Channel
 
-无缓冲的 Channel通过定义：
+无缓冲的`Channel`通过定义：
 
 ```go
 make(chan T)
 ```
 
-在无缓冲的 Channel 中，发送和接收操作是同步的。如果一个 Goroutine 向一个无缓冲的 Channel 发送数据，它将一直阻塞，直到另一个 Goroutine 从该 Channel 中接收到数据。同样地，如果一个 Goroutine 从一个无缓冲的 Channel 中接收数据，它将一直阻塞，直到另一个 Goroutine 向该 Channel 中发送数据。
+在无缓冲的 `Channel` 中，**发送和接收操作是同步**的。如果一个 `Goroutine` 向一个无缓冲的 `Channel` 发送数据，它将一直阻塞，直到另一个 `Goroutine` 从该 `Channel` 中接收到数据。同样地，如果一个 `Goroutine` 从一个无缓冲的 `Channel` 中接收数据，它将一直阻塞，直到另一个 `Goroutine` 向该 `Channel` 中发送数据。
 
 ```go
 package main
@@ -72,8 +78,7 @@ import (
 	"time"
 )
 
-// 发送端和接收端的阻塞问题
-// 发送端在没有准备好之前会阻塞,同样接收端在发送端没有准备好之前会阻塞
+// 发送端和接收端的阻塞问题,发送端在没有准备好之前会阻塞,同样接收端在发送端没有准备好之前会阻塞
 func main() {
 	c := make(chan string)
 
@@ -94,7 +99,7 @@ func main() {
 
 
 
-小练习：通过goroutine+channel计算数组之和。
+小练习：通过`Goroutine+Channel`计算数组之和。
 
 ```go
 package main
@@ -126,15 +131,15 @@ func main() {
 
 ## 缓冲Channel
 
-缓冲channel定义：
+缓冲`Channel`定义：
 
 ```go
 make(chan T,size)
 ```
 
-缓冲 Channel 是带有缓冲区的 Channel，创建时需要指定缓冲区大小，例如 `make(chan int, 10)` 创建了一个缓冲区大小为 10 的整型 Channel。
+缓冲 `Channel` 是带有缓冲区的 `Channel`，创建时需要指定缓冲区大小，例如 `make(chan int, 10)` 创建了一个缓冲区大小为 10 的整型 `Channel`。
 
-缓冲 Channel 中, 当缓冲区未满时，发送操作是非阻塞的，如果缓冲区已满，则发送操作会阻塞，直到有一个接收操作接收了一个值, 才能继续发送。当缓冲区非空时，接收操作是非阻塞的，如果缓冲区为空，则接收操作会阻塞，直到有一个发送操作发送了一个值。
+缓冲 `Channel` 中, **当缓冲区未满时，发送操作是非阻塞的，如果缓冲区已满，则发送操作会阻塞**，直到有一个接收操作接收了一个值, 才能继续发送。当缓冲区非空时，接收操作是非阻塞的，如果缓冲区为空，则接收操作会阻塞，直到有一个发送操作发送了一个值。
 
 ```go
 package main
@@ -172,11 +177,11 @@ func main() {
 }
 ```
 
-在上面代码中，我们创建了一个缓冲区大小为 5 的整型 Channel，生产者向 Channel 中发送了 10 个整数，消费者从 Channel 中接收这些整数，并将它们打印出来。由于缓冲区大小为 5，因此生产者只有在 Channel 中有 5 个或更少的元素时才会被阻塞。在该示例中，由于消费者从 Channel 中接收元素的速度比生产者发送元素的速度快，因此生产者最终会被阻塞，直到消费者接收完所有的元素并关闭 Channel。
+在上面代码中，我们创建了一个缓冲区大小为 5 的整型 `Channel`，生产者向 `Channel` 中发送了 10 个整数，消费者从 `Channel` 中接收这些整数，并将它们打印出来。由于缓冲区大小为 5，因此生产者只有在 `Channel` 中有 5 个或更少的元素时才会被阻塞。在该示例中，由于消费者从 `Channel` 中接收元素的速度比生产者发送元素的速度快，因此生产者最终会被阻塞，直到消费者接收完所有的元素并关闭 `Channel`。
 
-需要注意的是，当 Channel 被关闭后，仍然可以从 Channel 中接收剩余的元素，但不能再向 Channel 中发送任何元素。因此，在消费者函数中，我们使用了 `for` 循环和 `ok` 标志来检查 Channel 是否已经被关闭。
+需要注意的是，当 `Channel` 被关闭后，仍然可以从 `Channel` 中接收剩余的元素，但不能再向 `Channel` 中发送任何元素。因此，在消费者函数中，我们使用了 `for` 循环和 `ok` 标志来检查 `Channel` 是否已经被关闭。
 
-非缓冲channel和缓冲channel的对比：
+非缓冲`Channel`和缓冲`Channel`的对比：
 
 ```go
 package main
@@ -204,9 +209,9 @@ func main() {
 }
 ```
 
-## 关闭channel
+## 关闭Channel
 
-Close 函数可以用于关闭 Channel，关闭一个channel后，可以从中读取数据不过读取的数据全是当前channel类型的零值，但不能向这个channel写入数据会发送panic。
+`Close(c)` 函数可以用于关闭 `Channel`，关闭一个`Channel`后，可以从中读取数据不过读取的数据全是当前`Channel`类型的零值，但不能向这个`Channel`写入数据会发送`Panic`。
 
 ```go
 package main
@@ -227,7 +232,7 @@ func main() {
 
 ## 遍历 Channel
 
-可以通过range持续读取channel，直到channel关闭。
+可以通过`Range`持续读取`Channel`，直到`Channel`关闭。
 
 ```go
 package main
@@ -267,9 +272,9 @@ func main() {
 }
 ```
 
-## 通过select操作channel
+## 通过Select操作Channel
 
-通过`select-case`可以选择一个准备好数据`channel`执行，会从这个`channel`中读取或写入数据。
+通过`Select-Case`可以选择一个准备好数据`Channel`执行，会从这个`Channel`中读取或写入数据。
 
 ```go
 package main

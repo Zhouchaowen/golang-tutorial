@@ -408,7 +408,6 @@ func main() {
 	v.printAddr1()
 	v.printAddr2()
 }
-
 ```
 
 在上面的代码中， `print(),printB(),ModifyE(),printAddr1 (),printAddr2()` 这些方法都是定义的指针方法，与值方法不同的是定义方法时结构体使用指针类型：`func (p *StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnType {}`

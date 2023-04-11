@@ -433,30 +433,6 @@ func main() {
 }
 ```
 
-需要注意只有`return`退出或者`panic`导致的程序异常退出才会调用`defer`。如果使用`os.Exit`退出，程序会立即停止不会调用`defer`函数。
-
-```go
-package main
-
-import (
-	"fmt"
-	"os"
-)
-
-// 注意：如果函数因为执行了os.Exit而退出
-// 而不是正常return退出或者panic退出，那程序会立即停止，被defer的函数调用不会执行。
-func Steps1() {
-	fmt.Println("Steps1")
-}
-
-func main() {
-	fmt.Println("start")
-	defer Steps1()
-	fmt.Println("stop")
-	os.Exit(0)
-}
-```
-
 ## recover
 
 `recover`是 `Go `语言中用于从 `panic` 恢复的内置函数。当函数中发生 `panic` 时，程序会**停止执行当前函数**的代码，但是**会继续执行当前函数的 `defer` 语句**，直到所有的 `defer` 语句都执行完毕。如果其中某个 `defer` 语句调用了 `recover`，则程序会**停止向上传递 `panic`**，并在调用 `recover` 的地方继续执行代码，而不是终止程序的运行。
@@ -486,6 +462,30 @@ func main() {
 
 需要注意的是，**`recover` 函数只能在 `defer` 函数中使用**，否则会引发运行时错误。此外，**`recover` 函数只会在发生 `panic` 时返回错误信息**，如果没有 `panic `，则会返回 `nil`。
 
+需要注意只有`return`退出或者`panic`导致的程序异常退出才会调用`defer`。如果使用`os.Exit`退出，程序会立即停止不会调用`defer`函数。
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+// 注意：如果函数因为执行了os.Exit而退出
+// 而不是正常return退出或者panic退出，那程序会立即停止，被defer的函数调用不会执行。
+func Steps1() {
+	fmt.Println("Steps1")
+}
+
+func main() {
+	fmt.Println("start")
+	defer Steps1()
+	fmt.Println("stop")
+	os.Exit(0)
+}
+```
+
 ## 思考题
 
 1. 计算 100000 以内偶数,并且不是 4 的倍数外的所有数值和
@@ -511,5 +511,17 @@ func Calculation(option byte, a float64,b float64) float64{
 *****
 ******
 ```
+## 自检
+
+- `for`循环的语法和用法 ?
+- `for`循环的三个组成部分 ?
+- `for`循环的无限循环 ?
+- `range`循环的用法 ?
+- `break`关键字的用法 ?
+- `continue`关键字的用法 ?
+- `goto`关键字的用法 ?
+- `defer`关键字 ？
+
 ## 参考
+
 https://gfw.go101.org/article/control-flows.html

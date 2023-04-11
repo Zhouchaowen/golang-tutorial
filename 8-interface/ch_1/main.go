@@ -24,6 +24,6 @@ func main() {
 	f, ok := i.(float64)
 	fmt.Println(f, ok)
 
-	f = i.(float64) // 报错(panic)
+	f = i.(float64) // 如果断言失败 报错(panic)
 	fmt.Println(f)
 }
