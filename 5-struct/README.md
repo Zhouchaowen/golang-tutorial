@@ -184,7 +184,7 @@ Steps3():
 
 在上面的代码中，`User` 结构体中的 `UserName` 和 `PassWord` 字段都有 `tag`，`UserName` 字段的 `json tag`  表示在将`User` 结构体序列化为 `JSON` 格式时，使用 `user_name` 作为字段名；`PassWord` 字段的 `json tag` 表示在将 `User` 结构体序列化为 `JSON` 格式时，使用 `pass_word` 作为字段名。
 
-可以使用 `reflect` 包中的 `Type` 和 `Field` 方法来获取结构体的 tag。
+可以使用 `reflect` 包中的 `Type` 和 `Field` 方法来获取结构体的 `tag`。
 
 ```go
 package main
@@ -476,6 +476,19 @@ type circle struct{
   radius float64
 }
 ```
+
+## 自检
+
+- `struct`的定义和声明 ？
+- `struct`的初始化 ？ 
+- `struct`的字段访问 ？
+- `struct`的匿名字段 ？
+- `struct`嵌套 ？
+- `struct`的指针类型 ？
+- `struct`的值方法 ？
+- `struct`的指针方法 ？
+- `struct`标签的定义和语法 ？
+- `struct`标签的解析方法 ？
 
 ## 参考
 

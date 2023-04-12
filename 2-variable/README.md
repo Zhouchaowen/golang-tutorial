@@ -617,8 +617,227 @@ func main() {
 
 ## 运算符
 
-Go支持五个基本二元算术运算符：`+、-、*、/、%`
-Go支持六种位运算符：`&、|、^、&^、<<、>>`
+Go 语言中支持的运算符包括以下几种：
+
+1. 算术运算符：用于执行基本的算术操作，包括加减乘除和取余数。
+
+   - `+`：加法
+
+   - `-`：减法
+   - `*`：乘法
+   - `/`：除法
+   - `%`：取余数
+
+   ```go
+   package main
+   
+   import "fmt"
+   
+   func Steps1() {
+   	x := 10
+   	y := 3
+   	a := x + y 				// 13
+   	fmt.Printf("\t%d \n", a)
+   	a = x - y 				// 7
+   	fmt.Printf("\t%d \n", a)
+   	a = x * y 				// 30
+   	fmt.Printf("\t%d \n", a)
+   	a = x / y 				// 3
+   	fmt.Printf("\t%d \n", a)
+   	a = x % y 				// 1
+   	fmt.Printf("\t%d \n", a)
+   }
+   
+   func main() {
+   	fmt.Println("Steps1():")
+   	Steps1()
+   }
+   ```
+
+2. 关系运算符：用于比较两个值之间的关系，返回一个布尔值（true 或 false）。
+
+   - `==`：等于
+   - `!=`：不等于
+   - `<`：小于
+   - `>`：大于
+   - `<=`：小于等于
+   - `>=`：大于等于
+
+   ```go
+   package main
+   
+   import "fmt"
+   
+   func Steps2() {
+   	x := 10
+   	y := 3
+   	b := x == y 		// false
+   	fmt.Printf("\t%t \n", b)
+   	b = x != y 			// true
+   	fmt.Printf("\t%t \n", b)
+   	b = x < y 			// false
+   	fmt.Printf("\t%t \n", b)
+   	b = x > y 			// true
+   	fmt.Printf("\t%t \n", b)
+   	b = x <= y 			// false
+   	fmt.Printf("\t%t \n", b)
+   	b = x >= y 			// true
+   	fmt.Printf("\t%t \n", b)
+   }
+   
+   func main() {
+   	fmt.Println("Steps2():")
+   	Steps2()
+   }
+   ```
+
+3. 逻辑运算符：用于执行布尔逻辑运算，返回一个布尔值（true 或 false）。
+
+   - `&&`：逻辑 AND
+   - `||`：逻辑 OR
+   - `!`：逻辑 NOT
+
+   ```go
+   package main
+   
+   import "fmt"
+   
+   func Steps3() {
+   	x := true
+   	y := false
+   	c := x && y 		// false
+   	fmt.Printf("\t%t \n", c)
+   	c = x || y 			// true
+   	fmt.Printf("\t%t \n", c)
+   	c = !x 					// false
+   	fmt.Printf("\t%t \n", c)
+   }
+   
+   
+   func main() {
+   	fmt.Println("Steps3():")
+   	Steps3()
+   }
+   ```
+
+4. 位运算符：用于对整数类型的值执行按位运算，返回一个整数类型的值。
+
+   - `&`：按位 AND
+   - `|`：按位 OR
+   - `^`：按位 XOR
+   - `<<`：左移
+   - `>>`：右移
+
+   ```go
+   package main
+   
+   import "fmt"
+   
+   func Steps4() {
+   	x := 0b1010 			// 十进制数 10
+   	fmt.Printf("\t%05b %d\n", x, x)
+   	y := 0b0011 			// 十进制数 3
+   	fmt.Printf("\t%05b %d\n", y, y)
+   	d := x & y 				// 0b0010，十进制数 2
+   	fmt.Printf("\t%05b %d\n", d, d)
+   	d = x | y 				// 0b1011，十进制数 11
+   	fmt.Printf("\t%05b %d\n", d, d)
+   	d = x ^ y 				// 0b1001，十进制数 9
+   	fmt.Printf("\t%05b %d\n", d, d)
+   	d = x << 1 				// 0b10100，十进制数 20
+   	fmt.Printf("\t%05b %d\n", d, d)
+   	d = x >> 1 				// 0b0101，十进制数 5
+   	fmt.Printf("\t%05b %d\n", d, d)
+   }
+   
+   func main() {
+   	fmt.Println("Steps4():")
+   	Steps4()
+   }
+   ```
+
+5. 赋值运算符：用于给变量赋值。
+
+   - `=`：简单的赋值
+   - `+=`：加并赋值
+   - `-=`：减并赋值
+   - `*=`：乘并赋值
+   - `/=`：除并赋值
+   - `%=`：取余并赋值
+   - `&=`：按位 AND 并赋值
+   - `|=`：按位 OR 并赋值
+   - `^=`：按位 XOR 并赋值
+   - `<<=`：左移并赋值
+   - `>>=`：右移并赋值
+
+   ```go
+   package main
+   
+   import "fmt"
+   
+   func Steps5() {
+   	x := 10
+   	x += 5 				// x = 15
+   	fmt.Printf("\t%d \n", x)
+   	x -= 3 				// x = 12
+   	fmt.Printf("\t%d \n", x)
+   	x *= 2 				// x = 24
+   	fmt.Printf("\t%d \n", x)
+   	x /= 3 				// x = 8
+   	fmt.Printf("\t%d \n", x)
+   	x %= 5 				// x = 3
+   	fmt.Printf("\t%d \n", x)
+   	x &= 0b101 		// x = 00001，十进制数 1
+   	fmt.Printf("\t%05b %d\n", x, x)
+   	x |= 0b110 		// x = 00111，十进制数 7
+   	fmt.Printf("\t%05b %d\n", x, x)
+   	x ^= 0b011 		// x = 00100，十进制数 4
+   	fmt.Printf("\t%05b %d\n", x, x)
+   	x <<= 1 			// x = 01000，十进制数 8
+   	fmt.Printf("\t%05b %d\n", x, x)
+   	x >>= 2 			// x = 00010，十进制数 2
+   	fmt.Printf("\t%05b %d\n", x, x)
+   }
+   
+   func main() {
+   	fmt.Println("Steps5():")
+   	Steps5()
+   }
+   ```
+
+6. 其他运算符：包括取地址运算符、取值运算符、指针运算符等。
+
+   - `&`：取地址运算符
+
+   ```go
+   x := 10
+   p := &x     // 取 x 的地址，并赋值给指针变量 p
+   ```
+
+   - `*`：取值运算符、指针运算符
+
+   ```go
+   x := 10
+   var p *int  // 声明一个指向整数类型的指针变量 p
+   p = &x      // 将 x 的地址赋值给 p
+   *p = 20     // 通过指针 p 修改 x 的值，即 x = 20
+   ```
+
+   - `<-`：通道接收运算符 (后面章节讲解)
+
+   ```go
+   ch := make(chan int, 10) // 创建一个缓冲大小为 10 的 int 类型的通道 ch
+   ch <- 10                // 向通道 ch 写入数据 10
+   x := <-ch               // 从通道 ch 读取数据并赋值给 x
+   close(ch)               // 关闭通道 ch
+   ```
+
+7. 类型运算符：用于检查和转换数据类型。(后面章节讲解)
+
+   - `.`：选择器，用于从结构体类型变量中选择一个字段
+   - `()`：类型转换，用于将一个类型的值转换为另一个类型的值
+   - `[]`：切片类型，用于表示切片类型的值
+   - `...`：变长参数类型，用于表示函数的可变参数
 
 ## 思考题
 1. 定义一个值为 1024 的`int`变量`a`, 再定义一个值为 0.1 的`float64`的变量`b`,将这两个变量加减乘除并打印结果。

@@ -123,7 +123,14 @@ func main() {
 
 ## 思考题
 
+## 自检
 
+- `interface`的定义和声明 ？
+- `interface`的类型断言 ？
+- `interface`空的使用 ？
+- `interface`的比较 ？
+- `interface`的底层原理 ？
+- `interface`的实现方式 ？
 
 ## 参考
 

@@ -205,7 +205,17 @@ func (c class)PrintAllStudent()  {
 func .....
 ```
 
+## 自检
+
+- `map`的定义和声明 ？
+- `map`的初始化 ？
+- `map`的元素访问和赋值 ？
+- `map`的遍历 ？
+- `map`的长度和删除元素 ？
+- `map`的传递方式 ?
+
 ## 参考
+
 https://www.cnblogs.com/qcrao-2018/p/10903807.html
 
 https://jonny.website/posts/go-map-bmap/

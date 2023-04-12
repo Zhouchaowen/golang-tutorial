@@ -522,7 +522,18 @@ func Calculation(option byte, a float64,b float64) float64{
 - `break`关键字的用法 ?
 - `continue`关键字的用法 ?
 - `goto`关键字的用法 ?
-- `defer`关键字 ？
+- `if`语句的用法 ?
+- `if-else`语句的用法 ?
+- `if`语句的嵌套使用 ?
+- `switch`语句的用法 ?
+- `switch`语句的多个`case`匹配 ?
+- `switch`语句的默认分支 ?
+- `defer`关键字的用法 ?
+- `defer`语句的执行顺序 ?
+- `defer`语句的注意事项 ?
+- `recover`关键字的作用 ?
+- `panic`和`recover`的配合使用 ?
+- 不同层级之间传递错误信息 ?
 
 ## 参考
 

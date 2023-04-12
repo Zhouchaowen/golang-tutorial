@@ -291,7 +291,16 @@ func main() {
 
 ## 思考题
 
+## 自检
 
+- `Goroutine`的定义和启动 ？
+- `Goroutine`的同步方式 ？
+- `Goroutine`的错误处理 ？
+- `Goroutine`的优雅退出 ？
+- `Goroutine`的调度器 ？
+- `Goroutine`的通信方式 ？
+- `Goroutine`的并发安全 ？
+- `WaitGroup`的定义和使用 ？
 
 ## 参考
 

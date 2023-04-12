@@ -327,6 +327,21 @@ func main() {
 
 1. 通过goroutine+channel统计文本文件中每个单词的数量。
 
+## 自检
+
+- `Channel`的定义和声明 ？
+- `Channel`的阻塞和非阻塞 ？
+- `Channel`的容量和长度 ？
+- `Channel`的关闭 ？
+- `Channel`的遍历 ？
+- `Channel`的传递方式 ？
+- `Channel`的底层原理 ？
+- `Select`的语法和基本使用 ?
+- `Select`的阻塞和非阻塞 ?
+- `Select`的超时处理 ?
+- `Select`的底层实现 ?
+- `Channel+Select`的使用 ？
+
 ## 参考
 
 
