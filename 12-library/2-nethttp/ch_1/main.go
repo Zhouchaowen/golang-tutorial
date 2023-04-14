@@ -18,18 +18,31 @@ func init() {
 
 func main() {
 	flag.Parse()
-	mu := http.NewServeMux()
-	mu.Handle("/hello", printHandler())
 
-	mu.HandleFunc("/world", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintln(w, "world")
+	// HandleFunc 函数用于处理匹配成功的每个请求
+	// [/] 匹配所有路由
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Golang Tutorial!")
 	})
 
-	http.ListenAndServe(fmt.Sprintf("%s:%d", Ip, Port), mu)
+	// [/hello] 访问 http://ip:port/hello 将匹配到hello函数
+	http.HandleFunc("/hello", hello)
+
+	// [/hi] 访问 http://ip:port/hi 将匹配到SayHi实例的ServeHTTP()方法上
+	http.Handle("/hi", SayHi{})
+
+	// 启动服务端, 监听的地址 IP:Port
+	http.ListenAndServe(fmt.Sprintf("%s:%d", Ip, Port), nil)
 }
 
-func printHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "hello")
-	})
+func hello(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, World!")
+}
+
+// SayHi 实现 Handler 接口
+type SayHi struct {
+}
+
+func (s SayHi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hi!")
 }

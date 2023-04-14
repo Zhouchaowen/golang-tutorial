@@ -97,7 +97,8 @@ import (
 func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10
-	return handler(x, y)
+  result := handler(x, y)
+	return result
 }
 
 // 匿名函数
@@ -119,6 +120,119 @@ func main() {
 在上面的示例中第1部分，我们在 `main` 函数中定义了一个名为 `add` 的匿名函数，它接受两个整数作为参数并返回它们的和。然后调用 `add` 匿名函数变量，将其作为一个普通的函数来计算 1 + 2 的和，最后将结果输出到控制台上。
 
 在上面的示例中第2部分，我们定义了一个匿名函数`Multi`，它接受两个整数作为参数并返回它们的乘积。然后，我们定义了一个函数 `compute`，它接受两个整数，以及一个匿名函数作为参数。`compute` 函数会调用传入的函数`handler`，并将两个整数+10后作为参数传递给它。最后，我们在 `main` 函数调用 `compute` 函数，将两个整数和 `Multi`函数作为参数传递给它，然后将结果输出到控制台上。
+
+## 闭包
+
+在 Go 语言中，**闭包**简单来说是**一种引用了外部变量的匿名函数**，它可以访问外部作用域中的变量，即使外部作用域被销毁。
+
+`闭包` = `匿名函数` + `引用环境`
+
+**闭包把匿名函数和运行时的引用环境打包成为一个新的整体**，当每次调用包含闭包的函数时都将返回一个新的闭包实例，这些实例之间是隔离的，分别包含调用时不同的引用环境现场。不同于函数，闭包在运行时可以有多个实例，不同的引用环境和相同的匿名函数组合可以产生不同的实例。
+
+```go
+package main
+
+import "fmt"
+
+func counter() func() int {
+	total := 0 // 闭包打包的外部作用域环境
+	return func() int { // 闭包函数
+		total++
+		return total
+	}
+}
+
+func Steps1() {
+	f := counter()
+	fmt.Printf("\tnum: %d\n", f()) // 输出 1
+	fmt.Printf("\tnum: %d\n", f()) // 输出 2
+	fmt.Printf("\tnum: %d\n", f()) // 输出 3
+	fmt.Printf("\t-------\n")
+	ff := counter()
+	fmt.Printf("\tnum: %d\n", ff()) // 输出 1
+	fmt.Printf("\tnum: %d\n", ff()) // 输出 2
+	fmt.Printf("\tnum: %d\n", ff()) // 输出 3
+}
+
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()
+}
+```
+
+如上代码`counter()`函数中返回了一个闭包, 这个闭包通过匿名函数`func() int{ }`打包了`total环境` (这个闭包其实是一个整数计数器)。在 `Steps1()` 函数中，我们使用 `counter` 函数分别创建了两个闭包 `f` 和 `ff`，并分别调用它们并输出计数器的值。
+
+需要注意的是，由于 `counter` 函数返回的是一个闭包函数，而不是一个整数，所以我们需要使用 `()` 操作符来调用闭包函数并获取计数器的值。
+
+闭包在 Go 语言中是一个非常强大的编程技巧，可以用于实现函数工厂、延迟计算、函数递归等复杂的编程场景。不过，由于闭包函数可以访问其外部作用域中的变量，因此在使用闭包时需要特别小心，以避免出现并发访问和变量泄露等问题。
+
+通过闭包实现修饰器函数
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"runtime"
+)
+
+/*
+	需求：给add()函数添加添加调用日志
+*/
+
+// 缺陷：
+// 1.和业务代码耦合
+// 2.每个类似业务都要添加额外日志打印逻辑
+func addX(x, y int) int {
+	fmt.Printf("\tCalling addX function")
+	result := x + y
+	fmt.Printf("\tCalling addX function returned %v \n", result)
+	return result
+}
+
+func add(x, y int) int {
+	return x + y
+}
+
+// 通过函数实现 日志修饰器
+// 缺陷：
+// 1.每个调用的地方都需要包裹一层
+func logAdd(x, y int, fn func(x, y int) int) int {
+	fmt.Printf("\tlogAdd Calling function %v \n", runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name())
+	result := fn(x, y)
+	fmt.Printf("\tlogAdd Function returned %v \n", result)
+	return result
+}
+
+func Steps3() {
+	logAdd(1, 2, add) // 调用add时包裹一层
+}
+
+// 通过闭包实现 日志修饰器
+// 缺陷：
+// 1.入参格式和返回格式需要固定
+func logWrapper(fn func(x, y int) int) func(x, y int) int {
+	return func(x, y int) int {
+		fmt.Printf("\tlogWrapper Calling function %v \n", runtime.FuncForPC(reflect.ValueOf(fn).Pointer()).Name())
+		result := fn(x, y)
+		fmt.Printf("\tlogWrapper Function returned %v \n", result)
+		return result
+	}
+}
+
+func Steps3Plus() {
+	wrappedAdd := logWrapper(add)
+	wrappedAdd(2, 3)
+}
+
+func main() {
+	fmt.Println("Steps3():")
+	Steps3()
+	fmt.Println("Steps3Plus():")
+	Steps3Plus()
+}
+```
 
 ## Init函数
 
@@ -193,3 +307,6 @@ func add(a,b int) int {
 
 ## 参考
 
+https://llmxby.com/2022/08/27/%E6%8E%A2%E7%A9%B6Golang%E4%B8%AD%E7%9A%84%E9%97%AD%E5%8C%85/#%E9%97%AD%E5%8C%85%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9D%91
+
+https://www.cnblogs.com/mfrank/p/13383467.html
