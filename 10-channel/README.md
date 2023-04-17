@@ -1,24 +1,26 @@
 # Channel
 
-`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现共享内存，可以安全地传递数据，避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
+`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现**共享内存**，可以安全地传递数据，避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
 
-`Channel` 可以是有缓冲或无缓冲的。**无缓冲的 `Channel`，**也称为同步 `Channel`，**发送操作和接收操作必须同时准备就绪**，否则会被阻塞。**有缓冲的 `Channel`，**也称为异步 `Channel`，**发送操作会在 `Channel` 缓冲区未满的情况下立即返回**，接收操作也会在 `Channel` 缓冲区不为空的情况下立即返回，否则会被阻塞。
+`Channel` 可以分为有缓冲或无缓冲。**无缓冲的 `Channel`，**也称为同步 `Channel`，**发送操作和接收操作必须同时准备就绪**，否则会被阻塞。**有缓冲的 `Channel`，**也称为异步 `Channel`，**发送操作会在 `Channel` 缓冲区未满的情况下立即返回**，接收操作也会在 `Channel` 缓冲区不为空的情况下立即返回，否则会被阻塞。
 
 ## 目录
 
 - `Channel` 定义
 - 无缓冲`Channel`
 
-- 非缓冲和缓冲`Channel` 的对比
+- 缓冲`Channel` 
 - 关闭 `Channel`
 - 遍历 `Channel`
 - `Channel`+`select` 控制 `Goroutine` 退出
 
 ## 定义Channel
 
+在`Golang`中通过`make`来定义`Channel`格式为如下两种，分别为无缓冲`Channel`和有缓冲`Channel`：
+
 ```go
-c := make(chan T)
-c := make(chan T,size)
+c := make(chan T) // 定义无缓冲channel
+c := make(chan T,size) // 定义有缓冲channel
 ```
 
 ```go

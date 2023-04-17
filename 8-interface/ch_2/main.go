@@ -8,20 +8,22 @@ import "fmt"
 */
 
 // Duck 接口类型 定义一组方法签名的集合
-// 定义接口约定
 type Duck interface {
-	GaGaga()
+	GaGaga() // 定义接口约定
 	// ....
 }
 
+// 定义一个新类型(相当于给string起了个别名)
 type DonaldDuck string
 
+// DonaldDuck 实现了GaGaga()函数
 func (d DonaldDuck) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d)
 }
 
 type RubberDuck string
 
+// RubberDuck 实现了GaGaga()函数
 func (d RubberDuck) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d)
 }
@@ -31,6 +33,7 @@ type Dog struct {
 	age  int
 }
 
+// Dog 实现了GaGaga()函数
 func (d Dog) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d.Name)
 }
