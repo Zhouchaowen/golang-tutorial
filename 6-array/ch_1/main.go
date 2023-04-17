@@ -43,4 +43,11 @@ func main() {
 	// 数组可以直接通过下标修改 T[x] = y
 	arrayInt[0] = 11
 	fmt.Printf("arrayInt[0]: %d\n", arrayInt[0])
+
+	// 数组地址
+	fmt.Printf("arrayInt: %p\n", &arrayInt)
+	fmt.Printf("arrayInt[0]: %p\n", &arrayInt[0])
+
+	fmt.Printf("arrayInt len: %d\n", len(arrayInt))
+	fmt.Printf("arrayInt cap: %d\n", cap(arrayInt))
 }

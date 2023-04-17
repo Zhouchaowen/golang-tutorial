@@ -1,12 +1,12 @@
 # 数组与切片
 
-在 `Go` 中，数组和切片是两个非常常用的数据结构。虽然它们都可以存储一系列元素，但它们之间有着很大的区别。
+在 `Go` 中，数组和切片是两个非常常用的数据结构。它们都可以存储一系列元素，但有着很大的区别。
 
 - **数组是一个固定大小的数据结构**，一旦**创建后，其大小就不能被改变**，数组中的所有元素必须是相同的类型。
 
 - **切片是一个动态大小的数据结构**，它可以根据需要**动态地增长或缩小**。
 
-需要注意的是，**切片中的元素只是对底层数组的引用**，当切片被传递给函数时，函数中对切片元素的修改会反映在原始切片中。这种行为类似于指针，但切片比指针更安全，因为切片的长度信息可以帮助我们避免访问超出数组边界的元素。
+需要注意的是，**切片中的元素只是对底层数组的引用**，当切片被传递给函数时，函数中对切片元素的修改会反映在原始切片中。这种行为类似于指针，但切片比指针更安全，因为切片有长度信息，它可以帮助我们避免访问超出数组边界的元素。
 
 ## 目录
 
@@ -23,7 +23,7 @@
 var array [length]type
 ```
 
-其中，`length` 表示数组的长度，`type` 表示数组元素的数据类型。
+其中，`array`表示变量名称，`length` 表示数组的长度，`type` 表示数组元素的数据类型。
 
 ```go
 package main
@@ -62,12 +62,19 @@ func main() {
 	// 数组可以直接通过下标修改 T[x] = y
 	arrayInt[0] = 11
 	fmt.Printf("arrayInt[0]: %d\n", arrayInt[0])
+    
+	// 数组地址
+	fmt.Printf("arrayInt: %p\n", &arrayInt)
+	fmt.Printf("arrayInt[0]: %p\n", &arrayInt[0])
+
+	fmt.Printf("arrayInt len: %d\n", len(arrayInt))
+	fmt.Printf("arrayInt cap: %d\n", cap(arrayInt))
 }
 ```
 
 如上代码中`var arrayInt = [3]int{}`表示定义一个大小为3的`int`型数组； `arrayBool := [3]bool{false, true}`表示定义一个大小为3的`bool`型数组, 并且初始化第一个元素为false, 第二个元素为true。
 
-需要注意的是，由于数组长度是固定的，因此在 Golang 中很少直接使用数组。更常见的是使用切片（`slice`），它是一个动态数组，可以根据需要动态增加或减少大小。
+需要注意的是，由于数组长度是固定的，因此在 `Golang` 中很少直接使用数组。更常见的是使用切片（`slice`），它是一个动态数组，可以根据需要动态增加或减少大小。
 
 ## 切片基础用法
 
@@ -154,6 +161,10 @@ func Steps2() {
 		sliceString,
 		len(sliceString),
 		cap(sliceString))
+
+	// 数组地址
+	fmt.Printf("\tsliceString addr:    %p\n", &sliceString)
+	fmt.Printf("\tsliceString[0] addr: %p\n", &sliceString[0])
 }
 
 // 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
@@ -187,13 +198,14 @@ import (
 // Steps3 通过 make 创建切片
 func Steps3() {
 	// Steps 3-1: 用内建函数 make 来创建切片
-	// make([]T,len,cap)
+	// make([]T,len)
 	sliceFloat32 := make([]float32, 5)
 	fmt.Printf("\tsliceFloat32:%+v len:%d cap:%d\n",
 		sliceFloat32,
 		len(sliceFloat32),
 		cap(sliceFloat32))
   
+    // make([]T,len,cap)
 	sliceFloat64 := make([]float64, 5, 10)
 	fmt.Printf("\tsliceFloat64:%+v len:%d cap:%d\n",
 		sliceFloat64,
@@ -203,8 +215,8 @@ func Steps3() {
 
 // 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
 func main() {
-	Steps3()
 	fmt.Println("Steps4():")
+	Steps3()
 }
 ```
 
@@ -267,24 +279,25 @@ func main() {
 
 ```go
 slice[low:high]
+array[low:high]
 ```
 
 截取的格式为 `slice[low:high]`，其中 `low` 是需要截取的开始位置（包含），`high` 是需要截取的结束位置（不包含），新的切片包含从 `low` 到 `high-1` 的所有元素。
 
 ```go
 a := [5]int{0,1,2,3,4}
-a[1:3] // 1,2
+a[1:3] // 1,2 len 2 cap 2
 ```
 
 例如，给定一个数组 `a := [5]int{0, 1, 2, 3, 4}`，则 `a[1:3]` 将会得到一个切片 `[1, 2]`。如果省略 `low` 则默认从 0 开始，如果省略 `high` 则默认到切片的末尾。
 
 ```go
 slice[low:high:cap]
+a := [5]int{0,1,2,3,4}
+a[1:3:3] // 1,2 len 2 cap 3
 ```
 
 在截取切片时还可以指定容量，格式为 `slice[low:high:cap]`，其中 `cap` 是截取后切片的容量。如果省略 `cap`，则新切片的容量等于从 `low` 开始的剩余容量，也就是原始切片的容量减去 `low`。如果指定了 `cap`，则新切片的容量将是 `cap-low`。
-
-需要注意的是，**切片只是底层数组的一个映射，所以修改切片的元素会修改底层数组中对应的元素**。此外，与切片共享底层数组的其他切片也会观察到这些修改。
 
 ```go
 package main
@@ -352,6 +365,8 @@ func main() {
 ```
 
 在上面代码中，我们还展示了如何**通过指针偏移来获取底层数组中的元素**。这种方法是**不安全**的，因为它不受到 Go 语言类型系统的保护，可能会导致程序崩溃或者其他不可预测的结果。
+
+需要注意的是，**切片只是底层数组的一个映射，所以修改切片的元素会修改底层数组中对应的元素**。此外，与切片共享底层数组的其他切片也会观察到这些修改。
 
 ## 切片的拷贝
 

@@ -29,7 +29,7 @@ func Steps1() {
 		len(sliceInt),
 		cap(sliceInt))
 
-	//sliceInt[0] // 在未初始化长度前直接通过下标读取或赋值数据将会报错, 只能通过 append 添加元素
+	//_ = sliceInt[0] // 在未初始化长度前直接通过下标读取或赋值数据将会报错, 只能通过 append 添加元素
 
 	// Steps 1-2: append 向切片中添加元素（可能会导致内存重新分配）
 	for i := 0; i < 10; i++ {
@@ -62,6 +62,10 @@ func Steps2() {
 		sliceString,
 		len(sliceString),
 		cap(sliceString))
+
+	// 数组地址
+	fmt.Printf("\tsliceString addr:    %p\n", &sliceString)
+	fmt.Printf("\tsliceString[0] addr: %p\n", &sliceString[0])
 }
 
 // Steps3 通过 make 创建切片
