@@ -3,90 +3,134 @@ package main
 import (
 	"fmt"
 	"golang-tutorial/8-interface/ch_4/v1_struct"
-	"golang-tutorial/8-interface/ch_4/v2_struct"
-	"golang-tutorial/8-interface/ch_4/v3_interface"
+	"golang-tutorial/8-interface/ch_4/v2_interface"
 )
 
-func V1StructHero() {
-	fmt.Println("选择英雄 后裔 暴击流")
-	hero := v1_struct.NewHouYi(v1_struct.BuyShadowWarAx(), v1_struct.BuyEndless())
-	hero.ReleaseSkills(1)
-	hero.ReleaseSkills(2)
-	hero.NormalAttack()
+// 通过 _interface 构建一台 AMD CPU + 金士顿 Memory + 英特尔 NetWork + AOC Display 的电脑
+func CreateComputer1() {
+	cb := &v2_interface.ComputerBuilder{}
+	cpu := v2_interface.AmdCPU{
+		Name:       "Ryzen 5 5000",
+		ModelType:  "十二线程",
+		CoreNumber: 6,
+	}
+	mem := v2_interface.KingstonMemory{
+		Name: "DDR4",
+		Typ:  "金士顿",
+		Cap:  16,
+		MHz:  2666,
+	}
 
-	fmt.Println("选择英雄 后裔 制裁流")
-	hero2 := v1_struct.NewHouYi2(v1_struct.BuyShadowWarAx(), v1_struct.BuySanctions())
-	hero2.ReleaseSkills(1)
-	hero2.ReleaseSkills(2)
-	hero2.NormalAttack()
+	net := v2_interface.IntelNetWork{
+		Name: "82574L",
+		Typ:  "百兆以太网",
+		Rate: 100,
+	}
 
-	fmt.Println("选择英雄 亚瑟 制裁流")
-	hero3 := v1_struct.NewYaSe2(v1_struct.BuyShadowWarAx(), v1_struct.BuySanctions())
-	hero3.ReleaseSkills(1)
-	hero3.ReleaseSkills(2)
-	hero3.NormalAttack()
+	dis := v2_interface.AOCDisplay{
+		Name: "AOC",
+		Typ:  "1080P",
+	}
+	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
+	c.RUN()
 }
 
-func V2StructHero() {
-	fmt.Println("选择英雄 后裔")
-	hero := v2_struct.NewHero("HouYi")
-	if hero == nil {
-		fmt.Println("create hero fail")
-		return
+// 通过 _interface 构建一台 英特尔 CPU + 金士顿 Memory + 迈络思 NetWork + 飞利浦 Display 的电脑
+func CreateComputer2() {
+	cb := &v2_interface.ComputerBuilder{}
+	cpu := v2_interface.IntelCPU{
+		Name:       "i9-13900K",
+		ModelType:  "二十四线程",
+		CoreNumber: 12,
 	}
-	hy, ok := hero.(*v2_struct.HouYi)
-	if !ok {
-		panic("断言失败")
+	mem := v2_interface.KingstonMemory{
+		Name: "DDR4",
+		Typ:  "金士顿",
+		Cap:  32,
+		MHz:  2666,
 	}
 
-	hy.ReleaseSkills(1)
-	hy.ReleaseSkills(2)
-	hy.AddEquipments(v2_struct.BuyShadowWarAx(), v2_struct.BuySanctions())
-	hy.ReleaseSkills(3)
-	hy.ReleaseSkills(2)
+	net := v2_interface.MellanoxNetWork{
+		Name: "82574L",
+		Typ:  "千兆以太网",
+		Rate: 1000,
+	}
 
-	fmt.Println("选择英雄 赵云")
-	hero = v2_struct.NewHero("ZhaoYun")
-	if hero == nil {
-		fmt.Println("create hero fail")
-		return
+	dis := v2_interface.PhilipsDisplay{
+		Name: "Philips",
+		Typ:  "4K",
 	}
-	zy, ok := hero.(*v2_struct.ZhaoYun)
-	if !ok {
-		panic("断言失败")
-	}
-	zy.ReleaseSkills(1)
-	zy.AddEquipments(v2_struct.BuyShadowWarAx(), v2_struct.BuyBreakingTheMilitary())
-	zy.ReleaseSkills(3)
+	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
+	c.RUN()
 }
 
-func V3InterfaceHero() {
-	fmt.Println("选择英雄 后裔")
-	hero := v3_interface.NewHero("HouYi")
-	if hero == nil {
-		fmt.Println("create hero fail")
-		return
+// 通过 _struct 构建一台 AMD CPU + 金士顿 Memory + 英特尔 NetWork + AOC Display 的电脑
+func CreateComputer3() {
+	cb := &v1_struct.ComputerBuilder{}
+	cpu := v1_struct.AmdCPU{
+		Name:       "Ryzen 5 5000",
+		ModelType:  "十二线程",
+		CoreNumber: 6,
+	}
+	mem := v1_struct.KingstonMemory{
+		Name: "DDR4",
+		Typ:  "金士顿",
+		Cap:  16,
+		MHz:  2666,
 	}
 
-	hero.ReleaseSkills(1)
-	hero.ReleaseSkills(2)
-	hero.AddEquipments(v3_interface.BuyShadowWarAx(), v3_interface.BuySanctions())
-	hero.ReleaseSkills(3)
-	hero.ReleaseSkills(2)
-
-	fmt.Println("选择英雄 赵云")
-	hero = v3_interface.NewHero("ZhaoYun")
-	if hero == nil {
-		fmt.Println("create hero fail")
-		return
+	net := v1_struct.IntelNetWork{
+		Name: "82574L",
+		Typ:  "百兆以太网",
+		Rate: 100,
 	}
-	hero.ReleaseSkills(1)
-	hero.AddEquipments(v3_interface.BuyShadowWarAx(), v3_interface.BuyBreakingTheMilitary())
-	hero.ReleaseSkills(3)
+
+	dis := v1_struct.AOCDisplay{
+		Name: "AOC",
+		Typ:  "1080P",
+	}
+	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
+	c.RUN()
+}
+
+// 构建一台 英特尔 CPU + 金士顿 Memory + 迈络思 NetWork + 飞利浦 Display 的电脑
+func CreateComputer4() {
+	cb := &v1_struct.ComputerBuilder2{}
+	cpu := v1_struct.IntelCPU{
+		Name:       "i9-13900K",
+		ModelType:  "二十四线程",
+		CoreNumber: 12,
+	}
+	mem := v1_struct.KingstonMemory{
+		Name: "DDR4",
+		Typ:  "金士顿",
+		Cap:  32,
+		MHz:  2666,
+	}
+
+	net := v1_struct.MellanoxNetWork{
+		Name: "82574L",
+		Typ:  "千兆以太网",
+		Rate: 1000,
+	}
+
+	dis := v1_struct.PhilipsDisplay{
+		Name: "Philips",
+		Typ:  "4K",
+	}
+	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
+	c.RUN()
 }
 
 func main() {
-	V1StructHero()
-	//V2StructHero()
-	//V3InterfaceHero()
+	fmt.Println("------interface------")
+	fmt.Println("低配: ")
+	CreateComputer1()
+	fmt.Println("高配: ")
+	CreateComputer2()
+	fmt.Println("------struct------")
+	fmt.Println("低配: ")
+	CreateComputer3()
+	fmt.Println("高配: ")
+	CreateComputer4()
 }

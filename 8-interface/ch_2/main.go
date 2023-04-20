@@ -28,13 +28,13 @@ func (d RubberDuck) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d)
 }
 
-type Dog struct {
-	Name string
-	age  int
+type BlackSwan struct {
+	Name  string
+	Color string
 }
 
-// Dog 实现了GaGaga()函数
-func (d Dog) GaGaga() {
+// BlackSwan 实现了GaGaga()函数
+func (d BlackSwan) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d.Name)
 }
 
@@ -48,9 +48,9 @@ func main() {
 	d = RubberDuck("🦆 小黄鸭")
 	d.GaGaga()
 
-	d = Dog{
-		Name: "小狗",
-		age:  5,
+	d = BlackSwan{
+		Name:  "黑天鹅",
+		Color: "黑色",
 	}
 	d.GaGaga()
 }

@@ -11,17 +11,57 @@
 
 ## 定义并实现接口
 
-接口类型通常用于将具体类型的**实现细节与实现类型**的名称**分离**开。这种机制提供了非常强大的面向对象编程能力，使得`Go`语言的面向对象编程变得更加自然和简单。它可以**帮助**我们**构建高度抽象的代码**，使代码更加灵活、易于维护和扩展。如下代码定义并实现一个接口：
+定义接口语法格式: 
+
+```go
+type interfaceName interface {
+	functionName()
+}
+```
+
+`type`和`interface`为关键字, `interfaceName`为接口名称, `functionName()`为接口方法组中的一个方法名称, 举例如下：
+
+```go
+// 定义了一个名称为 Duck 的接口
+type Duck interface {
+	GaGaga() // 只包含一个方法 GaGaga()  
+}
+```
+
+实现接口：**必须要实现接口的所有方法才能被叫做实现该接口**
+
+```go
+type BlackSwan struct {
+	Name  string
+	Color string
+}
+
+// BlackSwan 实现了GaGaga()方法
+func (d BlackSwan) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d.Name)
+}
+```
+
+调用
+
+```go
+func main() {
+	var d Duck // 定义了一个 Duck 接口名称为d
+
+	d = BlackSwan{ // 将定义的BlackSwan实例赋值给d，因为BlackSwan实现了Duck接口
+		Name:  "黑天鹅",
+		Color: "黑色",
+	}
+	d.GaGaga() // 调用接口定义的方法，且只能调用定义过的方法
+}
+```
+
+定义并实现一个接口：
 
 ```go
 package main
 
 import "fmt"
-
-/*
-	1.通过接口定义方法
-	2.实现接口定义方法
-*/
 
 // Duck 接口类型 定义一组方法签名的集合
 type Duck interface {
@@ -29,6 +69,7 @@ type Duck interface {
 	// ....
 }
 
+// 定义一个新类型(相当于给string起了个别名)
 type DonaldDuck string
 
 // DonaldDuck 实现了GaGaga()函数
@@ -43,13 +84,13 @@ func (d RubberDuck) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d)
 }
 
-type Dog struct {
-	Name string
-	age  int
+type BlackSwan struct {
+	Name  string
+	Color string
 }
 
-// Dog 实现了GaGaga()函数
-func (d Dog) GaGaga() {
+// BlackSwan 实现了GaGaga()函数
+func (d BlackSwan) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d.Name)
 }
 
@@ -63,21 +104,23 @@ func main() {
 	d = RubberDuck("🦆 小黄鸭")
 	d.GaGaga()
 
-	d = Dog{
-		Name: "小狗",
-		age:  5,
+	d = BlackSwan{
+		Name:  "黑天鹅",
+		Color: "黑色",
 	}
 	d.GaGaga()
 }
 ```
 
-以上代码定义了一个接口类型 `Duck`，并定义了三个实现该接口的具体类型 `DonaldDuck`、`RubberDuck` 和 `Dog`。
+以上代码定义了一个接口类型 `Duck`，并定义了三个实现该接口的具体类型 `DonaldDuck`、`RubberDuck` 和 `BlackSwan`。
 
-其中，`DonaldDuck` 和 `RubberDuck` 都实现了 `GaGaga()` 方法，可以输出 `xxx, ga ga ga` 的字符串，而 `Dog` 类型也实现了 `GaGaga()` 方法，输出狗的名字和 `ga ga ga`。
+其中，`DonaldDuck` 和 `RubberDuck` 都实现了 `GaGaga()` 方法，可以输出 `xxx, ga ga ga` 的字符串，而 `BlackSwan` 类型也实现了 `GaGaga()` 方法，输出 `xxx, ga ga ga`。
 
-然后，在 `main` 函数中，定义了一个 `Duck` 类型的变量 `d`，并将 `DonaldDuck`、`RubberDuck` 和 `Dog` 类型的变量赋值给 `d`，这是因为这三个类型都实现了 `Duck` 接口，所以可以赋值给 `Duck` 类型的变量。
+然后，在 `main` 函数中，定义了一个 `Duck` 类型的变量 `d`，并将 `DonaldDuck`、`RubberDuck` 和 `BlackSwan` 类型的变量赋值给 `d`，这是因为这三个类型都实现了 `Duck` 接口，所以可以赋值给 `Duck` 类型的变量。
 
 然后分别调用 `d` 的 `GaGaga()` 方法，根据不同的类型，输出不同的字符串。
+
+**总结:** 接口类型通常用于将具体类型的**实现细节与实现类型**的名称**分离**开。这种机制提供了非常强大的面向对象编程能力，使得`Go`语言的面向对象编程变得更加自然和简单。它可以**帮助**我们**构建高度抽象的代码**，使代码更加灵活、易于维护和扩展。
 
 ## 接口断言
 

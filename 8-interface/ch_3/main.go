@@ -2,135 +2,58 @@ package main
 
 import (
 	"fmt"
-	"golang-tutorial/8-interface/ch_3/v1_struct"
-	"golang-tutorial/8-interface/ch_3/v2_interface"
+	"math/rand"
+	"time"
 )
 
-// 通过 _interface 构建一台 AMD CPU + 金士顿 Memory + 英特尔 NetWork + AOC Display 的电脑
-func CreateComputer1() {
-	cb := &v2_interface.ComputerBuilder{}
-	cpu := v2_interface.AmdCPU{
-		Name:       "Ryzen 5 5000",
-		ModelType:  "十二线程",
-		CoreNumber: 6,
-	}
-	mem := v2_interface.KingstonMemory{
-		Name: "DDR4",
-		Typ:  "金士顿",
-		Cap:  16,
-		MHz:  2666,
-	}
-
-	net := v2_interface.IntelNetWork{
-		Name: "82574L",
-		Typ:  "百兆以太网",
-		Rate: 100,
-	}
-
-	dis := v2_interface.AOCDisplay{
-		Name: "AOC",
-		Typ:  "1080P",
-	}
-	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
-	c.RUN()
+type Hero interface {
+	Skills(index int)
+	AddEquipments(eq string)
+	Move(direction string)
 }
 
-// 通过 _interface 构建一台 英特尔 CPU + 金士顿 Memory + 迈络思 NetWork + 飞利浦 Display 的电脑
-func CreateComputer2() {
-	cb := &v2_interface.ComputerBuilder{}
-	cpu := v2_interface.IntelCPU{
-		Name:       "i9-13900K",
-		ModelType:  "二十四线程",
-		CoreNumber: 12,
-	}
-	mem := v2_interface.KingstonMemory{
-		Name: "DDR4",
-		Typ:  "金士顿",
-		Cap:  32,
-		MHz:  2666,
-	}
-
-	net := v2_interface.MellanoxNetWork{
-		Name: "82574L",
-		Typ:  "千兆以太网",
-		Rate: 1000,
-	}
-
-	dis := v2_interface.PhilipsDisplay{
-		Name: "Philips",
-		Typ:  "4K",
-	}
-	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
-	c.RUN()
+type Houyi struct {
+	Equipments []string
 }
 
-// 通过 _struct 构建一台 AMD CPU + 金士顿 Memory + 英特尔 NetWork + AOC Display 的电脑
-func CreateComputer3() {
-	cb := &v1_struct.ComputerBuilder{}
-	cpu := v1_struct.AmdCPU{
-		Name:       "Ryzen 5 5000",
-		ModelType:  "十二线程",
-		CoreNumber: 6,
-	}
-	mem := v1_struct.KingstonMemory{
-		Name: "DDR4",
-		Typ:  "金士顿",
-		Cap:  16,
-		MHz:  2666,
-	}
-
-	net := v1_struct.IntelNetWork{
-		Name: "82574L",
-		Typ:  "百兆以太网",
-		Rate: 100,
-	}
-
-	dis := v1_struct.AOCDisplay{
-		Name: "AOC",
-		Typ:  "1080P",
-	}
-	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
-	c.RUN()
+func (h Houyi) Skills(index int) {
+	fmt.Printf("\t 释放技能 %d\n", index)
 }
 
-// 构建一台 英特尔 CPU + 金士顿 Memory + 迈络思 NetWork + 飞利浦 Display 的电脑
-func CreateComputer4() {
-	cb := &v1_struct.ComputerBuilder2{}
-	cpu := v1_struct.IntelCPU{
-		Name:       "i9-13900K",
-		ModelType:  "二十四线程",
-		CoreNumber: 12,
-	}
-	mem := v1_struct.KingstonMemory{
-		Name: "DDR4",
-		Typ:  "金士顿",
-		Cap:  32,
-		MHz:  2666,
-	}
+func (h Houyi) AddEquipments(eq string) {
+	h.Equipments = append(h.Equipments, eq)
+	fmt.Printf("\t 添加装备 %s\n", eq)
+}
 
-	net := v1_struct.MellanoxNetWork{
-		Name: "82574L",
-		Typ:  "千兆以太网",
-		Rate: 1000,
-	}
+func (h Houyi) Move(direction string) {
+	fmt.Printf("\t 向 %s 移动\n", direction)
+}
 
-	dis := v1_struct.PhilipsDisplay{
-		Name: "Philips",
-		Typ:  "4K",
+var move = []string{"上", "下", "左", "右"}
+var equipments = []string{"斗篷", "电刀", "黑切", "破军"}
+var skills = []int{1, 2, 3, 4}
+
+func operation(h Hero) {
+	fmt.Println("开始王者操作：")
+	rand.Seed(time.Now().UnixNano())
+	for i := 0; ; i++ {
+		tmp := i % 4
+		switch tmp {
+		case 0:
+			m := move[rand.Intn(len(move)-1)]
+			h.Move(m)
+		case 1:
+			s := skills[rand.Intn(len(skills)-1)]
+			h.Skills(s)
+		case 2:
+			e := equipments[rand.Intn(len(equipments)-1)]
+			h.AddEquipments(e)
+		}
+		time.Sleep(2 * time.Second)
 	}
-	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
-	c.RUN()
 }
 
 func main() {
-	fmt.Println("------interface------")
-	fmt.Println("低配: ")
-	CreateComputer1()
-	fmt.Println("高配: ")
-	CreateComputer2()
-	fmt.Println("------struct------")
-	fmt.Println("低配: ")
-	CreateComputer3()
-	fmt.Println("高配: ")
-	CreateComputer4()
+	var hy = Houyi{}
+	operation(hy)
 }
