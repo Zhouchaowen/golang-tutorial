@@ -1,49 +1,48 @@
 package main
 
 import (
-	"encoding/json"
+	"flag"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"sort"
 )
 
-type Package struct {
-	ModulePath    string  `json:"module_path"`
-	DownloadCount float64 `json:"download_count"`
+var (
+	Ip   string
+	Port int
+)
+
+func init() {
+	flag.StringVar(&Ip, "i", "0.0.0.0", "server ip")
+	flag.IntVar(&Port, "p", 8080, "server port")
 }
 
-type ByDownloadCount []Package
-
-func (a ByDownloadCount) Len() int           { return len(a) }
-func (a ByDownloadCount) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByDownloadCount) Less(i, j int) bool { return a[i].DownloadCount > a[j].DownloadCount }
-
 func main() {
-	url := "https://goproxy.cn/stats/trends/latest"
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return
-	}
-	defer resp.Body.Close()
+	flag.Parse()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return
-	}
+	// HandleFunc 函数用于处理匹配成功的每个请求
+	// [/] 匹配所有路由
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Golang Tutorial!")
+	})
 
-	var packages []Package
-	err = json.Unmarshal(body, &packages)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		return
-	}
+	// [/hello] 访问 http://ip:port/hello 将匹配到hello函数
+	http.HandleFunc("/hello", hello)
 
-	sort.Sort(ByDownloadCount(packages))
+	// [/hi] 访问 http://ip:port/hi 将匹配到SayHi实例的ServeHTTP()方法上
+	http.Handle("/hi", SayHi{})
 
-	for _, p := range packages {
-		fmt.Printf("module_path: %s, download_count: %f\n", p.ModulePath, p.DownloadCount)
-	}
+	// 启动服务端, 监听的地址 IP:Port
+	http.ListenAndServe(fmt.Sprintf("%s:%d", Ip, Port), nil)
+}
+
+func hello(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, World!")
+}
+
+// SayHi 实现 Handler 接口
+type SayHi struct {
+}
+
+func (s SayHi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hi!")
 }

@@ -354,3 +354,11 @@ PASS
 ## 参考
 https://bingdoal.github.io/backend/2022/05/unit-test-on-golang/
 
+https://blog.wolfogre.com/posts/go-ppof-practice/
+
+https://colobu.com/2019/08/20/use-pprof-to-compare-go-memory-usage/
+
+https://www.sofastack.tech/blog/is-pprof-enough-for-go-memory-leak/
+
+https://blog.xizhibei.me/2021/06/27/golang-heap-profiling/
+
