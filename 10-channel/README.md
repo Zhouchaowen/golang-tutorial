@@ -8,11 +8,10 @@
 
 - `Channel` 定义
 - 无缓冲`Channel`
-
 - 缓冲`Channel` 
 - 关闭 `Channel`
 - 遍历 `Channel`
-- `Channel`+`select` 控制 `Goroutine` 退出
+- `Channel`+`Select` 控制 `Goroutine` 退出
 
 ## 定义Channel
 
@@ -317,7 +316,7 @@ func main() {
 	// 通知 genNum() 退出
 	quit <- 1
 
-	// 接收者可以通过 v,ok := <- c 表达式第二个参数来测试信道是否被关闭：若没有值可以接收且信道已被关闭，那么在执行完
+	// 接收者可以通过 v,ok := <- c 表达式的第二个参数来测试信道是否被关闭：若没有值可以接收且信道已被关闭，那么在执行完
 	v, ok := <-c
 	fmt.Printf("value:%d, ok:%t\n", v, ok)
 
@@ -343,6 +342,9 @@ func main() {
 - `Select`的超时处理 ?
 - `Select`的底层实现 ?
 - `Channel+Select`的使用 ？
+- `Goroutine+Channel`的通信方式 ？
+- `Goroutine+Channel+Select`的错误处理 ？
+- `Goroutine+Channel+Select`的优雅退出 ？
 
 ## 参考
 

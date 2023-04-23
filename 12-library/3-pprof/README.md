@@ -40,8 +40,12 @@
 
 ## 目录
 
-- 排查Heap占用过高
-- 排查CPU占用过高
+- 排查`Heap`占用过高
+- 排查`CPU`占用过高
+- 排查频繁内存回收
+- 排查`Goroutine`泄露
+- 排查`Mutex`的竞争
+- 排查阻塞操作
 
 ## Heap占用过高
 
@@ -198,21 +202,318 @@ ROUTINE ======================== main.cpu in /Users/zdns/Desktop/code_study/gola
 
 ## 排查频繁内存回收
 
+```go
+package main
 
+import (
+	"net/http"
+	_ "net/http/pprof"
+	"runtime"
+	"time"
+)
+
+const (
+	Ki = 1024
+	Mi = Ki * Ki
+	Gi = Ki * Mi
+	Ti = Ki * Gi
+	Pi = Ki * Ti
+)
+
+// pprof 分析频繁分配内存
+func gc() {
+	for {
+		_ = make([]byte, 16*Mi)
+		time.Sleep(time.Second)
+	}
+}
+
+func main() {
+	runtime.GOMAXPROCS(1)              // 限制 CPU 使用数，避免过载
+	runtime.SetMutexProfileFraction(1) // 开启对锁调用的跟踪
+	runtime.SetBlockProfileRate(1)     // 开启对阻塞操作的跟踪
+
+	go func() {
+		http.ListenAndServe("0.0.0.0:6060", nil)
+	}()
+
+	gc()
+}
+```
+
+```bash
+harris-3% go tool pprof http://127.0.0.1:6060/debug/pprof/allocs
+Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/allocs
+Type: alloc_space
+Time: Apr 22, 2023 at 5:44pm (CST)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top
+Showing nodes accounting for 17921.33kB, 100% of 17921.33kB total
+Showing top 10 nodes out of 16
+      flat  flat%   sum%        cum   cum%
+   16384kB 91.42% 91.42%    16384kB 91.42%  main.gc (inline)
+ 1025.12kB  5.72% 97.14%  1025.12kB  5.72%  runtime.allocm
+  512.20kB  2.86%   100%   512.20kB  2.86%  runtime.malg
+         0     0%   100%    16384kB 91.42%  main.main
+         0     0%   100%    16384kB 91.42%  runtime.main
+         0     0%   100%  1025.12kB  5.72%  runtime.mstart
+         0     0%   100%  1025.12kB  5.72%  runtime.mstart0
+         0     0%   100%  1025.12kB  5.72%  runtime.mstart1
+         0     0%   100%  1025.12kB  5.72%  runtime.newm
+         0     0%   100%   512.20kB  2.86%  runtime.newproc.func1
+(pprof) list main.gc
+Total: 17.50MB
+ROUTINE ======================== main.gc in /Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_3/main.go
+      16MB       16MB (flat, cum) 91.42% of Total
+         .          .     15:	Pi = Ki * Ti
+         .          .     16:)
+         .          .     17:
+         .          .     18:func gc() {
+         .          .     19:	for {
+      16MB       16MB     20:		_ = make([]byte, 16*Mi)
+         .          .     21:		time.Sleep(time.Second)
+         .          .     22:	}
+         .          .     23:}
+         .          .     24:
+(pprof)
+```
 
 ## 排查协程泄露
 
+```go
+package main
 
+import (
+	"net/http"
+	_ "net/http/pprof"
+	"runtime"
+	"time"
+)
+
+const (
+	Ki = 1024
+	Mi = Ki * Ki
+	Gi = Ki * Mi
+	Ti = Ki * Gi
+	Pi = Ki * Ti
+)
+
+// pprof 分析goroutine泄露
+func coroutinesLeaked() {
+	for {
+		for i := 0; i < 10; i++ {
+			go func() {
+				time.Sleep(30 * time.Second)
+			}()
+		}
+		time.Sleep(time.Second)
+	}
+}
+
+func main() {
+	runtime.GOMAXPROCS(1)              // 限制 CPU 使用数，避免过载
+	runtime.SetMutexProfileFraction(1) // 开启对锁调用的跟踪
+	runtime.SetBlockProfileRate(1)     // 开启对阻塞操作的跟踪
+
+	go func() {
+		http.ListenAndServe("0.0.0.0:6060", nil)
+	}()
+
+	coroutinesLeaked()
+}
+```
+
+```bash
+harris-3% go tool pprof http://127.0.0.1:6060/debug/pprof/goroutine
+Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/goroutine
+Type: goroutine
+Time: Apr 22, 2023 at 5:28pm (CST)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top
+Showing nodes accounting for 293, 99.66% of 294 total
+Showing top 10 nodes out of 28
+      flat  flat%   sum%        cum   cum%
+       292 99.32% 99.32%        292 99.32%  runtime.gopark
+         1  0.34% 99.66%          1  0.34%  runtime/pprof.runtime_goroutineProfileWithLabels
+         0     0% 99.66%          1  0.34%  internal/poll.(*FD).Accept
+         0     0% 99.66%          1  0.34%  internal/poll.(*pollDesc).wait
+         0     0% 99.66%          1  0.34%  internal/poll.(*pollDesc).waitRead (inline)
+         0     0% 99.66%          1  0.34%  internal/poll.runtime_pollWait
+         0     0% 99.66%          1  0.34%  main.coroutinesLeaked
+         0     0% 99.66%        290 98.64%  main.coroutinesLeaked.func1
+         0     0% 99.66%          1  0.34%  main.main
+         0     0% 99.66%          1  0.34%  main.main.func1
+(pprof) list main.coroutinesLeaked
+Total: 294
+ROUTINE ======================== main.coroutinesLeaked in /Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_3/main.go
+         0          1 (flat, cum)  0.34% of Total
+         .          .     20:		for i := 0; i < 10; i++ {
+         .          .     21:			go func() {
+         .          .     22:				time.Sleep(30 * time.Second)
+         .          .     23:			}()
+         .          .     24:		}
+         .          1     25:		time.Sleep(time.Second)
+         .          .     26:	}
+         .          .     27:}
+ROUTINE ======================== main.coroutinesLeaked.func1 in /Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_3/main.go
+         0        290 (flat, cum) 98.64% of Total
+         .          .     17:
+         .          .     18:func coroutinesLeaked() {
+         .          .     19:	for {
+         .          .     20:		for i := 0; i < 10; i++ {
+         .          .     21:			go func() {
+         .        290     22:				time.Sleep(30 * time.Second)
+         .          .     23:			}()
+         .          .     24:		}
+         .          .     25:		time.Sleep(time.Second)
+         .          .     26:	}
+         .          .     27:}
+```
 
 ## 排查mutex的竞争
 
+```go
+package main
 
+import (
+	"net/http"
+	_ "net/http/pprof"
+	"runtime"
+	"sync"
+	"time"
+)
+
+const (
+	Ki = 1024
+	Mi = Ki * Ki
+	Gi = Ki * Mi
+	Ti = Ki * Gi
+	Pi = Ki * Ti
+)
+
+func mutex() {
+	for {
+		m := &sync.Mutex{}
+		m.Lock()
+		go func() {
+			time.Sleep(time.Second)
+			m.Unlock()
+		}()
+		m.Lock()
+		time.Sleep(time.Second)
+	}
+}
+
+func main() {
+	runtime.GOMAXPROCS(1)              // 限制 CPU 使用数，避免过载
+	runtime.SetMutexProfileFraction(1) // 开启对锁调用的跟踪
+	runtime.SetBlockProfileRate(1)     // 开启对阻塞操作的跟踪
+
+	go func() {
+		http.ListenAndServe("0.0.0.0:6060", nil)
+	}()
+
+	mutex()
+}
+```
+
+```bash
+harris-3% go tool pprof http://127.0.0.1:6060/debug/pprof/mutex
+Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/mutex
+Type: delay
+Time: Apr 23, 2023 at 9:30am (CST)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top
+Showing nodes accounting for 32.05s, 100% of 32.05s total
+      flat  flat%   sum%        cum   cum%
+    32.05s   100%   100%     32.05s   100%  sync.(*Mutex).Unlock (inline)
+         0     0%   100%     32.05s   100%  main.mutex.func1
+(pprof) list main.mutex.func1
+Total: 32.05s
+ROUTINE ======================== main.mutex.func1 in /Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_5/main.go
+         0     32.05s (flat, cum)   100% of Total
+         .          .     20:	for {
+         .          .     21:		m := &sync.Mutex{}
+         .          .     22:		m.Lock()
+         .          .     23:		go func() {
+         .          .     24:			time.Sleep(time.Second)
+         .     32.05s     25:			m.Unlock()
+         .          .     26:		}()
+         .          .     27:		m.Lock()
+         .          .     28:		time.Sleep(time.Second)
+         .          .     29:	}
+         .          .     30:}
+(pprof)
+```
 
 ## 排查阻塞操作
 
+```go
+package main
 
+import (
+	"net/http"
+	_ "net/http/pprof"
+	"runtime"
+	"time"
+)
 
+const (
+	Ki = 1024
+	Mi = Ki * Ki
+	Gi = Ki * Mi
+	Ti = Ki * Gi
+	Pi = Ki * Ti
+)
 
+func block() {
+	for {
+		<-time.After(time.Second)
+	}
+}
+
+// go tool pprof http://127.0.0.1:6060/debug/pprof/block
+func main() {
+	runtime.GOMAXPROCS(1)              // 限制 CPU 使用数，避免过载
+	runtime.SetMutexProfileFraction(1) // 开启对锁调用的跟踪
+	runtime.SetBlockProfileRate(1)     // 开启对阻塞操作的跟踪
+
+	go func() {
+		http.ListenAndServe("0.0.0.0:6060", nil)
+	}()
+
+	block()
+}
+```
+
+```bash
+harris-3% go tool pprof http://127.0.0.1:6060/debug/pprof/block
+Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/block
+Type: delay
+Time: Apr 23, 2023 at 9:31am (CST)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof) top
+Showing nodes accounting for 4s, 100% of 4s total
+      flat  flat%   sum%        cum   cum%
+        4s   100%   100%         4s   100%  runtime.chanrecv1
+         0     0%   100%         4s   100%  main.block (inline)
+         0     0%   100%         4s   100%  main.main
+         0     0%   100%         4s   100%  runtime.main
+(pprof) list main.block
+Total: 4s
+ROUTINE ======================== main.block in /Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_6/main.go
+         0         4s (flat, cum)   100% of Total
+         .          .     15:	Pi = Ki * Ti
+         .          .     16:)
+         .          .     17:
+         .          .     18:func block() {
+         .          .     19:	for {
+         .         4s     20:		<-time.After(time.Second)
+         .          .     21:	}
+         .          .     22:}
+         .          .     23:
+(pprof)
+```
 
 ## 思考题
 

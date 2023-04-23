@@ -20,21 +20,21 @@ func NoConcurrence() {
 
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 10000000; i++ {
+		for i := 0; i < 10000000; i++ { // sum做累加
 			sum++
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 10000000; i++ {
+		for i := 0; i < 10000000; i++ { // sum做累加
 			sum++
 		}
 	}()
 
 	wg.Wait()
 
-	fmt.Println(sum)
+	fmt.Println(sum) // 结果应该等于20000000
 }
 
 func Concurrence() {
@@ -42,6 +42,7 @@ func Concurrence() {
 
 	var wg sync.WaitGroup
 	var mu sync.Mutex // 互斥锁（保护临界区，同一时刻只能有一个 goroutine 可以操作临界区）
+	// var rmu sync.RWMutex
 
 	wg.Add(2) // 设置需要等待 goroutine 的数量,目前为2
 
@@ -65,7 +66,7 @@ func Concurrence() {
 
 	wg.Wait()
 
-	fmt.Println(sum)
+	fmt.Println(sum) // 结果应该等于20000000
 }
 
 // goroutine 的并发安全问题

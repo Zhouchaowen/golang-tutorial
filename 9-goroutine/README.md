@@ -1,6 +1,6 @@
 # Goroutine
 
-`Goroutine` 是 `Go` 语言中提供的并发处理的方式。它可以看作是一个轻量级线程，一个程序可以包含成百上千个 `Goroutine`。`Goroutine` 的启动非常快，只需要几纳秒的时间，而且 `Goroutine` 的调度是由 `Go` 运行时系统自动完成的，开发者不需要手动进行线程调度。
+`Goroutine` 是 `Go` 语言中提供**并发处理**的方式。它可以看作是一个**轻量级线程**, 一个程序可以包含**成百上千**个 `Goroutine`。`Goroutine` 的启动非常快，只需要几纳秒的时间, 而且 `Goroutine` 的调度是由 `Go` 运行时系统自动完成的, 开发者不需要手动进行线程调度。
 
 ## 目录
 
@@ -11,7 +11,7 @@
 
 ## Goroutine基础
 
-`Golang`中想要并发的执行一段逻辑可以**通过`go`关键字+匿名函数或有名函数实现**，代码如下: 
+`Golang`中想要**并发的执行一段逻辑**可以**通过`go`关键字+匿名函数或有名函数实现**, 代码如下: 
 
 ```go
 // 匿名函数
@@ -26,7 +26,7 @@ func test(){
 go test()
 ```
 
-一个`go func()`会启动一个后台并发任务, 大概流程是通过`go`关键字将这个`func()`打包成一个任务，然后提交给`Golang`的并发调度器，并发调度器会根据一定策略来执行这些任务。
+一个`go func()`会启动一个后台并发任务, 大概流程是通过`go`关键字将这个`func()`打包成一个任务, 然后提交给`Golang`的并发调度器, 并发调度器会根据一定策略来执行这些任务。
 
 ```go
 package main
@@ -67,13 +67,19 @@ func listTutorial(items []string) {
 }
 ```
 
+如上代码实现了并发打印数据的功能。在 `main` 函数中，首先定义了两个切片，分别存储语言和教程的信息。然后通过 `go` 关键字，将 `listLanguage` 和 `listTutorial` 这两个函数同时启动，并发地执行。
+
+在 `listLanguage` 和 `listTutorial` 函数中，通过 `for` 循环遍历切片中的元素，使用 `fmt.Printf` 函数打印每个元素的信息，并通过 `time.Sleep` 函数暂停一秒钟，模拟执行一些耗时的操作。
+
+在 `main` 函数的最后，通过 `<-time.After(time.Second * 10)` 等待 10 秒钟，保证两个 `goroutine` 都有足够的时间执行。然后通过 `fmt.Println` 函数输出 "return"，程序结束。
+
 ## WaitGroup使用
 
 再上一小节中通过`<-time.After(time.Second * 10)`来等待`Goroutine`执行完成, 这是非常难以控制的。
 
 在真实的场景中我们并不那么容易知道一个`Goroutine`什么时候执行完成, 我们需要一种更简单的方式来等待`Goroutine`的结束。
 
-`sync.WaitGroup` 是 `Go` 语言中用于并发控制的一个结构体，它可以用于**等待一组 `Goroutine` 的完成**。
+`sync.WaitGroup` 可以用来完成这个需求, 它是 `Go` 语言中用于并发控制的一个结构体, 它可以用于**等待一组 `Goroutine` 的完成**。
 
 `WaitGroup` 包含三个方法：
 
@@ -87,6 +93,8 @@ func listTutorial(items []string) {
 2. 启动多个 `Goroutine`，在每个 `Goroutine` 的开始处调用 `wg.Add(1)` 将等待的 `Goroutine` 数量加 1。
 3. 在每个 `Goroutine` 中进行任务处理，当任务处理完毕后，在 `Goroutine` 的结束处调用 `wg.Done()` 将已完成的 `Goroutine` 数量减 1。
 4. 在主 `Goroutine` 中调用 `wg.Wait()` 等待所有的 `Goroutine` 完成任务。
+
+通过`sync.WaitGroup`改造上一小节代码。
 
 ```go
 package main
@@ -135,6 +143,8 @@ func main() {
 }
 ```
 
+如上代码, 在 `main` 函数的最后, 通过 `wg.Wait()` 等待两个 `goroutine` 都执行完成。然后通过 `fmt.Println` 函数输出 "return"程序结束。
+
 ## 并发下载图片小练习
 
 ```go
@@ -156,7 +166,8 @@ func getImageData(url, name string) {
 	// 创建一个缓存读取返回的 response 数据
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
-
+	resp.Body.Close()
+  
 	dir, _ := os.Getwd()             // 获取当前执行程序目录
 	fileName := path.Join(dir, name) // 拼接保存图片的文件地址
 
@@ -193,9 +204,9 @@ func main() {
 
 ## Goroutine并发安全
 
-`Goroutine` 的出现使得 `Go` 语言可以更加方便地进行并发编程。但是在使用 `Goroutine` 时需要注意**避免资源竞争和死锁**等问题。
+`Goroutine` 的出现使得 `Go` 语言可以更加方便地进行**并发编程**。但是在使用 `Goroutine` 时需要注意**避免资源竞争和死锁**等问题。
 
-当多个`Goroutine`**并发修改同一个变量**有可能会产生**并发安全问题**导致结果错误，因为**修改可能是非原子的**。这种情况可以将修改变成**原子操作**(`atomic`)或通过**加锁保护**(`sync.Mutex`, `sync.RWMutex`)，让修改的步骤串行防止并发安全问题。
+当多个`Goroutine`**并发修改同一个变量**时有可能会产生**并发安全问题**导致结果错误, 因为**修改可能是非原子的**。这种情况可以将修改变成**原子操作**(`atomic`)或通过**加锁保护**(`sync.Mutex`, `sync.RWMutex`), 让修改的步骤串行执行防止并发安全问题。
 
 ```go
 package main
@@ -215,21 +226,21 @@ func NoConcurrence() {
 
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 10000000; i++ {
+		for i := 0; i < 10000000; i++ { // sum做累加
 			sum++
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 10000000; i++ {
+		for i := 0; i < 10000000; i++ { // sum做累加
 			sum++
 		}
 	}()
 
 	wg.Wait()
 
-	fmt.Println(sum)
+	fmt.Println(sum) // 结果应该等于20000000
 }
 
 func Concurrence() {
@@ -261,7 +272,7 @@ func Concurrence() {
 
 	wg.Wait()
 
-	fmt.Println(sum)
+	fmt.Println(sum) // 结果应该等于20000000
 }
 
 // goroutine 的并发安全问题
@@ -271,7 +282,21 @@ func main() {
 }
 ```
 
-**`Mutex` 和 `RWMutex`** 都是 `Go` 语言中的并发控制机制，它们都可以用于保护共享资源，避免并发访问导致的数据竞争和不一致性。
+如上代码展示了 `Go` 语言中使用互斥锁（Mutex）保证并发安全的方法。
+
+首先，定义了一个 `NoConcurrence()` 函数和一个 `Concurrence()` 函数，分别用来演示并发操作变量时的不安全和加锁保证安全的方法。
+
+在 `NoConcurrence()` 函数中，定义了一个变量 `sum`，然后启动了两个 `Goroutine` 并发执行相同的累加操作，最终将结果打印在控制台。由于两个 `Goroutine` **同时访问了同一个变量 `sum`**, 并且**没有使用任何锁机制**，所以会出现并发安全问题，结果将不等于20000000。
+
+在 `Concurrence()` 函数中，首先定义了一个互斥锁 `mu`，然后在每个 `Goroutine` 中在访问共享变量 `sum` 之前加锁，操作完成之后解锁，从而保证**同一时间只有一个 `Goroutine` 能够访问 `sum`**。这样就可以避免并发安全问题，保证最终结果为20000000。
+
+需要注意的是，互斥锁`Mutex`只能保证在同一时间只有一个 `Goroutine` 能够访问临界区，但是**会牺牲一定的性能**，因为在一个 `Goroutine` 访问临界区时，其他 `Goroutine` 无法执行，需要等待锁释放之后才能继续执行。如果需要在读多写少的场景中提高性能，可以使用读写锁（RWMutex）来代替互斥锁。
+
+
+
+最后来详细看看**`Mutex` 和 `RWMutex`：**
+
+ **`Mutex` 和 `RWMutex`** 都是 `Go` 语言中的并发控制机制，它们都可以用于**保护共享资源**，避免并发访问导致的数据竞争和不一致性。
 
 `Mutex` 是最简单的并发控制机制，它提供了两个方法：
 
@@ -295,10 +320,7 @@ func main() {
 
 - `Goroutine`的定义和启动 ？
 - `Goroutine`的同步方式 ？
-- `Goroutine`的错误处理 ？
-- `Goroutine`的优雅退出 ？
 - `Goroutine`的调度器 ？
-- `Goroutine`的通信方式 ？
 - `Goroutine`的并发安全 ？
 - `WaitGroup`的定义和使用 ？
 
