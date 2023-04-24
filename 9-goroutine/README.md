@@ -77,13 +77,13 @@ func listTutorial(items []string) {
 
 再上一小节中通过`<-time.After(time.Second * 10)`来等待`Goroutine`执行完成, 这是非常难以控制的。
 
-在真实的场景中我们并不那么容易知道一个`Goroutine`什么时候执行完成, 我们需要一种更简单的方式来等待`Goroutine`的结束。
+在真实的场景中我们并不是那么容易知道一个`Goroutine`什么时候执行完成, 我们需要一种更简单的方式来等待`Goroutine`的结束。
 
 `sync.WaitGroup` 可以用来完成这个需求, 它是 `Go` 语言中用于并发控制的一个结构体, 它可以用于**等待一组 `Goroutine` 的完成**。
 
 `WaitGroup` 包含三个方法：
 
-1. `Add(delta int)`：向 `WaitGroup` 中添加 `delta` 个等待的 `Goroutine`。
+1. `Add(n int)`：向 `WaitGroup` 中添加 `n` 个等待的 `Goroutine`。
 2. `Done()`：表示一个等待的 `Goroutine` 已经完成了，向 `WaitGroup` 中减少一个等待的 `Goroutine`。
 3. `Wait()`：等待所有添加到 `WaitGroup` 中的 `Goroutine` 都完成。
 
@@ -284,23 +284,19 @@ func main() {
 
 如上代码展示了 `Go` 语言中使用互斥锁（Mutex）保证并发安全的方法。
 
-首先，定义了一个 `NoConcurrence()` 函数和一个 `Concurrence()` 函数，分别用来演示并发操作变量时的不安全和加锁保证安全的方法。
+首先，定义了一个 `NoConcurrence()` 函数和一个 `Concurrence()` 函数，分别演示了并发操作变量时的不安全场景和加锁保护的安全场景。
 
 在 `NoConcurrence()` 函数中，定义了一个变量 `sum`，然后启动了两个 `Goroutine` 并发执行相同的累加操作，最终将结果打印在控制台。由于两个 `Goroutine` **同时访问了同一个变量 `sum`**, 并且**没有使用任何锁机制**，所以会出现并发安全问题，结果将不等于20000000。
 
-在 `Concurrence()` 函数中，首先定义了一个互斥锁 `mu`，然后在每个 `Goroutine` 中在访问共享变量 `sum` 之前加锁，操作完成之后解锁，从而保证**同一时间只有一个 `Goroutine` 能够访问 `sum`**。这样就可以避免并发安全问题，保证最终结果为20000000。
+在 `Concurrence()` 函数中，首先定义了一个互斥锁 `mu`，然后在每个 `Goroutine` 中在访问共享变量 `sum` 之前**加锁**，操作完成之后**解锁**，从而保证**同一时间只有一个 `Goroutine` 能够访问 `sum`**。这样就可以避免并发安全问题，保证最终结果为20000000。
 
-需要注意的是，互斥锁`Mutex`只能保证在同一时间只有一个 `Goroutine` 能够访问临界区，但是**会牺牲一定的性能**，因为在一个 `Goroutine` 访问临界区时，其他 `Goroutine` 无法执行，需要等待锁释放之后才能继续执行。如果需要在读多写少的场景中提高性能，可以使用读写锁（RWMutex）来代替互斥锁。
-
-
-
-最后来详细看看**`Mutex` 和 `RWMutex`：**
+需要注意的是，互斥锁`Mutex`只能保证在同一时间只有一个 `Goroutine` 能够访问临界区，但是**会牺牲一定的性能**，因为在一个 `Goroutine` 访问临界区时，其他 `Goroutine` 无法执行，需要等待锁释放之后才能继续执行。如果需要在读多写少的场景中提高性能，可以使用读写锁（RWMutex）来代替互斥锁。接下来详细看看**`Mutex` 和 `RWMutex`：**
 
  **`Mutex` 和 `RWMutex`** 都是 `Go` 语言中的并发控制机制，它们都可以用于**保护共享资源**，避免并发访问导致的数据竞争和不一致性。
 
 `Mutex` 是最简单的并发控制机制，它提供了两个方法：
 
-1. `Lock()`：获取互斥锁，如果互斥锁已经被其他 `Goroutine` 获取，则当前 `Goroutine` 会阻塞等待。
+1. `Lock()`：获取互斥锁，如果互斥锁已经被其他 `Goroutine` 获取，则当前 `Goroutine` 会**阻塞等待**。
 2. `Unlock()`：释放互斥锁，如果当前 `Goroutine` 没有获取互斥锁，则会引发运行时 `panic`。(必须先`Lock`, 在`Unlock`)
 
 `Mutex` 适用于对共享资源的互斥访问，即同一时间只能有一个 `Goroutine` 访问共享资源的情况。
@@ -309,10 +305,10 @@ func main() {
 
 1. `RLock()`：获取读锁，允许多个 `Goroutine` 同时获取读锁。
 2. `RUnlock()`：释放读锁。
-3. `Lock()`：获取写锁，只允许一个 `Goroutine` 获取写锁。
+3. `Lock()`：获取互斥锁(写锁)，只允许一个 `Goroutine` 获取互斥锁。
 4. `Unlock()`：释放互斥锁。
 
-`RWMutex` 适用于读写分离的场景，可以提高共享资源的并发读取性能。
+`RWMutex` 适用于读多写少的场景，可以提高共享资源的并发读取性能。
 
 ## 思考题
 

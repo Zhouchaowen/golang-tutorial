@@ -15,10 +15,10 @@
 
 ## 定义Channel
 
-在`Golang`中通过`make`来定义`Channel`格式为如下两种，分别为无缓冲`Channel`和有缓冲`Channel`：
+在`Golang`中通过`make`来定义`Channel`, 格式为如下两种, 分别为**无缓冲`Channel`和有缓冲`Channel`**：
 
 ```go
-c := make(chan T) // 定义无缓冲channel
+c := make(chan T)      // 定义无缓冲channel
 c := make(chan T,size) // 定义有缓冲channel
 ```
 
@@ -57,7 +57,7 @@ func main() {
 
 然后通过 `go` 关键字定义了一个匿名的 `Goroutine`，用于从 `Channel c` 中接收数据。匿名函数 `Goroutine` 中，使用 `<-` 语法从 `Channel c` 中接收值，并将其赋值给变量 `num`。接收完值后，使用 `fmt.Printf` 打印出接收到的值。
 
-接着，在 `main`函数 中，使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中，即`c <- 1`。
+接着，在 `main`函数 中，**使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中**，即`c <- 1`。
 
 最后，为了保证 `Goroutine` 有足够的时间去接收 `Channel` 中的值，通过 `<-time.After(time.Second * 3)` 等待 3 秒钟之后，打印出 "return"。如果将 `<-time.After(time.Second * 3)` 去掉，那么程序可能在打印 "return" 之前就结束了，因为 `Goroutine` 没有足够的时间执行接收 `Channel` 中的值。
 
@@ -96,7 +96,9 @@ func main() {
 }
 ```
 
-上面代码创建了一个无缓冲的字符串类型的 `Channel c`，然后启动了一个新的 `Goroutine`，该 `Goroutine` 会在 10 秒后发送一个字符串 `"ping"` 到 `Channel c` 中。在主 `main` 中，接收操作 `<-c` 会阻塞，直到有值从 `Channel c` 中被接收到为止。因为发送端需要 10 秒后才会发送数据，所以接收端会在 `<-c` 处阻塞 10 秒。接收到 `"ping"` 后，主 `main` 继续执行，输出 `"recover: ping"`。
+上面代码创建了一个无缓冲字符串类型的 `Channel c`，然后启动了一个新的 `Goroutine`，该 `Goroutine` 会在 10 秒后发送一个字符串 `"ping"` 到 `Channel c` 中。
+
+在主 `main` 函数中，接收操作 `<-c` 会阻塞，直到有值发送到 `Channel c` 中为止。因为发送端需要 10 秒后才会发送数据，所以接收端会在 `<-c` 处阻塞 10 秒。接收到 `"ping"` 后，主 `main` 函数继续执行，输出 `"recover: ping"`后整个程序退出。
 
 
 
