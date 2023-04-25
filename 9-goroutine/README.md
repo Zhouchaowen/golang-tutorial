@@ -75,7 +75,7 @@ func listTutorial(items []string) {
 
 ## WaitGroup使用
 
-再上一小节中通过`<-time.After(time.Second * 10)`来等待`Goroutine`执行完成, 这是非常难以控制的。
+再上一小节中通过`<-time.After(time.Second * 10)`来等待`Goroutine`执行完成, 这非常难以控制`Goroutine`的结束时刻。
 
 在真实的场景中我们并不是那么容易知道一个`Goroutine`什么时候执行完成, 我们需要一种更简单的方式来等待`Goroutine`的结束。
 
@@ -206,7 +206,114 @@ func main() {
 
 `Goroutine` 的出现使得 `Go` 语言可以更加方便地进行**并发编程**。但是在使用 `Goroutine` 时需要注意**避免资源竞争和死锁**等问题。
 
-当多个`Goroutine`**并发修改同一个变量**时有可能会产生**并发安全问题**导致结果错误, 因为**修改可能是非原子的**。这种情况可以将修改变成**原子操作**(`atomic`)或通过**加锁保护**(`sync.Mutex`, `sync.RWMutex`), 让修改的步骤串行执行防止并发安全问题。
+当多个`Goroutine`**并发修改同一个变量**时有可能会产生**并发安全问题**导致结果不一致, 因为**修改操作可能是非原子的**。这种情况可以将修改变成**原子操作**(`atomic`)或通过**加锁保护**(`sync.Mutex`, `sync.RWMutex`), 让修改的步骤**串行执行**防止并发安全问题。
+
+**什么是原子操作(`atomic`)？**
+
+原子操作是指一个不可中断的操作(一条`CPU`指令)，它要么完全执行，要么完全不执行, 例如`count = 1`
+
+**什么是非原子操作？**
+
+非原子操作是指需要多条`CPU`指令来完成的操作，高级语言中一条语句往往需要多条`CPU`指令完成。例如`count++`，至少需要三条`CPU`指令：
+
+```go
+package main
+
+func main() {
+	count++
+}
+```
+
+- 指令1:把变量`count`从内存加载到`CPU`的寄存器;
+- 指令2:在寄存器中执行+1操作;
+- 指令3:将结果写入内存(缓存机制导致可能写入的是`CPU`缓存而不是内存)。
+
+上面三个步骤每一步都是**原子操作**，但是**组合在一起就不是原子操作**。
+
+**非原子操作为什么导致并发安全问题？**
+
+在多核下，多个`Goroutine`同时以**非原子的方式**修改一个共享变量时(`count++`操作), 如果一个 `Goroutine` 读取了变量`count`的值，并且在它修改`count`的值之前，另一个 `Goroutine` 修改了这个`count`的值，那么该 `Goroutine `的修改操作将会**被覆盖或丢失**，从而导致数据不一致。如下示例将展示这种现象：
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"sync/atomic"
+)
+
+// NoConcurrence 并发操作一个变量是不安全的，需要加锁
+func NoConcurrence() {
+	sum := 0
+
+	var wg sync.WaitGroup
+
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 10000000; i++ { // sum做累加
+			sum++
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 10000000; i++ { // sum做累加
+			sum++
+		}
+	}()
+
+	wg.Wait()
+
+	fmt.Println(sum) // 结果应该等于20000000
+}
+
+func Concurrence() {
+	var sum int64 = 0 
+
+	var wg sync.WaitGroup
+
+	wg.Add(2) // 设置需要等待 goroutine 的数量,目前为2
+
+	go func() {
+		defer wg.Done() // 程序运行完毕, 将 goroutine 等待数量减1
+		for i := 0; i < 10000000; i++ {
+			atomic.AddInt64(&sum, 1) // 原子操作 +1
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 10000000; i++ {
+			atomic.AddInt64(&sum, 1) // 原子操作 +1
+		}
+	}()
+
+	wg.Wait()
+
+	fmt.Println(sum) // 结果应该等于20000000
+}
+
+// goroutine 的并发安全问题
+func main() {
+	NoConcurrence()
+	Concurrence()
+}
+```
+
+如上代码演示了使用原子操作和非原子操作对变量进行并发累加时，对程序结果正确性的影响。
+
+在 `NoConcurrence()` 函数中，使用非原子操作 `sum++` 进行累加，会出现并发安全问题，因为多个`Goroutine`同时对 `sum` 进行写操作，会导致结果不正确。执行该函数后，累加结果不等于20000000。
+
+在 `Concurrence()` 函数中，使用原子操作 `atomic.AddInt64` 进行累加，保证了在多个`Goroutine`同时对 `sum` 进行写操作时，每次只有一个`Goroutine`能够成功操作，其余`Goroutine`则需要等待。这样可以保证 `sum` 的值的正确性。执行该函数后，累加结果等于20000000。
+
+**加锁保护(`sync.Mutex`, `sync.RWMutex`)**
+
+在多个`Goroutine`并发执行的情况下，**加锁**可以保证同一时刻只有一个`Goroutine`能够进入**临界区(简单理解为变量count的这块内存)**操作，其他`Goroutine`需要等待锁被释放后才能进入临界区进行操作。这种机制可以保证不会出现多个`Goroutine`同时对同一共享资源进行修改的情况，从而避免了并发安全问题。
+
+互斥锁（`Mutex`）是一种实现方式，只有**拥有锁**的 `Goroutine` 才能访问临界区，其他的 `Goroutine` 必须等待。当一个 `Goroutine` 获得了锁，其他的  `Goroutine` 就无法再获得锁，只有等到这个 `Goroutine` 释放锁后才能继续访问。如下示例通过`Mutex`保护临界区：
 
 ```go
 package main
@@ -218,7 +325,7 @@ import (
 
 // NoConcurrence 并发操作一个变量是不安全的，需要加锁
 func NoConcurrence() {
-	sum := 0
+  sum := 0 // 临界区或叫做共享变量
 
 	var wg sync.WaitGroup
 
@@ -286,13 +393,13 @@ func main() {
 
 首先，定义了一个 `NoConcurrence()` 函数和一个 `Concurrence()` 函数，分别演示了并发操作变量时的不安全场景和加锁保护的安全场景。
 
-在 `NoConcurrence()` 函数中，定义了一个变量 `sum`，然后启动了两个 `Goroutine` 并发执行相同的累加操作，最终将结果打印在控制台。由于两个 `Goroutine` **同时访问了同一个变量 `sum`**, 并且**没有使用任何锁机制**，所以会出现并发安全问题，结果将不等于20000000。
+在 `NoConcurrence()` 函数中，定义了一个变量 `sum`，然后启动了两个 `Goroutine` 并发执行相同的累加操作，最终将结果打印在控制台。由于两个 `Goroutine` **同时访问了同一个变量 `sum`**, 并且**没有使用任何锁机制**，所以会出现并发安全问题，累加结果不等于20000000。
 
-在 `Concurrence()` 函数中，首先定义了一个互斥锁 `mu`，然后在每个 `Goroutine` 中在访问共享变量 `sum` 之前**加锁**，操作完成之后**解锁**，从而保证**同一时间只有一个 `Goroutine` 能够访问 `sum`**。这样就可以避免并发安全问题，保证最终结果为20000000。
+在 `Concurrence()` 函数中，首先定义了一个互斥锁 `mu`，然后在每个 `Goroutine` 中在访问共享变量 `sum` 之前**加锁**，操作完成之后**解锁**，从而保证**同一时间只有一个 `Goroutine` 能够访问 `sum`**。这样就可以避免并发安全问题，累加结果等于20000000。
 
-需要注意的是，互斥锁`Mutex`只能保证在同一时间只有一个 `Goroutine` 能够访问临界区，但是**会牺牲一定的性能**，因为在一个 `Goroutine` 访问临界区时，其他 `Goroutine` 无法执行，需要等待锁释放之后才能继续执行。如果需要在读多写少的场景中提高性能，可以使用读写锁（RWMutex）来代替互斥锁。接下来详细看看**`Mutex` 和 `RWMutex`：**
+需要注意的是，互斥锁`Mutex`只能保证在同一时间只有一个 `Goroutine` 能够访问临界区，但是**会牺牲一定的性能**，因为在一个 `Goroutine` 访问临界区时，其他 `Goroutine` 无法执行，需要等待锁释放之后才能继续执行。如果需要在读多写少的场景中提高性能，可以使用读写锁（`RWMutex`）来代替互斥锁。接下来详细看看**`Mutex` 和 `RWMutex`：**
 
- **`Mutex` 和 `RWMutex`** 都是 `Go` 语言中的并发控制机制，它们都可以用于**保护共享资源**，避免并发访问导致的数据竞争和不一致性。
+ **`Mutex` 和 `RWMutex`** 都是 `Go` 语言中的并发控制机制，它们都可以用于**保护临界区(共享资源)**，避免并发访问导致的数据竞争和不一致性。
 
 `Mutex` 是最简单的并发控制机制，它提供了两个方法：
 
@@ -327,3 +434,9 @@ https://blog.boot.dev/golang/gos-waitgroup-javascripts-promiseall/
 https://gfw.go101.org/article/control-flows-more.html
 
 https://larrylu.blog/race-condition-in-golang-c49a6e242259
+
+https://zhuanlan.zhihu.com/p/431422464
+
+https://segmentfault.com/a/1190000019576884
+
+https://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html

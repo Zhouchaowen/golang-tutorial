@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"sync/atomic"
 )
 
 /*
@@ -38,29 +39,23 @@ func NoConcurrence() {
 }
 
 func Concurrence() {
-	sum := 0
+	var sum int64 = 0
 
 	var wg sync.WaitGroup
-	var mu sync.Mutex // 互斥锁（保护临界区，同一时刻只能有一个 goroutine 可以操作临界区）
-	// var rmu sync.RWMutex
 
 	wg.Add(2) // 设置需要等待 goroutine 的数量,目前为2
 
 	go func() {
 		defer wg.Done() // 程序运行完毕, 将 goroutine 等待数量减1
 		for i := 0; i < 10000000; i++ {
-			mu.Lock() // 加锁保护临界区
-			sum++
-			mu.Unlock() // 操作完成解锁,临界区
+			atomic.AddInt64(&sum, 1) // 原子操作 +1
 		}
 	}()
 
 	go func() {
 		defer wg.Done()
 		for i := 0; i < 10000000; i++ {
-			mu.Lock() // 加锁保护临界区
-			sum++
-			mu.Unlock() // 操作完成解锁,临界区
+			atomic.AddInt64(&sum, 1) // 原子操作 +1
 		}
 	}()
 

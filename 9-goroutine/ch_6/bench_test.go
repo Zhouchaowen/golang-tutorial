@@ -1,8 +1,8 @@
 package main
 
 import (
-	"golang-tutorial/9-goroutine/ch_5/pool"
-	"golang-tutorial/9-goroutine/ch_5/work"
+	"golang-tutorial/9-goroutine/ch_6/pool"
+	"golang-tutorial/9-goroutine/ch_6/work"
 	"testing"
 )
 

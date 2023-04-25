@@ -1,7 +1,7 @@
 package pool
 
 import (
-	"golang-tutorial/9-goroutine/ch_5/work"
+	"golang-tutorial/9-goroutine/ch_6/work"
 	"log"
 )
 
