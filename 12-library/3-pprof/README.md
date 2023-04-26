@@ -523,8 +523,6 @@ ROUTINE ======================== main.block in /Desktop/code_study/golang-tutori
 - 示例函数的编写和展示
 
 ## 参考
-https://bingdoal.github.io/backend/2022/05/unit-test-on-golang/
-
 https://blog.wolfogre.com/posts/go-ppof-practice/
 
 https://colobu.com/2019/08/20/use-pprof-to-compare-go-memory-usage/

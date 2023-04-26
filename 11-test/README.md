@@ -15,11 +15,11 @@
 
 ### 简单测试
 
-如下是 `Golang` 测试的基本用法：
+ `Go`语言中编写一个测试的基本步骤：
 
-1. 创建测试文件：测试代码应该与被测试的代码放在同一个包中，并以 `_test.go` 结尾。例如，要测试名为 `add` 文件中的函数，可以创建一个名为 `add_test.go` 的文件。
+1. 创建测试文件：测试文件应该与被测试的代码放在同一个包中，并以 `_test.go` 结尾。例如，要测试名为 `add` 文件中的函数，可以创建一个名为 `add_test.go` 的文件。
 2. 编写测试函数：测试函数应该以 `Test` 开头，后跟被测试函数的名称。例如，要测试名为 `add` 的函数，可以创建一个名为 `TestAdd` 的测试函数。
-3. 编写测试代码：测试函数应该包含测试代码，以验证被测试函数的行为是否符合预期。测试代码应该使用 `t.Error` 或 `t.Fail` 等函数来报告测试失败。
+3. 编写测试代码：测试函数应该包含测试代码，以验证被测试函数的行为是否符合预期。测试代码应该使用 `t.Error` 或 `t.Fail` 等函数来报告测试失败结果。
 4. 运行测试：在命令行中使用 `go test` 命令来运行测试。如果测试通过，将输出 `PASS`。如果测试失败，将输出失败的测试用例的详细信息。
 
 示例代码：
@@ -62,9 +62,15 @@ func TestAdd(t *testing.T) {
 go test 
 ```
 
-默认情况下, `go test` 命令会运行指定包中的所有测试, 并输出测试结果。如果测试成功，则输出 `PASS`；如果测试失败，则输出 `FAIL`。如果测试运行期间出现 `Panic`，测试会被中止并输出相关信息。
+默认情况下, `go test` 命令会运行当前包中的所有测试, 并输出测试结果。如果测试成功，则输出 `PASS`；如果测试失败，则输出 `FAIL`。如果测试运行期间出现 `Panic`，测试会被中止并输出相关信息。
 
-`go test` 命令的一些常用标志如下：
+```bash
+$  go test 
+PASS
+ok      golang-tutorial/11-test/ch_1    0.017s
+```
+
+`go test` 命令还包含一些常用命令选项：
 
 - `-v`：输出测试详情；
 - `-run`：指定要运行的测试函数，可以通过正则匹配；
@@ -90,16 +96,17 @@ ok      golang-tutorial/11-test/ch_1    0.009s
 ```
 
 - === RUN 表示运行的测试函数
-- --- PASS 表示测试结果为通过
+- --- PASS 表示测试函数的结果为通过
 
 ### 子测试
 
-除了基本的测试外，Go 语言的测试框架还提供了一些高级功能，以帮助更好地组织和管理测试代码。
+除了基本的测试外，`Go` 语言测试框架还提供了一些高级功能，以帮助更好地组织和管理测试代码。
 
-其中子测试, 可以在一个测试函数中创建多个子测试，每个子测试都可以独立运行和失败, 使用 `t.Run` 函数来创建子测试。
+其中**子测试**, 可以在一个测试函数中创建多个子测试，每个子测试都可以独立运行和失败, 使用 `t.Run` 函数来创建子测试。
 
 ```go
 func TestAdd(t *testing.T) {
+  // 子测试一
 	t.Run("test case 1", func(t *testing.T) {
 		result := add(2, 3)
 		expected := 5
@@ -108,11 +115,21 @@ func TestAdd(t *testing.T) {
 		}
 	})
 
+  // 子测试二
 	t.Run("test case 2", func(t *testing.T) {
 		result := add(3, 3)
 		expected := 6
 		if result != expected {
 			t.Errorf("add(3, 3) returned %d, expected %d", result, expected)
+		}
+	})
+  	
+  // 子测试三
+	t.Run("test case 3", func(t *testing.T) {
+		result := add(4, 4)
+		expected := 7
+		if result != expected {
+			t.Errorf("add(4, 4) returned %d, expected %d", result, expected)
 		}
 	})
 }
@@ -125,16 +142,20 @@ $ go test -run="TestAdd$" -v
 === RUN   TestAdd
 === RUN   TestAdd/test_case_1
 === RUN   TestAdd/test_case_2
---- PASS: TestAdd (0.00s)
+=== RUN   TestAdd/test_case_3
+		add_test.go:35: add(3, 3) returned 8, expected 7 # 失败日志
+--- FAIL: TestAdd (0.00s)
     --- PASS: TestAdd/test_case_1 (0.00s) # 子测试 1 通过
     --- PASS: TestAdd/test_case_2 (0.00s) # 子测试 2 通过
-PASS
-ok      golang-tutorial/11-test/ch_1    0.008s
+    --- FAIL: TestAdd/test_case_3 (0.00s) # 子测试 3 失败
+FAIL
+exit status 1
+FAIL    golang-tutorial/11-test/ch_1    0.011s
 ```
 
 ### 表驱动测试
 
-可以使用表格驱动测试来测试多组输入和输出。创建一个包含输入和预期输出的表格，然后使用 `for` 循环遍历表格中的每一行并运行测试。
+`Go`中还可以使用**表格驱动**测试来测试多组输入和输出。创建一个包含输入和预期输出的表格，然后使用 `for` 循环遍历表格中的每一行并运行测试。
 
 ```go
 func TestAdd(t *testing.T) {
@@ -142,7 +163,8 @@ func TestAdd(t *testing.T) {
 		a int
 		b int
 	}
-	tests := []struct {
+  
+  tests := []struct { // 表格 包含(测试名称，参数，期望值)
 		name string
 		args args
 		want int
@@ -163,9 +185,17 @@ func TestAdd(t *testing.T) {
 			},
 			20,
 		},
+    {
+			"15+15",
+			args{
+				a: 15,
+				b: 15,
+			},
+			31,
+		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, tt := range tests { // 循环tests表格
+		t.Run(tt.name, func(t *testing.T) { // 通过子测试运行
 			if got := add(tt.args.a, tt.args.b); got != tt.want {
 				t.Errorf("add() = %v, want %v", got, tt.want)
 			}
@@ -177,16 +207,19 @@ func TestAdd(t *testing.T) {
 如上代码`tests`是一个结构体数组,存储测试用的参数和预期结果。通过 `for` 循环遍历数组中的每一行并运行测试。测试结果如下：
 
 ```bash
-$ go test -run="TestAdd$" -v
+$ go test -run="TestAdd" -v
 === RUN   TestAdd
 === RUN   TestAdd/1+2
 === RUN   TestAdd/10+10
---- PASS: TestAdd (0.00s)
-    --- PASS: TestAdd/1+2 (0.00s)
-    --- PASS: TestAdd/10+10 (0.00s)
-PASS
-ok      golang-tutorial/11-test/ch_1    0.009s
-
+=== RUN   TestAdd/15+15
+    add_test.go:81: add() = 30, want 31 # 失败日志
+--- FAIL: TestAdd (0.00s)
+    --- PASS: TestAdd/1+2 (0.00s) 			# 子测试 1 通过
+    --- PASS: TestAdd/10+10 (0.00s)			# 子测试 2 通过
+    --- FAIL: TestAdd/15+15 (0.00s)			# 子测试 3 失败
+FAIL
+exit status 1
+FAIL    golang-tutorial/11-test/ch_1    0.015s
 ```
 
 ### 测试覆盖率
@@ -230,21 +263,21 @@ func TestCover(t *testing.T) {
 执行并分析
 
 ```go
-go test -run="Cover$" -v -cover
+$ go test -run="Cover$" -v -cover
 
 // 测试结果
 === RUN   TestCover
 === RUN   TestCover/test_case_1
 === RUN   TestCover/test_case_2
 --- PASS: TestCover (0.00s)
-    --- PASS: TestCover/test_case_1 (0.00s) // 子测试1 通过
-    --- PASS: TestCover/test_case_2 (0.00s) // 子测试2 通过
+    --- PASS: TestCover/test_case_1 (0.00s) // 子测试 1 通过
+    --- PASS: TestCover/test_case_2 (0.00s) // 子测试 2 通过
 PASS
 coverage: 42.9% of statements // 测试覆盖率为42.9%
 ok      golang-tutorial/11-test/ch_1    0.018s
 ```
 
-除了通过命令行执行查看外，还可以使用`go test -coverprofile=coverage.out`参数来指定输出覆盖率分析结果的文件名，然后执行`go tool cover -html=coverage.out`命令来打开浏览器查看覆盖率报告。
+除了通过命令行执行查看外，还可以使用`go test -coverprofile=coverage.out`参数来指定输出覆盖率分析结果的文件名，然后执行`go tool cover -html=coverage.out`命令打开浏览器来查看覆盖率报告。
 
 ```go
 go test -run="Cover$" -coverprofile=coverage.out
@@ -253,9 +286,9 @@ go tool cover -html=coverage.out
 
 ## 基准测试
 
-在 `Golang` 中，基准测试是通过 `testing` 包提供的 `benchmark` 功能实现的。在测试文件中，我们可以使用 `func BenchmarkXxx(b *testing.B)` 格式的函数来编写基准测试，其中 `Xxx` 是被测试函数的名称，`b` 是一个 `*testing.B` 类型的指针，用于控制测试的次数和时间等参数。
+在 `Golang` 中，基准测试是通过 `testing` 包提供的 `benchmark` 功能实现的。在测试文件中，我们可以使用 `func BenchmarkXXX(b *testing.B)` 格式的函数来表示基准测试，其中 `XXX` 是被测试函数的名称，其中`b` 是一个 `*testing.B` 类型的指针，用于控制测试的次数和时间等参数。
 
-在下面的示例中，我们编写了一个基准测试函数 `BenchmarkAdd`，用于测试 `add` 函数的性能。该函数会在 `b.N` 次测试中，多次调用 `add` 函数并测量其性能。在测试过程中，Go 会自动调整测试次数，以使测试结果具有一定的可靠性。
+在下面的示例中，我们编写了一个基准测试函数 `BenchmarkAdd()`，用于测试 `add` 函数的性能。该函数会在 `b.N` 次测试中，多次调用 `add` 函数并测量其性能。在测试过程中，`Golang` 会自动调整测试次数，以使测试结果具有一定的可靠性。
 
 ```go
 func BenchmarkAdd(b *testing.B) {
@@ -281,15 +314,15 @@ PASS
 
 该结果表示，在执行 1000000000 次测试中，每次测试平均需要 0.3756 纳秒 (可以用来评估 `add` 函数的性能) 如下是每项的含义：
 
-- BenchmarkAdd-4：被测试的基准测试函数的名称。
+- BenchmarkAdd-4：代表被运行的基准测试名称, 4代表使用的核心数。
 
-- 1000000000：每个基准测试函数运行的迭代次数。
+- 1000000000：代表这个个基准测试运行的迭代次数。
 
-- 0.3756 ns/op：每个操作的平均纳秒数。
+- 0.3756 ns/op：代表每个操作的平均纳秒数。
 
-- 0 B/op：每个操作分配的平均字节数。
+- 0 B/op：代表每个操作分配的平均字节数。
 
-- 0 allocs/op：每个操作分配的平均内存数。
+- 0 allocs/op：代表每个操作分配的平均内存数。
 
 总结一些常用的基准测试命令：
 
@@ -301,44 +334,6 @@ PASS
 - `go test -bench=BenchmarkAdd -cpuprofile=cpu.out`：运行名为 `BenchmarkAdd` 的基准测试，并生成 CPU 分析文件 `cpu.out`。
 - `go test -bench=BenchmarkAdd -benchmem`：运行名为 `BenchmarkAdd` 的基准测试，并输出每次测试分配的内存和内存分配次数的平均值。
 
-## pprof
-
-上一小节提到，可以通过`-memprofile`和`-cpuprofile`生成内存分配文件和`cpu`分析文件。我们可以使用 `Go` 自带的 `pprof` 工具来查看 `mem.out` 和 `cpu.out` 文件中的分析结果。
-
-具体的步骤如下：
-
-1. 生成 `mem.out` 和 `cpu.out` 文件：
-
-   ```go
-   go test -bench=BenchmarkAdd -memprofile=mem.out -cpuprofile=cpu.out
-   ```
-
-2. 使用 `go tool pprof` 命令打开 `cpu.out` 文件：
-
-   ```go
-   go tool pprof cpu.out
-   ```
-
-3. 在 `pprof` 命令行中输入 `top` 命令，可以查看 CPU 使用率最高的函数：
-
-   ```go
-   (pprof) top
-   ```
-
-4. 输入 `list` 命令，可以查看当前函数的源代码：
-
-   ```go
-   (pprof) list funxxx
-   ```
-
-5. 使用 `web` 命令生成火焰图，并在浏览器中查看：
-
-   ```go
-   (pprof) svg
-   ```
-
-   执行完该命令后，会在当前目录下生成一个 `profile00x.svg` 文件，可以用浏览器打开该文件来查看火焰图。
-
 ## 思考题
 
 ## 自检
@@ -348,17 +343,11 @@ PASS
 - 测试函数的编写和执行 ？
 - 测试覆盖率分析 ？
 - 基准测试的编写和执行 ？
-- `pprof`分析程序？
 - 示例函数的编写和展示
 
 ## 参考
 https://bingdoal.github.io/backend/2022/05/unit-test-on-golang/
 
-https://blog.wolfogre.com/posts/go-ppof-practice/
+https://www.gagahappy.com/golang-test-benchmark-result-introducing/
 
-https://colobu.com/2019/08/20/use-pprof-to-compare-go-memory-usage/
-
-https://www.sofastack.tech/blog/is-pprof-enough-for-go-memory-leak/
-
-https://blog.xizhibei.me/2021/06/27/golang-heap-profiling/
-
+https://geektutu.com/post/hpg-benchmark.html

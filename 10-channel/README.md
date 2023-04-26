@@ -11,7 +11,7 @@
 - 缓冲`Channel` 
 - 关闭 `Channel`
 - 遍历 `Channel`
-- `Channel`+`Select` 控制 `Goroutine` 退出
+- 通过`Select` 操作`Channel`
 
 ## 定义Channel
 
@@ -81,7 +81,7 @@ import (
 
 // 发送端和接收端的阻塞问题,发送端在没有准备好之前会阻塞,同样接收端在发送端没有准备好之前会阻塞
 func main() {
-	c := make(chan string)
+	c := make(chan string) // 无缓冲字符串类型
 
 	go func() {
 		<-time.After(time.Second * 10)
@@ -98,7 +98,7 @@ func main() {
 
 上面代码创建了一个无缓冲字符串类型的 `Channel c`，然后启动了一个新的 `Goroutine`，该 `Goroutine` 会在 10 秒后发送一个字符串 `"ping"` 到 `Channel c` 中。
 
-在主 `main` 函数中，接收操作 `<-c` 会阻塞，直到有值发送到 `Channel c` 中为止。因为发送端需要 10 秒后才会发送数据，所以接收端会在 `<-c` 处阻塞 10 秒。接收到 `"ping"` 后，主 `main` 函数继续执行，输出 `"recover: ping"`后整个程序退出。
+在主 `main` 函数中，接收操作 `<-c` 会阻塞，直到接收到 `Channel c` 中的值为止。因为发送端需要 10 秒后才会发送数据，所以接收端会在 `<-c` 处阻塞 10 秒。接收到 `"ping"` 后，主 `main` 函数继续执行，输出 `"recover: ping"`后整个程序退出。
 
 小练习：通过`Goroutine+Channel`计算数组之和。
 
@@ -152,16 +152,16 @@ import (
 
 func producer(c chan int, n int) {
 	for i := 0; i < n; i++ {
-		c <- i
+		c <- i		// 将i的值循环写入channel c
 		fmt.Printf("producer sent: %d\n", i)
 	}
-	close(c)
+	close(c) // 写完n个值后关闭channel c
 }
 
 func consumer(c chan int) {
 	for {
-		num, ok := <-c
-		if !ok {
+		num, ok := <-c // 从channel c中接收值
+    if !ok { // ok 代表是否接受到channel c的值,ok=true代表接收到,ok=false代表channel已经被close了
 			fmt.Println("consumer closed")
 			return
 		}
@@ -170,19 +170,19 @@ func consumer(c chan int) {
 }
 
 func main() {
-	c := make(chan int, 5)
-	go producer(c, 10)
-	go consumer(c)
-	time.Sleep(time.Second * 1)
+	c := make(chan int, 5) // 有缓冲int类型
+	go producer(c, 10) // 启动生产函数发送10个值到channel c中
+	go consumer(c) // 启动消费函数接收这10个值
+	time.Sleep(time.Second * 5)
 	fmt.Println("main exited")
 }
 ```
 
-在上面代码中，我们创建了一个缓冲区大小为 5 的整型 `Channel`，生产者向 `Channel` 中发送了 10 个整数，消费者从 `Channel` 中接收这些整数，并将它们打印出来。由于缓冲区大小为 5，因此生产者只有在 `Channel` 中有 5 个或更少的元素时才会被阻塞。在该示例中，由于消费者从 `Channel` 中接收元素的速度比生产者发送元素的速度快，因此生产者最终会被阻塞，直到消费者接收完所有的元素并关闭 `Channel`。
+在上面代码中，我们创建了一个缓冲区大小为 5 的整型 `Channel`，生产者向 `Channel` 中发送了 10 个整数，消费者从 `Channel` 中接收这些整数，并将它们打印出来。由于缓冲区大小为 5，因此生产者只有在 `Channel` 中有 5 个或更多的元素时才会被阻塞。
 
 需要注意的是，当 `Channel` 被关闭后，仍然可以从 `Channel` 中接收剩余的元素，但不能再向 `Channel` 中发送任何元素。因此，在消费者函数中，我们使用了 `for` 循环和 `ok` 标志来检查 `Channel` 是否已经被关闭。
 
-非缓冲`Channel`和缓冲`Channel`的对比：
+**非缓冲`Channel`和缓冲`Channel`的对比：**
 
 ```go
 package main
@@ -233,7 +233,13 @@ func main() {
 
 ## 遍历 Channel
 
-可以通过`Range`持续读取`Channel`，直到`Channel`关闭。
+可以通过`Range`持续读取`Channel`，直到`Channel`关闭。格式如下：
+
+```go
+for v := range c {
+  fmt.Println("receive:", v)
+}
+```
 
 ```go
 package main
@@ -278,6 +284,15 @@ func main() {
 通过`Select-Case`可以选择一个准备好数据`Channel`执行，会从这个`Channel`中读取或写入数据。
 
 ```go
+select {
+  case <-quit: // 接收channel信息
+    return
+  default: // 等同于 switch 的 default。当所以case都阻塞时如果有default则执行default
+    time.Sleep(1 * time.Second)
+}
+```
+
+```go
 package main
 
 import (
@@ -295,7 +310,7 @@ func genNum(c, quit chan int) {
 			// 发送者可通过 close 关闭一个信道来表示没有需要发送的值了。
 			close(c)
 			return
-		default: // 等同于 switch 的 default。当所以case都阻塞时如果有default则，执行default
+		default: // 等同于 switch 的 default。当所以case都阻塞时如果有default则执行default
 			c <- i
 			time.Sleep(1 * time.Second)
 		}
