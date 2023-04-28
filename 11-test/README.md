@@ -346,8 +346,13 @@ PASS
 - 示例函数的编写和展示
 
 ## 参考
+https://pkg.go.dev/testing
+
+https://blog.jetbrains.com/go/2022/11/22/comprehensive-guide-to-testing-in-go/
+
 https://bingdoal.github.io/backend/2022/05/unit-test-on-golang/
 
 https://www.gagahappy.com/golang-test-benchmark-result-introducing/
 
 https://geektutu.com/post/hpg-benchmark.html
+

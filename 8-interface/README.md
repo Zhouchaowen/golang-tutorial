@@ -192,3 +192,7 @@ https://stackoverflow.com/questions/39092925/why-are-interfaces-needed-in-golang
 https://stackoverflow.com/questions/23148812/whats-the-meaning-of-interface
 
 https://blog.boot.dev/golang/golang-interfaces/
+
+https://golangbyexample.com/interface-in-golang/
+
+https://betterprogramming.pub/a-comprehensive-guide-to-interfaces-in-go-6a945b795db

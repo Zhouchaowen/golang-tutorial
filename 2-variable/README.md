@@ -2,6 +2,8 @@
 
 变量和常量简单来说就是给**内存中某一个地址**起一个名字, 然后用这个地址**存储某个特定类型的值**。
 
+![1-1.package](../image/2-1.variate.png)
+
 ## 目录
 
 - 数据类型
@@ -60,9 +62,18 @@ rune        alias for int32 (represents a Unicode code point)
 
 ## 定义变量
 
-在`Golang`中, 通过`var`关键字定义变量, 格式有多种最常用的两种为`var variableName T`和`variableName := Value`（简短声明，定义变量并赋值）。
+在`Golang`中, 通过`var`关键字定义变量, 如下格式有多种：
 
-变量可以定义在函数外, 当做该`package`下的全局变量, 也可以定义在函数内当, 做该函数内的局部变量。
+```go
+var variableName int			// 定义int类型的变量,初始化为零值
+variableName := 1		      // 定义int类型的变量,初始化为 1
+
+// 其它方式
+var variableName int = 1
+var variableName = 1
+```
+
+其中最常用的两种为`var variableName T`和`variableName := Value`（简短声明）。变量可以定义在函数外, 当做该`package`下的全局变量, 也可以定义在函数内当, 做该函数内的局部变量。
 
 ```go
 package main
@@ -180,6 +191,38 @@ func main() {
 	fmt.Printf("str value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(i))
 }
 ```
+
+如上代码中描述了不同类型的声明方式，其中的`interface`类型可以存储任意类型的值，具体原因是在 `Go` 的 `runtime` 中，`interface` 是用两个指针来实现的。其中一个指针指向实际存储数据的指针，另一个指针指向实际存储类型信息的指针。
+
+```go
+// interface{} 运行时的结构
+type eface struct {
+	_type *_type
+	data  unsafe.Pointer
+}
+```
+
+![1-1.package](../image/2-3.interface.png)
+
+具体来说，当一个接口变量被赋值时，Go 会在运行时分配一个包含两个指针的结构体，其中第一个指针指向实际存储的值(`Data Prt`)，第二个指针指向一个表示实际类型的结构体(`Type Prt`)。需要注意的是，这里的类型指的是动态类型，即变量的实际类型而非声明时的类型。
+
+```go
+var i interface{} = true
+fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
+// i value:true  i type:bool
+
+i = "tutorial"
+fmt.Printf("i value:%s  i type:%s\n", i, reflect.TypeOf(i))
+// i value:tutorial  i type:string
+```
+
+这段代码中，定义了一个空接口变量 `i`，并分别将其赋值为 `true` 和 `"tutorial"`。由于 `i` 是一个空接口变量，它可以容纳任何类型的值。在这种情况下，`i` 的类型会根据所赋的值进行自动推导。
+
+在第一个赋值代码中，`i` 被赋值为 `true`，因此 `i` 的类型被推导为 `bool` 类型。在第二个赋值代码中，`i` 被赋值为 `"tutorial"`，因此 `i` 的类型被推导为 `string` 类型。
+
+在 `fmt.Printf()` 函数中，使用了格式化打印 `i` 的值和类型。因此，在第一次打印时，`i` 的值为 `true`，类型为 `bool`；赋值后再打印，`i` 的值为 `"tutorial"`，类型为 `string`。
+
+![1-1.package](../image/2-4.interface-boolTostring.png)
 
 ## 类型转换
 
@@ -868,6 +911,16 @@ Go 语言中支持的运算符包括以下几种：
 - 指针的比较 ?
 
 ## 参考
+
+https://gobyexample.com/variables
+
+https://www.golangprograms.com/go-language/variables.html
+
+https://learnbatta.com/course/golang/data-types-and-variables/
+
+https://www.callicoder.com/golang-variables-zero-values-type-inference/
+
+https://learnbatta.com/course/golang/data-types-and-variables/
 
 https://gfw.go101.org/article/operators.html
 

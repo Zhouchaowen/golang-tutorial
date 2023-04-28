@@ -49,6 +49,9 @@ func main() {
 	fmt.Printf("h value:%s  h type:%s\n", h, reflect.TypeOf(h))
 	fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
 
+	i = "tutorial"
+	fmt.Printf("i value:%s  i type:%s\n", i, reflect.TypeOf(i))
+
 	// 定义字符串变量并初始化为 Golang Tutorial
 	str := "Golang Tutorial"
 	strLength := len(str) // len() 函数可以获取字符串的长度

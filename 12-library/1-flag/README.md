@@ -1,9 +1,20 @@
 # Flag
 
-Go语言标准库中的`flag`包提供了一个方便的接口来解析命令行参数。
+`Flag`是`Go`语言中的一个标准库，它提供了方便的接口来解析命令行参数。定义格式如下：
 
 ```go
-// go run main.go -name zcw -debug -age 20 -score 80 -timeout=10m
+// 格式一
+variableName := flag.[T]("cmd name", "default value", "some descriptive information")
+
+// 格式二
+var variableName T
+flag.[T]Var(&variableName, "cmd name", "default value", "some descriptive information")
+```
+
+
+
+```go
+// go run main.go -name golang -debug -age 20 -score 80 -timeout=10m
 package main
 
 import (
