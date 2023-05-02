@@ -52,6 +52,11 @@ int32   int64   iota    len     make   new     nil       panic      uint64
 print   println real    recover string true    uint      uint8      uintptr
 ```
 
+## 公众号
+
+![wechat](https://github.com/Zhouchaowen/golang-tutorial/blob/master/image/wechat.jpeg)
+
 ## 参考
 
 [参考文件](https://github.com/Zhouchaowen/golang-tutorial/blob/master/REFERENCE.md)
+
