@@ -40,12 +40,15 @@ func main() {
 	//e := uint8(256) // 编译错误, 常量256超出了uint8最大存储限制, 不能转换
 
 	// 转换时, 超过转换的类型范围时将导致数据溢出
-	var f int = 256
-	g := uint8(f)     // uint8最大为255, 溢出后从0开始, 所以g等于0
-	h := uint8(f + 1) // 如上可知h等于1
+	var f uint16 = 256
+	g := uint8(f) // uint8最大为255, 溢出后从0开始, 所以g等于0
+	ff := f + 1
+	h := uint8(ff) // 如上可知h等于1
 
-	fmt.Printf("g value:%d  g type:%s\n", g, reflect.TypeOf(g))
-	fmt.Printf("h value:%d  h type:%s\n", h, reflect.TypeOf(h))
+	fmt.Printf("f  binary value:%016b f  value:%d   f type:%s\n", f, f, reflect.TypeOf(f))
+	fmt.Printf("g  binary value:%016b g  value:%d     g type:%s\n", g, g, reflect.TypeOf(g))
+	fmt.Printf("ff binary value:%016b ff value:%d  ff type:%s\n", ff, ff, reflect.TypeOf(ff))
+	fmt.Printf("h  binary value:%016b h  value:%d     h type:%s\n", h, h, reflect.TypeOf(h))
 
 	j := 10    // 自动推导为int型
 	l := 100.1 // 自动推导为float64型

@@ -1,3 +1,5 @@
+https://golangbot.com/learn-golang-series/
+
 https://gobyexample-cn.github.io/
 
 https://go-zh.org/doc/effective_go.html
@@ -67,3 +69,4 @@ https://github.com/bodhiye/paste
 https://github.com/hhandhuan/ku-bbs
 
 https://github.com/cloudreve/Cloudreve
+

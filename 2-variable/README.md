@@ -2,7 +2,7 @@
 
 变量和常量简单来说就是给**内存中某一个地址**起一个名字, 然后用这个地址**存储某个特定类型的值**。
 
-![1-1.package](../image/2-1.variate.png)
+![2-1.variate](../image/2-1.variate.png)
 
 ## 目录
 
@@ -192,7 +192,7 @@ func main() {
 }
 ```
 
-如上代码中描述了不同类型的声明方式，其中的`interface`类型可以存储任意类型的值，具体原因是在 `Go` 的 `runtime` 中，`interface` 是用两个指针来实现的。其中一个指针指向实际存储数据的指针，另一个指针指向实际存储类型信息的指针。
+如上代码中描述了不同类型的声明方式，**其中的`interface`类型可以存储任意类型的值**，具体原因是在 `Go` 的 `runtime` 中，`interface` 是用**两个指针**来实现的(`eface`)。其中一个指针**指向实际类型信息**的指针(`_ytpe`)，另一个指针**指向实际存储数据**的指针(`data`)。
 
 ```go
 // interface{} 运行时的结构
@@ -204,7 +204,7 @@ type eface struct {
 
 ![1-1.package](../image/2-3.interface.png)
 
-具体来说，当一个接口变量被赋值时，Go 会在运行时分配一个包含两个指针的结构体，其中第一个指针指向实际存储的值(`Data Prt`)，第二个指针指向一个表示实际类型的结构体(`Type Prt`)。需要注意的是，这里的类型指的是动态类型，即变量的实际类型而非声明时的类型。
+具体来说，当一个接口变量被赋值时，`Go` 会在**运行时分配一个包含两个指针的结构体**(`eface`)，其中第一个指针指向一个表示实际类型的指针(`Type Prt`)，第二个指针指向实际存储值的指针(`Data Prt`)。需要注意的是，这里的类型指的是**动态类型**，即**变量的实际类型而非声明时的类型**。
 
 ```go
 var i interface{} = true
@@ -216,11 +216,11 @@ fmt.Printf("i value:%s  i type:%s\n", i, reflect.TypeOf(i))
 // i value:tutorial  i type:string
 ```
 
-这段代码中，定义了一个空接口变量 `i`，并分别将其赋值为 `true` 和 `"tutorial"`。由于 `i` 是一个空接口变量，它可以容纳任何类型的值。在这种情况下，`i` 的类型会根据所赋的值进行自动推导。
+这段代码中，定义了一个空接口变量 `i`，并先后将其赋值为 `true` 和 `"tutorial"`。由于 `i` 是一个空接口变量，它可以容纳任何类型的值。在这种情况下，`i` 的类型会根据所赋的值进行自动推导。
 
 在第一个赋值代码中，`i` 被赋值为 `true`，因此 `i` 的类型被推导为 `bool` 类型。在第二个赋值代码中，`i` 被赋值为 `"tutorial"`，因此 `i` 的类型被推导为 `string` 类型。
 
-在 `fmt.Printf()` 函数中，使用了格式化打印 `i` 的值和类型。因此，在第一次打印时，`i` 的值为 `true`，类型为 `bool`；赋值后再打印，`i` 的值为 `"tutorial"`，类型为 `string`。
+在 `fmt.Printf()` 函数中，使用了格式化打印 `i` 的值和类型。因此，在第一次打印时，`i` 的值为 `true`，类型为 `bool`；赋值为`tutorial`后再打印，`i` 的值为 `"tutorial"`，类型为 `string`。
 
 ![1-1.package](../image/2-4.interface-boolTostring.png)
 
@@ -267,12 +267,15 @@ func main() {
 	//e := uint8(256) // 编译错误, 常量256超出了uint8最大存储限制, 不能转换
 
 	// 转换时, 超过转换的类型范围时将导致数据溢出
-	var f int = 256
-	g := uint8(f)     // uint8最大为255, 溢出后从0开始, 所以g等于0
-	h := uint8(f + 1) // 如上可知h等于1
+	var f uint16 = 256
+	g := uint8(f) // uint8最大为255, 溢出后从0开始, 所以g等于0
+	ff := f + 1
+	h := uint8(ff) // 如上可知h等于1
 
-	fmt.Printf("g value:%d  g type:%s\n", g, reflect.TypeOf(g))
-	fmt.Printf("h value:%d  h type:%s\n", h, reflect.TypeOf(h))
+	fmt.Printf("f  binary value:%016b f  value:%d   f type:%s\n", f, f, reflect.TypeOf(f))
+	fmt.Printf("g  binary value:%016b g  value:%d     g type:%s\n", g, g, reflect.TypeOf(g))
+	fmt.Printf("ff binary value:%016b ff value:%d  ff type:%s\n", ff, ff, reflect.TypeOf(ff))
+	fmt.Printf("h  binary value:%016b h  value:%d     h type:%s\n", h, h, reflect.TypeOf(h))
 
 	j := 10    // 自动推导为int型
 	l := 100.1 // 自动推导为float64型
@@ -284,11 +287,34 @@ func main() {
 }
 ```
 
+如上代码中展示了类型转换时的溢出问题，代码片段如下：
+
+```go
+// 转换时, 超过转换的类型范围时将导致数据溢出
+var f uint16 = 256
+g := uint8(f) // uint8最大为255, 溢出后从0开始, 所以g等于0
+ff := f + 1
+h := uint8(ff) // 如上可知h等于1
+```
+
+其中`uint16`类型的`f`转换为`uint8`类型的`g`,由于`f`存储的值为256超过`uint8`最大可存储值，导致数据溢出。转换时会从`uint16`起始位置截取`uint8`占用的位数(8位), 然后赋值给`g`, 如下图展示：
+
+![overflow1.png](../image/2-5.overflow1.png)
+
+`uint16`类型的`ff`转换为`uint8`类型的`h`， 如下图展示：
+
+![overflow2.png](../image/2-5.overflow2.png)
+
 注意：如果要在类型之间进行转换，但不确定是否能够安全地进行转换，可以使用**类型断言**。类型断言可以判断**一个接口类型(interface{})的值是否属于指定类型**。如果是，则返回转换后的值，否则返回一个错误。（该知识点将在`Interface{}`章节讲解）
 
 ## 定义常量
 
 在`Golang`中通过`const`定义常量, 格式为`const constantName = value`或`const constantName T = value`, 其中 `constantName` 表示常量的名称，`T` 表示常量的类型（可以省略，省略后类型会根据值自动推导），`value` 表示常量的值。
+
+```go
+const constantName = valueA
+const constantName T = value
+```
 
 常量可以定义在函数外当做该包下的**全局常量**, 也可以定义在函数内当做该函数内的**局部常量**。注意：常量定义的时候必须赋值，**定义后值不能被修改**。
 
@@ -349,10 +375,31 @@ func main() {
 在`Golang`中，**函数可以像普通类型一样被声明和使用**。这意味着可以将一个函数赋值给一个变量, 也可以将一个函数作为另一个函数的参数或返回值。**(函数定义将在下一章讲解)**
 
 ```go
+// 将一个匿名函数赋值给变量 printConsole
+var printConsole = func(){
+  fmt.Println("golang tutorial")
+}
+
+// 将一个带参数的匿名函数赋值给变量 add
+var add = func(x, y int) int {
+  return x + y
+}
+
+// 将一个带参数的匿名函数当做参数
+func compute(x, y int, handler func(x, y int) int) int {}
+
+// 将一个匿名函数当做返回值
+func genNum() func() int {}
+```
+
+使用实例：
+
+```go
 package main
 
 import (
 	"fmt"
+	"math/rand"
 )
 
 /*
@@ -364,27 +411,44 @@ import (
 func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10
-  result := handler(x, y) // 调用匿名函数 handler
+	result := handler(x, y) // 调用匿名函数 handler
 	return result
-  //return handler(x, y) //可以直接这样调用
+	//return handler(x, y) //可以直接这样调用
+}
+
+func genNum() func() int {
+	return func() int {
+		return rand.Intn(999999)
+	}
 }
 
 // 函数也可以当做类型,可以像其它值一样传递
 func main() {
-  // 第1部分 将一个匿名函数赋值给变量 add
+	var printConsole = func() {
+		fmt.Println("golang tutorial")
+	}
+	printConsole()
+
+	// 1 将一个匿名函数赋值给变量 add
 	var add = func(x, y int) int {
 		return x + y
 	}
-  result := add(1, 2) // 调用函数变量
-	fmt.Println("add result",result)
+	result := add(1, 2) // 调用函数变量
+	fmt.Println("add result", result)
 
-  // 第2部分
+	// 2
 	Multi := func(x, y int) int {
 		return x * y
 	}
-  result = compute(1, 2, Multi) // 调用函数compute并传递2个int参数和函数变量参数Multi
-	fmt.Println("Multi result",result)
+	result = compute(1, 2, Multi) // 调用函数compute并传递2个int参数和函数变量参数Multi
+	fmt.Println("Multi result", result)
+
+	num := genNum()
+	fmt.Println("genNum result", num())
+	fmt.Println("genNum result", num())
+	fmt.Println("genNum result", num())
 }
+
 /*
 func(x, y int) int {
 		return x + y
@@ -394,17 +458,15 @@ func(x, y int) int {
 
 在上面的示例中第1部分，我们声明了一个名为 `add` 的函数变量，它接受两个整数作为参数并返回它们的和。然后调用 `add` 变量，将其作为一个普通的函数来计算 1 和 2 的和，最后将结果输出到控制台上。
 
-在上面的示例中第2部分，我们定义了一个函数变量`Multi`，它接受两个整数作为参数并返回它们的乘积。然后，我们定义了一个函数 `compute`，它接受两个整数，以及一个函数作为参数。`compute` 函数会调用传入的函数`handler`，并将两个整数+10后作为参数传递给它。最后，我们在 `main` 函数调用 `compute` 函数，将两个整数和 `Multi`函数作为参数传递给它，然后将结果输出到控制台上。
-
-需要注意的是，函数变量不能像普通变量那样赋值为 `nil`。如果要声明一个为空的函数变量，可以使用函数类型的零值 `func() {}`。
+在上面的示例中第2部分，我们定义了一个函数变量`Multi`，它接受两个整数作为参数并返回它们的乘积。然后，我们定义了一个函数 `compute`，它接受两个整数，以及一个函数作为参数。`compute` 函数将传入的两个整数参数+10后作为参数传递给`handler`。最后，我们在 `main` 函数调用 `compute` 函数，将两个整数和 `Multi`函数作为参数传递给它，然后将结果输出到控制台上。
 
 ## 定义指针变量
 
 在`Golang`中通过`var`定义指针变量, 格式有多种选择常用的三种
 
-- `var variableName *T` 定义一个指针变量, 默认值为`nil`。
-- `variableName := &Value` 通过简单语句定义一个指针变量并赋默认值(`&Value`代表去`Value`值的地址)。
--  `variableName := new(T)` 通过内置函数`new()`初始化指针变量，会默认分配一个地址,并存储对应类型的0值。
+- `var variableName *T` 定义一个指针变量, **默认值为`nil`**。
+- `variableName := &Value` 通过简单语句定义一个指针变量并赋默认值(`&Value`代表取`Value`值的地址)。
+-  `variableName := new(T)` 通过内置函数`new()`初始化指针变量，会默认分配一个地址,并存储对应类型的**零值**。
 
 指针变量还可以与 `nil` 进行比较，以检查它们**是否指向了某个地址**。如果一个指针变量为 `nil`，则表示它没有指向地址。
 
@@ -416,7 +478,7 @@ import "fmt"
 /*
 	通过 var 定义指针变量
 	var variableName *T
-	var variableName *T = Value
+	var variableName *T = &Value
 	var variableName = &Value
 	variableName := &Value
 */
@@ -500,11 +562,13 @@ func main() {
 
 在上面的代码中，注释① 我们定义了一个整数变量 `b`，并将其初始化为 1。 注释② 我们使用取地址符 `&` 来获取变量 `b` 的内存地址，并将其赋值给指针变量 `a`。现在，指针变量 `a` 指向了变量 `b` 的内存地址，打印`a`存储的地址和地址上的具体值。
 
+![2-2.pointerVariate](../image/2-2.pointerVariate.png)
+
 需要注意的是，指针变量只能指向相同类型的变量。例如，如果我们定义了一个整数类型的指针变量，那么它只能指向整数类型的变量，而不能指向字符串、浮点数或其他类型的变量。
 
 - 通过内置函数new创建指针
 
-使用 `new` 函数创建的变量是**零值**，也就是说，它们的值为 **0、false、空字符或者空指针**，具体取决于变量类型。
+使用 `new` 函数创建的指针变量默认值是**零值**，也就是说它们的值为 **0、false、空字符或者空指针**，具体取决于变量类型。
 
 ```go
 package main
@@ -562,9 +626,9 @@ func main() {
 }
 ```
 
-在上面的代码中，我们首先定义了一个指针变量 `ptr`，并检查它是否为 `nil`。由于它没有指向任何变量，因此应该输出 "ptr is nil"。然后，我们定义了一个整数变量 `a`，并使用 `&a` 获取它的内存地址，并将其赋值给指针变量 `ptr2`。由于 `ptr2` 指向了变量 `a`，因此应该输出 "ptr2 is not nil"。
+在上面的代码中，我们首先定义了一个指针变量 `ptr`，并检查它是否为 `nil`。由于它没有指向任何变量(地址)，因此应该输出 "ptr is nil"。然后，我们定义了一个整数变量 `a`，并使用 `&a` 获取它的内存地址，并将其赋值给指针变量 `ptr2`。由于 `ptr2` 指向了变量 `a`，因此应该输出 "ptr2 is not nil"。
 
-需要注意的是，指针变量可能会产生**空指针异常**。如果我们在访问指针变量所指向的变量之前没有检查指针变量是否为 `nil`，则可能会**出现空指针异常，导致程序崩溃**。因此，在使用指针变量之前，应该先检查它是否为 `nil`，以避免出现空指针异常。
+需要注意的是，使用指针变量可能会产生**空指针异常**。如果我们在访问指针变量所指向的变量之前没有检查指针变量是否为 `nil`，则可能会**出现空指针异常，导致程序崩溃**。因此，在使用指针变量之前，应该先检查它是否为 `nil`，以避免出现空指针异常。
 
 ## 占位符
 
@@ -870,9 +934,9 @@ Go 语言中支持的运算符包括以下几种：
 
    ```go
    ch := make(chan int, 10) // 创建一个缓冲大小为 10 的 int 类型的通道 ch
-   ch <- 10                // 向通道 ch 写入数据 10
-   x := <-ch               // 从通道 ch 读取数据并赋值给 x
-   close(ch)               // 关闭通道 ch
+   ch <- 10                 // 向通道 ch 写入数据 10
+   x := <-ch                // 从通道 ch 读取数据并赋值给 x
+   close(ch)                // 关闭通道 ch
    ```
 
 7. 类型运算符：用于检查和转换数据类型。(后面章节讲解)

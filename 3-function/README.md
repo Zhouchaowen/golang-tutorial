@@ -2,6 +2,8 @@
 
 在 ` Go ` 语言中，函数是一种**基本的代码块**，用于执行某些操作并返回结果。通过函数来划分不同功能， 我们可以将不同的功能封装成不同的函数，减少主干逻辑的复杂度。
 
+![3-1.funcCall.png](../image/3-1.funcCall.png)
+
 ## 目录
 
 - 定义函数
@@ -11,7 +13,13 @@
 
 ## 函数定义
 
-在`Golang`中通过关键字`func`定义一个函数, 并指定函数名称、参数列表和返回类型。 格式`func functionName(parameterName T,....) resultName T ...{}`
+在`Golang`中通过关键字`func`定义一个函数, 并指定函数名称、参数列表和返回类型。 格式:
+
+```go
+func functionName(parameterName T,....) resultName T ...{}
+```
+
+使用实例：
 
 ```go
 package main
@@ -48,6 +56,22 @@ func variableCut(x int, y ...int) int {
 	return x
 }
 
+func main() {
+	print()
+	fmt.Printf("add() return: %d\n", add(1, 2))
+	x, y := swap(1, 2)
+	fmt.Printf("swap() x: %d, y: %d \n", x, y)
+	fmt.Printf("advariableCutd() return: %d\n", variableCut(1, 2, 3, 4, 5))
+}
+```
+
+**变量传递与指针变量传递的区别**
+
+```go
+package main
+
+import "fmt"
+
 // 值类型参数
 func modifyValue(x int) {
 	x = x * 10
@@ -59,17 +83,11 @@ func modifyPointer(x *int) {
 }
 
 func main() {
-	print()
-	fmt.Printf("add() return: %d\n", add(1, 2))
-	x, y := swap(1, 2)
-	fmt.Printf("swap() x: %d, y: %d \n", x, y)
-	fmt.Printf("advariableCutd() return: %d\n", variableCut(1, 2, 3, 4, 5))
-
 	// 值类型传递与指针类型传递的区别
 	//		值传递是指在调用函数时将实际参数复制一份传递到函数中，
-  //       这样在函数中如果对参数进行修改，将不会影响到实际参数
+  //       这样在函数中如果对参数进行修改，将不会影响到传入的变量的值
 	//		指针传递(引用传递)是指在调用函数时将实际参数的地址传递到函数中，
-  //       那么在函数中对参数进行的修改，将影响到实际参数
+  //       那么在函数中对参数进行的修改，将影响到传入的指针变量指向的值
 	x = 1
 	modifyValue(x)
 	fmt.Printf("modifyValue() return: %d\n", x)
@@ -79,6 +97,14 @@ func main() {
 	fmt.Printf("modifyPointer() return: %d\n", x)
 }
 ```
+
+如上代码中`modifyValue(x int)`接收一个值变量参数,在函数中对参数进行修改，将不会影响到传入的变量的值。
+
+![3-1.funcVariate.png](../image/3-2.funcVariate.png)
+
+然而`func modifyPointer(x *int)`接收一个指针变量参数,在函数中对参数进行修改，将会影响到传入的指针变量指向的值。
+
+![3-2.funcPointerVariate.png](../image/3-3.funcPointerVariate.png)
 
 ## 匿名函数
 
@@ -129,6 +155,8 @@ func main() {
 
 **闭包把匿名函数和运行时的引用环境打包成为一个新的整体**，当每次调用包含闭包的函数时都将返回一个新的闭包实例，这些实例之间是隔离的，分别包含调用时不同的引用环境现场。不同于函数，闭包在运行时可以有多个实例，不同的引用环境和相同的匿名函数组合可以产生不同的实例。
 
+![3-4.closure.png](../image/3-4.closure.png)
+
 ```go
 package main
 
@@ -164,9 +192,9 @@ func main() {
 
 需要注意的是，由于 `counter` 函数返回的是一个闭包函数，而不是一个整数，所以我们需要使用 `()` 操作符来调用闭包函数并获取计数器的值。
 
-闭包在 Go 语言中是一个非常强大的编程技巧，可以用于实现函数工厂、延迟计算、函数递归等复杂的编程场景。不过，由于闭包函数可以访问其外部作用域中的变量，因此在使用闭包时需要特别小心，以避免出现并发访问和变量泄露等问题。
+**闭包在 Go 语言中是一个非常强大的编程技巧，可以用于实现函数工厂、延迟计算、函数递归等复杂的编程场景。**不过，由于闭包函数可以访问其外部作用域中的变量，因此在使用闭包时需要特别小心，以避免出现并发访问和变量泄露等问题。
 
-通过闭包实现修饰器函数
+通过闭包实现修饰器函数:
 
 ```go
 package main
@@ -233,6 +261,59 @@ func main() {
 	Steps3Plus()
 }
 ```
+
+通过`type Handler func(x, y int) int`改造`logWrapper()`修饰器函数:
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"runtime"
+)
+
+// Handler 是通过type给func(x, y int) int起的别名(简化开发)
+type Handler func(x, y int) int
+
+// add 也是一个Handler
+func add(x, y int) int {
+	return x + y
+}
+
+// 入参为Handler返回为也为Handler
+func logWrapper(handler Handler) Handler {
+	return func(x, y int) int {
+		fmt.Printf("\tlogWrapper Calling function %v \n", runtime.FuncForPC(reflect.ValueOf(handler).Pointer()).Name())
+		result := handler(x, y)
+		fmt.Printf("\tlogWrapper Function returned %v \n", result)
+		return result
+	}
+}
+
+func countWrapper(handler Handler) Handler {
+	countX := 0
+	return func(x, y int) int {
+		fmt.Printf("  {\n")
+		fmt.Printf("\tcountWrapper Calling function %v \n", runtime.FuncForPC(reflect.ValueOf(handler).Pointer()).Name())
+		result := handler(x, y)
+		fmt.Printf("\tcountWrapper Calling function count %v \n", countX)
+		fmt.Printf("  }\n")
+		countX++
+		return result
+	}
+}
+
+func main() {
+	// 修饰器函数countWrapper包裹logWrapper，logWrapper包裹add
+	wrappedCount := countWrapper(logWrapper(add))
+	wrappedCount(2, 3)
+	wrappedCount(3, 3)
+	wrappedCount(4, 3)
+}
+```
+
+![3-5.closureCallChain.png](../image/3-5.closureCallChain.png)
 
 ## Init函数
 

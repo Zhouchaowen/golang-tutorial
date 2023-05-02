@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 )
 
 /*
@@ -23,8 +24,19 @@ func compute(x, y int, handler func(x, y int) int) int {
 	//return handler(x, y) //可以直接这样调用
 }
 
+func genNum() func() int {
+	return func() int {
+		return rand.Intn(999999)
+	}
+}
+
 // 函数也可以当做类型,可以像其它值一样传递
 func main() {
+	var printConsole = func() {
+		fmt.Println("golang tutorial")
+	}
+	printConsole()
+
 	// 1 将一个匿名函数赋值给变量 add
 	var add = func(x, y int) int {
 		return x + y
@@ -38,6 +50,11 @@ func main() {
 	}
 	result = compute(1, 2, Multi) // 调用函数compute并传递2个int参数和函数变量参数Multi
 	fmt.Println("Multi result", result)
+
+	num := genNum()
+	fmt.Println("genNum result", num())
+	fmt.Println("genNum result", num())
+	fmt.Println("genNum result", num())
 }
 
 /*

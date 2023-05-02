@@ -36,7 +36,7 @@ func main() {
 
 	var h interface{} = "golang"
 	var i interface{} = true
-	//var j,k = 1,"Golang Tutrial" // 多变量声明并赋值
+	//var j,k = 1,"Golang Tutorial" // 多变量声明并赋值
 
 	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
 	fmt.Printf("aa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
@@ -49,6 +49,7 @@ func main() {
 	fmt.Printf("h value:%s  h type:%s\n", h, reflect.TypeOf(h))
 	fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
 
+	// i 被重新赋值, 类型转换为string
 	i = "tutorial"
 	fmt.Printf("i value:%s  i type:%s\n", i, reflect.TypeOf(i))
 

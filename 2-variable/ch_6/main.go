@@ -12,7 +12,7 @@ import "fmt"
 /*
 	通过 var 定义指针变量
 	var variableName *T
-	var variableName *T = Value
+	var variableName *T = &Value
 	var variableName = &Value
 	variableName := &Value
 */
