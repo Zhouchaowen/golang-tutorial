@@ -144,6 +144,15 @@ Steps2():
 在` Go` 语言中，可以为结构体中的字段设置 `tag`，`tag` 是结构体中的一个特殊字段，它可以用来指定某些字段的元数据信息，比如 `JSON` 序列化时的字段名、`ORM` 映射时的表名、字段类型等。`tag` 是一个字符串，通常以 `key:"value"` 的形式表示，多个 `tag` 之间使用空格分隔。
 
 ```go
+type User struct {
+	UserName string `json:"user_name"`
+  PassWord string `json:"pass_word" orm:"passw"`
+}
+```
+
+其中`json:"user_name"`和`json:"pass_word" orm:"passw"`就分别是`UserName`和`PassWord`的`tag`。如下为具体使用实例：
+
+```go
 package main
 
 import (
@@ -227,17 +236,17 @@ Steps4():
 
 ## 结构体方法
 
-除了定义数据字段之外，结构体类型还可以定义相关的方法。**方法是一种与特定类型相关联的函数**，可以对该类型的值进行操作。在 Go 语言中，可以通过 `func` 关键字和结构体类型的名称来定义方法，语法如下：
+除了定义数据字段之外，结构体类型还可以定义相关的方法。**方法是一种与特定类型相关联的函数**，可以对该类型的值进行操作。在 Go 语言中，可以通过结构体类型的名称和`func` 关键字来定义方法，语法如下：
 
 ```go
-func (p StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnType {
+func (p StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) (ReturnType,...) {
     // 方法的实现代码
 }
 ```
 
-其中`p`是定义的结构体局部变量名称(**接收者**)，`StructName` 表示当前方法属于这结构体。后面依次是方法名和参数列表，这些与普通函数的定义类似，用于指定方法的输入和输出。
+其中`p`是定义的结构体局部变量名称(或者叫**值接收者**)，`StructName` 为结构体名称，表示当前方法属于这结构体。后面依次是方法名、参数列表和返回值，这些与普通函数的定义类似，用于指定方法的输入和输出。
 
-其实结构体方法等同于如下的`MethodName`函数 (方法只是函数的另外一种写法并且必须和类型绑定)。
+其实结构体方法**等同于**如下的`MethodName`函数 (方法只是函数的另外一种写法并且必须和类型绑定)。
 
 ```go
 func MethodName(p StructName, parameter1 Type1, parameter2 Type2, ...) ReturnType {
@@ -246,6 +255,10 @@ func MethodName(p StructName, parameter1 Type1, parameter2 Type2, ...) ReturnTyp
 ```
 
 ### 值方法
+
+值方法就是接收者定义为普通变量的方法。
+
+![5-1.valueMethod.png](../image/5-1.valueMethod.png)
 
 ```go
 package main
@@ -307,9 +320,9 @@ func main() {
 }
 ```
 
-在上面的代码中， `print(),printB(),ModifyE(),printAddr1 (),printAddr2()` 方法绑定到 `Demo` 结构体上，并且只能通过`Demo`结构体的实例才能调用。
+在上面的代码中 `print(),printB(),ModifyE(),printAddr1 (),printAddr2()` 方法绑定到 `Demo` 结构体上，并且只能通过`Demo`结构体的实例才能调用。
 
-每个方法中都使用 `d` 作为接收者名称 (当然接收者`d`可以任意取名)，表示当 `Demo` 类型的实例调用该方法时，实例本身的数据会被赋值给接收者 `d` ，从而可以通过接收者`d`在结构体方法中访问该实例的数据字段,  例如：
+每个方法中都使用 `d` 作为**接收者名称** (当然接收者`d`可以任意取名)，表示当 `Demo` 类型的实例调用该方法时，实例本身的数据会被赋值给接收者 `d` ，从而可以通过接收者`d`在结构体方法中访问该实例的数据字段,  例如：
 
 ```go
 func (d Demo) printB() {
@@ -332,11 +345,15 @@ fmt.Printf("value %+v\n", v)
 {a:true B:71 C:1 D:1 E:Golang Tutorial F:[1 2] G:map[Golang:0 Tutorial:1]}
 ```
 
+![5-2.valueMethodCopy.png](../image/5-2.valueMethodCopy.png)
+
 以上两个方法调用证明了这一点，`ModifyE()`方法中修改了`E`字段，并不会影响到v实例。
 
 ### 指针方法
 
 指针方法和值方法使用方式基本一致，只是在定义接收者的时候需要定义为指针。
+
+![5-1.pointerMethod.png](../image/5-1.pointerMethod.png)
 
 ```go
 func (p *StructName) MethodName(parameter1 Type1, parameter2 Type2, ...) ReturnType {
@@ -420,11 +437,13 @@ fmt.Printf("%+v\n", v)
 {a:true B:71 C:1 D:1 E:Hello World F:[1 2] G:map[Golang:0 Tutorial:1]}
 ```
 
+![5-2.pointerMethodCopy.png](../image/5-2.pointerMethodCopy.png)
+
 所以如果方法需要修改接收者的值，那么必须使用指针类型的接收者。如果使用值类型的接收者，则只能访问接收者的数据字段，而不能修改接收者的值。
 
 ## 自定义类型定义方法
 
-自定义类型方法和结构体方法使用方式基本一致。
+自定义类型方法和结构体方法使用方式基本一致, 自定义类型只是给现有的类型起的**一个别名**。
 
 ```go
 package main
@@ -492,3 +511,8 @@ type circle struct{
 
 ## 参考
 
+https://www.pengrl.com/p/16608/
+
+https://xie.infoq.cn/article/e87f45801f8b694babe5db07e
+
+https://www.liwenzhou.com/posts/Go/struct_memory_layout/

@@ -98,11 +98,11 @@ func main() {
 }
 ```
 
-如上代码中`modifyValue(x int)`接收一个值变量参数,在函数中对参数进行修改，将不会影响到传入的变量的值。
+如上代码中`modifyValue(x int)`接收一个值变量参数,在函数中对参数进行修改，将不会影响到传入的变量的值, 因为它们属于不同的内存空间(`0xc00012a020,0xc00012a038`),所以是相互隔离的。
 
 ![3-1.funcVariate.png](../image/3-2.funcVariate.png)
 
-然而`func modifyPointer(x *int)`接收一个指针变量参数,在函数中对参数进行修改，将会影响到传入的指针变量指向的值。
+然而`func modifyPointer(x *int)`接收一个指针变量参数,在函数中对参数进行修改，将会影响到传入的指针变量指向的值,虽然它们属于不同的内存空间(`0xc00012a020,0xc00012a038`), 但是`0xc00012a038`的值指向了`0xc00012a020`, 可以通过`*`操作符改变指针变量指向的最终值。
 
 ![3-2.funcPointerVariate.png](../image/3-3.funcPointerVariate.png)
 
@@ -358,6 +358,8 @@ func main() {
 
 注意, `Go` 语言的初始化顺序是先导入所有包，然后按照包导入的顺序依次初始化每个包中的 `const`、`var` 和 `init`, 最后调用 `main` 函数。
 
+![3-6.init.png](../image/3-6.init.png)
+
 ## 思考题
 
 1. 通过传参实现加减乘除这四个函数,如: 加法函数
@@ -388,6 +390,8 @@ func add(a,b int) int {
 
 ## 参考
 
-https://llmxby.com/2022/08/27/%E6%8E%A2%E7%A9%B6Golang%E4%B8%AD%E7%9A%84%E9%97%AD%E5%8C%85/#%E9%97%AD%E5%8C%85%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9D%91
+https://llmxby.com/2022/08/27/%E6%8E%A2%E7%A9%B6Golang%E4%B8%AD%E7%9A%84%E9%97%AD%E5%8C%85/
 
 https://www.cnblogs.com/mfrank/p/13383467.html
+
+https://stackoverflow.com/questions/24790175/when-is-the-init-function-run/49831018#49831018

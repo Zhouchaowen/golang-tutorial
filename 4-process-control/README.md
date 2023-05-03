@@ -12,13 +12,21 @@
 
 ## 循环语句
 
+![4-1.for-rang.png](../image/4-1.for-rang.png)
+
 `Golang`中实现循环有三种类型的语句：`for` 循环、`range` 循环和 `goto` 语句。
 
 - **For循环**
 
 `Golang`中通过`For`关键字来定义一个循环并且只有`For`关键字(`Golang`中没有`while`关键字)，格式
 
-`for initialization; condition; post { // do something }` 其中，`initialization` 是循环开始前的初始化语句，`condition` 是循环条件，`post` 是每次循环结束后执行的语句。这些语句都是可选的，如果不需要可以省略。
+```go
+for initialization; condition; post {
+  // do something 
+}
+```
+
+其中，`initialization` 是循环开始前的初始化语句，`condition` 是循环条件，`post` 是每次循环结束后执行的语句。这些语句都是可选的，如果不需要可以省略。
 
 ```go
 package main
@@ -172,6 +180,8 @@ func main() {
 
 ## If判断
 
+![4-2.if.png](../image/4-2.if.png)
+
 `Golang`中`If`语句和其它语言语义相同
 
 ```go
@@ -201,6 +211,8 @@ func main() {
 ```
 
 ## Switch选择
+
+![4-3.switch.png](../image/4-3.switch.png)
 
 在`Golang`中可以通过`switch-case`来实现分支选择, 每一个`case`分支都是**唯一**的，从上往下逐一判断，直到匹配为止，如果某些`case`分支条件重复了，编译会报错。
 
@@ -350,6 +362,8 @@ func main() {
 
 在上面的示例中，`defer` 语句都在函数中定义，它们会在函数返回之前执行。`defer fmt.Printf(" world\n")`，会在`func Steps1()`返回前执行。
 
+![4-4.defer1.png](../image/4-4.defer1.png)
+
 通过`defer`延时打印数字：
 
 ```go
@@ -377,12 +391,12 @@ func main() {
   |   | |    |
   | | V | |  |
   |	|     |  V
-	| ... |
-	|  3  |
-	|  2  |
-	|  1  |
-	|  0  |
-	 —————
+    | ... |
+    |  3  |
+    |  2  |
+    |  1  |
+    |  0  |
+     —————
 */
 /* 执行结果
 begin
@@ -395,6 +409,8 @@ end
     i: 0
 */
 ```
+
+![4-4.defer2.png](../image/4-4.defer2.png)
 
 如下代码`defer` 语句中**引用函数中的变量**，会在函数调用是根据最新的值计算（`Steps3`）; `defer` 语句中的**函数参数**会在 `defer` 语句定义时计算，而不是在函数调用时计算（`Steps4`）。
 
@@ -432,6 +448,10 @@ func main() {
 	Steps4()
 }
 ```
+
+总结来说就是**变量作用域**的问题。
+
+![4-4.defer3.png](../image/4-4.defer3.png)
 
 ## Recover
 
@@ -538,3 +558,11 @@ func Calculation(option byte, a float64,b float64) float64{
 ## 参考
 
 https://gfw.go101.org/article/control-flows.html
+
+https://www.songx.fun/blog/%E5%BF%85%E4%BF%AE/7golang%E4%B8%AD%E7%9A%84defer%E5%BF%85%E6%8E%8C%E6%8F%A1%E7%9A%847%E7%9F%A5%E8%AF%86%E7%82%B9/
+
+https://tachingchen.com/tw/blog/go-defer-and-os-exit/
+
+https://xiaomi-info.github.io/2020/01/20/go-trample-panic-recover/
+
+https://juejin.cn/post/6946517151251431454

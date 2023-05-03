@@ -39,11 +39,13 @@ func (d *Demo) ModifyE() {
 }
 
 func (d *Demo) printAddr1() {
-	fmt.Printf("%p\n", d)
+	fmt.Printf("d address:%p\n", &d)
+	fmt.Printf("d   value:%p\n", d)
 }
 
 func (d *Demo) printAddr2() {
-	fmt.Printf("%p\n", d)
+	fmt.Printf("d address:%p\n", &d)
+	fmt.Printf("d   value:%p\n", d)
 }
 
 func main() {
@@ -55,7 +57,12 @@ func main() {
 	v.ModifyE()
 	fmt.Printf("%+v\n", v)
 
+	fmt.Println("--------------")
+	fmt.Printf("v address:%p\n", &v)
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr2()
 }
