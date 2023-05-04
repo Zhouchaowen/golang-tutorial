@@ -54,7 +54,7 @@ print   println real    recover string true    uint      uint8      uintptr
 
 ## 公众号
 
-![wechat](../image/wechat.jpeg)
+![wechat](./image/wechat.jpeg)
 
 ## 参考
 

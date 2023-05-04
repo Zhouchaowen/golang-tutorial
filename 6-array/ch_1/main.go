@@ -20,7 +20,7 @@ var arrayUInt [3]uint
 func main() {
 	// 类型 [n]T 表示拥有 n 个 T 类型的值的数组
 	// 类型 [3]int 表示拥有 3 个 int 类型的值的数组, 默认值为0
-	var arrayInt = [3]int{} // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	var arrayInt [3]int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	arrayInt[0] = 1
 	arrayInt[1] = 2
 	fmt.Printf("arrayInt: %+v\n", arrayInt)
@@ -46,7 +46,9 @@ func main() {
 
 	// 数组地址
 	fmt.Printf("arrayInt: %p\n", &arrayInt)
-	fmt.Printf("arrayInt[0]: %p\n", &arrayInt[0])
+	for i, v := range arrayInt {
+		fmt.Printf("&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
+	}
 
 	fmt.Printf("arrayInt len: %d\n", len(arrayInt))
 	fmt.Printf("arrayInt cap: %d\n", cap(arrayInt))

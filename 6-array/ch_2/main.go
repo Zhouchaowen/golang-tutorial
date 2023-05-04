@@ -28,12 +28,20 @@ func Steps1() {
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
-
+	fmt.Printf("\t sliceInt:%p\n", sliceInt)
+	fmt.Printf("\t&sliceInt:%p\n", &sliceInt)
 	//_ = sliceInt[0] // 在未初始化长度前直接通过下标读取或赋值数据将会报错, 只能通过 append 添加元素
 
 	// Steps 1-2: append 向切片中添加元素（可能会导致内存重新分配）
-	for i := 0; i < 10; i++ {
+	for i := 1; i < 11; i++ {
 		sliceInt = append(sliceInt, i)
+		fmt.Printf("\t&sliceInt:%p sliceInt:%p &sliceInt[0]:%p sliceInt:%+v len:%d cap:%d\n",
+			&sliceInt,
+			sliceInt,
+			&sliceInt[0],
+			sliceInt,
+			len(sliceInt),
+			cap(sliceInt))
 	}
 	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
@@ -64,8 +72,10 @@ func Steps2() {
 		cap(sliceString))
 
 	// 数组地址
-	fmt.Printf("\tsliceString addr:    %p\n", &sliceString)
-	fmt.Printf("\tsliceString[0] addr: %p\n", &sliceString[0])
+	fmt.Printf("\t&sliceString    addr: %p\n", &sliceString)
+	fmt.Printf("\tsliceString     addr: %p\n", sliceString)
+	fmt.Printf("\t&sliceString[0] addr: %p\n", &sliceString[0])
+	fmt.Printf("\t&sliceString[1] addr: %p\n", &sliceString[1])
 }
 
 // Steps3 通过 make 创建切片
@@ -137,7 +147,7 @@ func Steps5() {
 
 	// Steps 5-2: 可以用 slice[low : high] or slice[low : high] 来截取数组或切片的一个片段长度为 high-low
 	// 注意: sliceInt[0:3] 等同于 sliceInt[:3]
-	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2,3] 长度为2
+	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2 容量为9
 	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
 		interceptionSliceInt,
 		len(interceptionSliceInt),

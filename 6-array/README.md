@@ -41,12 +41,14 @@ type dome struct {
 	b float32
 }
 
+var arrayUInt [3]uint
+
 // 定义数组, 数组必须指定大小
 func main() {
 	// 类型 [n]T 表示拥有 n 个 T 类型的值的数组
 	// 类型 [3]int 表示拥有 3 个 int 类型的值的数组, 默认值为0
-	var arrayInt = [3]int{} // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
-	arrayInt[0] = 1 // 数组可以直接通过下标修改 T[x] = y
+	var arrayInt [3]int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	arrayInt[0] = 1
 	arrayInt[1] = 2
 	fmt.Printf("arrayInt: %+v\n", arrayInt)
 
@@ -68,19 +70,25 @@ func main() {
 	// 数组可以直接通过下标修改 T[x] = y
 	arrayInt[0] = 11
 	fmt.Printf("arrayInt[0]: %d\n", arrayInt[0])
-    
+
 	// 数组地址
 	fmt.Printf("arrayInt: %p\n", &arrayInt)
-	fmt.Printf("arrayInt[0]: %p\n", &arrayInt[0])
+	for i, v := range arrayInt {
+		fmt.Printf("&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
+	}
 
 	fmt.Printf("arrayInt len: %d\n", len(arrayInt))
 	fmt.Printf("arrayInt cap: %d\n", cap(arrayInt))
 }
 ```
 
-如上代码中`var arrayInt = [3]int{}`表示定义一个大小为3的`int`型数组； `arrayBool := [3]bool{false, true}`表示定义一个大小为3的`bool`型数组, 并且初始化第一个元素为false, 第二个元素为true。
+如上代码中`var arrayInt [3]int`表示定义一个大小为3的`int`型数组；
 
-需要注意的是，由于数组长度是固定的，因此在 `Golang` 中很少直接使用数组。更常见的是使用切片（`slice`），它是一个动态数组，可以根据需要动态增加或减少大小。
+![6-2.arrayDefinition2.png](../image/6-2.arrayDefinition2.png)
+
+ `arrayBool := [3]bool{false, true}`表示定义一个大小为3的`bool`型数组, 并且初始化第一个元素为false, 第二个元素为true。
+
+需要注意: 由于数组长度是固定的，因此在 `Golang` 中很少直接使用数组。更常见的是使用切片（`slice`），它是一个动态数组，可以根据需要动态增加或减少大小。
 
 ## 切片基础用法
 
@@ -145,6 +153,23 @@ func main() {
 
 接着，在 `Steps1()` 函数中，定义了一个名为 `sliceInt` 的 `[]int` 类型的切片，并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的值、长度和容量。
 
+```go
+ sliceInt:0x0
+&sliceInt:0xc0000a4018
+&sliceInt:0xc0000b2008 sliceInt:[1] len:1 cap:1
+&sliceInt:0xc0000b2030 sliceInt:[1 2] len:2 cap:2
+&sliceInt:0xc0000b6020 sliceInt:[1 2 3] len:3 cap:4
+&sliceInt:0xc0000b6020 sliceInt:[1 2 3 4] len:4 cap:4
+&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5] len:5 cap:8
+&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6] len:6 cap:8
+&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6 7] len:7 cap:8
+&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6 7 8] len:8 cap:8
+&sliceInt:0xc0000ba000 sliceInt:[1 2 3 4 5 6 7 8 9] len:9 cap:16
+&sliceInt:0xc0000ba000 sliceInt:[1 2 3 4 5 6 7 8 9 10] len:10 cap:16
+```
+
+![6-3.sliceAppend.png](../image/6-3.sliceAppend.png)
+
 然后，通过使用 `len()` 函数获取切片的长度，以及使用 `cap()` 函数获取切片的容量。
 
 最后，代码定义了一个名为 `sliceBool` 的 `[]bool` 类型的切片，它的长度和容量都为 0，且没有底层数组。
@@ -169,8 +194,9 @@ func Steps2() {
 		cap(sliceString))
 
 	// 数组地址
-	fmt.Printf("\tsliceString addr:    %p\n", &sliceString)
-	fmt.Printf("\tsliceString[0] addr: %p\n", &sliceString[0])
+	fmt.Printf("\t&sliceString    addr: %p\n", &sliceString)
+	fmt.Printf("\t&sliceString[0] addr: %p\n", &sliceString[0])
+	fmt.Printf("\t&sliceString[1] addr: %p\n", &sliceString[1])
 }
 
 // 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
@@ -181,6 +207,8 @@ func main() {
 ```
 
 如上代码使用了简短声明语法初始化了一个字符串类型的切片 `sliceString`，并且包含了两个元素 "Golang" 和 "Tutorial"。通过 `len()` 和 `cap()` 函数可以分别获取切片的长度和容量。
+
+![6-3.sliceInit.png](../image/6-3.sliceInit.png)
 
 ### 通过make创建切片
 
@@ -204,15 +232,25 @@ import (
 // Steps3 通过 make 创建切片
 func Steps3() {
 	// Steps 3-1: 用内建函数 make 来创建切片
-	// make([]T,len)
+	// make([]T,len,cap) 如下：创建一个 float32 类型, 长度为 5 的数组
 	sliceFloat32 := make([]float32, 5)
+	for i := 0; i < len(sliceFloat32); i++ {
+		sliceFloat32[i] = float32(i)
+	}
+
 	fmt.Printf("\tsliceFloat32:%+v len:%d cap:%d\n",
 		sliceFloat32,
 		len(sliceFloat32),
 		cap(sliceFloat32))
-  
-    // make([]T,len,cap)
+
+	// 创建一个 float64 类型, 长度为 5, 容量为 10 的数组
 	sliceFloat64 := make([]float64, 5, 10)
+	//for i := 0 ;i < cap(sliceFloat64);i++ { // cap-len的部分并没有分配，不能直接赋值
+	//	sliceFloat64[i] = float64(i) // panic: runtime error: index out of range [5] with length 5
+	//}
+	for i := 0; i < len(sliceFloat64); i++ {
+		sliceFloat64[i] = float64(i)
+	}
 	fmt.Printf("\tsliceFloat64:%+v len:%d cap:%d\n",
 		sliceFloat64,
 		len(sliceFloat64),
@@ -285,25 +323,30 @@ func main() {
 
 ```go
 slice[low:high]
+slice[low:high:cap]
+
 array[low:high]
+array[low:high:cap]
 ```
 
 截取的格式为 `slice[low:high]`，其中 `low` 是需要截取的开始位置（包含），`high` 是需要截取的结束位置（不包含），新的切片包含从 `low` 到 `high-1` 的所有元素。
 
 ```go
-a := [5]int{0,1,2,3,4}
-a[1:3] // 1,2 len 2 cap 2
+a := [5]int{0,1,2,3,4,5}
+a[1:3] // 1,2 len 2 cap 3
 ```
 
-例如，给定一个数组 `a := [5]int{0, 1, 2, 3, 4}`，则 `a[1:3]` 将会得到一个切片 `[1, 2]`。如果省略 `low` 则默认从 0 开始，如果省略 `high` 则默认到切片的末尾。
+例如，给定一个数组 `a := [5]int{0, 1, 2, 3, 4,5}`，则 `a[1:3]` 将会得到一个切片 `[1, 2]`。如果省略 `low` 则默认从 0 开始，如果省略 `high` 则默认到切片的末尾。
 
 ```go
 slice[low:high:cap]
-a := [5]int{0,1,2,3,4}
+a := [5]int{0,1,2,3,4,5}
 a[1:3:3] // 1,2 len 2 cap 3
 ```
 
 在截取切片时还可以指定容量，格式为 `slice[low:high:cap]`，其中 `cap` 是截取后切片的容量。如果省略 `cap`，则新切片的容量等于从 `low` 开始的剩余容量，也就是原始切片的容量减去 `low`。如果指定了 `cap`，则新切片的容量将是 `cap-low`。
+
+![6-4.sliceSplit.png](../image/6-4.sliceSplit.png)
 
 ```go
 package main
@@ -324,14 +367,14 @@ func Steps5() {
 
 	// Steps 5-2: 可以用 slice[low : high] or slice[low : high] 来截取数组或切片的一个片段长度为 high-low
 	// 注意: sliceInt[0:3] 等同于 sliceInt[:3]
-	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2,3] 长度为2,容量为9
+	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2,容量为9
 	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
 		interceptionSliceInt,
 		len(interceptionSliceInt),
 		cap(interceptionSliceInt))
 
 	// Steps 5-3: 可以用 slice[low : high: cap] 来截取切片或数组的一个片段长度为 high-low,容量为cap
-	interceptionSliceIntCap := sliceInt[1:3:5] // 获取 sliceInt 下标 1-2 的元素:[1,2,3] 长度为2, 容量为4
+	interceptionSliceIntCap := sliceInt[1:3:5] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2, 容量为4
 	fmt.Printf("\tinterceptionSliceIntCap:%+v len:%d cap:%d\n",
 		interceptionSliceIntCap,
 		len(interceptionSliceIntCap),
@@ -370,7 +413,7 @@ func main() {
 }
 ```
 
-在上面代码中，我们还展示了如何**通过指针偏移来获取底层数组中的元素**。这种方法是**不安全**的，因为它不受到 Go 语言类型系统的保护，可能会导致程序崩溃或者其他不可预测的结果。
+在上面代码中，我们还展示了如何**通过指针偏移来获取底层数组中的元素**。这种方法是**不安全**的，因为它不受到 `Go` 语言类型系统的保护，可能会导致程序崩溃或者其他不可预测的结果。
 
 需要注意的是，**切片只是底层数组的一个映射，所以修改切片的元素会修改底层数组中对应的元素**。此外，与切片共享底层数组的其他切片也会观察到这些修改。
 
@@ -603,3 +646,10 @@ https://juejin.cn/post/7055660145988075550
 
 https://www.practical-go-lessons.com/chap-21-slices
 
+https://emmie.work/posts/golang-slice-assignment-%E8%88%87-append-%E6%96%B9%E6%B3%95/
+
+https://geekr.dev/posts/go-slice-usage
+
+https://technobeans.com/2019/01/27/golang-composite-data-types-arrays-and-slices/
+
+https://www.practical-go-lessons.com/chap-21-slices
