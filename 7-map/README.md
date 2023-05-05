@@ -2,9 +2,12 @@
 
 `map`是`Go`语言中的一种内置数据结构，也称为**哈希表或字典**。它是一种**无序的键值对集合**，其中每个键唯一对应一个值，通过键来快速查找对应的值。在`map`中，**所有的键都必须是同一类型，所有的值也必须是同一类型**。
 
+![7-1.map.png](../image/7-1.map.png)
+
 ## 目录
 
 - 定义 Map与赋值
+- Map深浅拷贝
 - Map参数传递
 
 ## 定义 Map与赋值
@@ -176,9 +179,94 @@ func main() {
 }
 ```
 
+## Map深浅拷贝
+
+`Map`拷贝不是将新旧`Map`直接赋值，这样**只会赋值`Map`内部的引用**，他们底层还是共用的同一片存储空间，修改新`Map`会导致旧`Map`也一起变。所以真正的拷贝是将旧的`Map`的所有元素复制到新的`Map`中。
+
+```go
+package main
+
+import "fmt"
+
+/*
+	1.map深浅拷贝
+*/
+
+// Steps3 浅拷贝
+func Steps3() {
+	mpIntString := map[int]string{
+		1: "golang",
+		2: "tutorial",
+	}
+	fmt.Printf("\tmpIntString:%+v len:%d\n",
+		mpIntString,
+		len(mpIntString))
+	fmt.Printf("\tmpIntString       addr:%p\n", &mpIntString)
+	fmt.Printf("\tmpIntString value addr:%p\n", mpIntString)
+	fmt.Println("\t-------------------------")
+	tmpIntString := make(map[int]string, 2)
+	tmpIntString = mpIntString
+	fmt.Printf("\ttmpIntString:%+v len:%d\n",
+		tmpIntString,
+		len(tmpIntString))
+	fmt.Printf("\ttmpIntString       addr:%p\n", &tmpIntString)
+	fmt.Printf("\ttmpIntString value addr:%p\n", tmpIntString)
+
+	tmpIntString[2] = "IMianBa"
+	fmt.Println("\t-------------------------")
+	fmt.Printf("\tmpIntString:%+v len:%d\n",
+		mpIntString,
+		len(mpIntString))
+	fmt.Printf("\ttmpIntString:%+v len:%d\n",
+		tmpIntString,
+		len(tmpIntString))
+}
+
+// Steps4 深拷贝
+func Steps4() {
+	mpIntString := map[int]string{
+		1: "golang",
+		2: "tutorial",
+	}
+	fmt.Printf("\tmpIntString:%+v len:%d\n",
+		mpIntString,
+		len(mpIntString))
+	fmt.Printf("\tmpIntString       addr:%p\n", &mpIntString)
+	fmt.Printf("\tmpIntString value addr:%p\n", mpIntString)
+	fmt.Println("\t-------------------------")
+
+	tmpIntString := make(map[int]string, 2)
+	for k, v := range mpIntString {
+		tmpIntString[k] = v
+	}
+
+	fmt.Printf("\ttmpIntString:%+v len:%d\n",
+		tmpIntString,
+		len(tmpIntString))
+	fmt.Printf("\ttmpIntString       addr:%p\n", &tmpIntString)
+	fmt.Printf("\ttmpIntString value addr:%p\n", tmpIntString)
+
+	tmpIntString[2] = "IMianBa"
+	fmt.Println("\t-------------------------")
+	fmt.Printf("\tmpIntString:%+v len:%d\n",
+		mpIntString,
+		len(mpIntString))
+	fmt.Printf("\ttmpIntString:%+v len:%d\n",
+		tmpIntString,
+		len(tmpIntString))
+}
+
+func main() {
+	fmt.Println("Steps3():")
+	Steps3()
+	fmt.Println("Steps4():")
+	Steps4()
+}
+```
+
 ## Map参数传递
 
-`map`的传递和切片的传递非常类似，传递的`map`在函数中改变值，会影响主函数中的`map`。
+`map`的传递和切片的传递非常类似，传递的`map`在函数中改变值，会影响主函数中的`map` (导致这个问题的原因就是**深浅拷贝的问题**)。
 
 ```go
 package main
@@ -196,9 +284,9 @@ func addMap(mp map[int]string) {
 	fmt.Printf("\tmp addr:%p\n", &mp)
 }
 
-// Steps3
-func Steps3() {
-	// Steps 2-1: 用内建函数 make 来创建map
+// Steps5
+func Steps5() {
+	// 用内建函数 make 来创建map
 	mpIntString := make(map[int]string, 2)
 	fmt.Printf("\tmpIntString:%+v len:%d\n",
 		mpIntString,
@@ -215,8 +303,8 @@ func Steps3() {
 }
 
 func main() {
-	fmt.Println("Steps3():")
-	Steps3()
+	fmt.Println("Steps5():")
+	Steps5()
 }
 ```
 
@@ -276,6 +364,14 @@ func .....
 - `map`的传递方式 ?
 
 ## 参考
+
+https://technobeans.com/2019/02/21/golang-composite-data-types-maps/
+
+https://www.cnblogs.com/linkstar/p/10969631.html
+
+https://www.kevinwu0904.top/blogs/golang-map/
+
+https://go.dev/blog/maps
 
 https://www.cnblogs.com/qcrao-2018/p/10903807.html
 

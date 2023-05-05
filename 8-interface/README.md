@@ -1,21 +1,27 @@
 # Interface
 
-在`Go`语言中`interface`是一种类型，用于定义一组方法签名。一个**实现了这组方法的具体类型**被称为这个`interface`的**实现类型**。`interface`类型是一种抽象的类型，它不会暴露出所包含的具体值的内部结构和数据。
+在电脑主板上，有不同的接口（例如`USB`、`HDMI`、音频接口等），它们可以用来连接不同的外部设备（例如鼠标、键盘、显示器、扬声器等）。这些接口提供了一种标准的协议，允许不同的设备进行通信和交互。
+
+![8-1.interface.png](../image/8-1.interface.png)
+
+在`Golang`中，`interface`的作用类似于电脑主板上的接口。它是一种类型，用于定义一组方法签名。一个**实现了这组方法的具体类型**被称为这个`interface`的**实现类型**。`interface`类型是一种抽象的类型，它不会暴露出所包含的具体值的内部结构和数据。
 
 同时`interface` 类型可以代表任意类型的值，因此它可以用来定义不同类型的值。
 
 ## 目录
 
-- 定义并实现接口
+- 接口定义与实现
+- 接口应用举例
 - 接口断言
 
-## 定义并实现接口
+## 接口定义与实现
 
 定义接口语法格式: 
 
 ```go
 type interfaceName interface {
 	functionName()
+  // functionName2(type) type
 }
 ```
 
@@ -122,6 +128,77 @@ func main() {
 
 **总结:** 接口类型通常用于将具体类型的**实现细节与实现类型**的名称**分离**开。这种机制提供了非常强大的面向对象编程能力，使得`Go`语言的面向对象编程变得更加自然和简单。它可以**帮助**我们**构建高度抽象的代码**，使代码更加灵活、易于维护和扩展。
 
+## 接口应用举例
+
+```go
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// Hero 定义一个英雄接口，包含：
+// 1.释放技能方法 Skills
+// 2.添加装备方法 AddEquipments
+// 3.上下左右移动方法 Move
+type Hero interface {
+	Skills(index int)
+	AddEquipments(eq string)
+	Move(direction string)
+}
+
+// Houyi 英雄后裔实现 Hero 接口
+type Houyi struct {
+	Equipments []string
+}
+
+func (h Houyi) Skills(index int) {
+	fmt.Printf("\t 释放技能 %d\n", index)
+}
+
+func (h Houyi) AddEquipments(eq string) {
+	h.Equipments = append(h.Equipments, eq)
+	fmt.Printf("\t 添加装备 %s\n", eq)
+}
+
+func (h Houyi) Move(direction string) {
+	fmt.Printf("\t 向 %s 移动\n", direction)
+}
+
+var move = []string{"上", "下", "左", "右"}
+var equipments = []string{"斗篷", "电刀", "黑切", "破军"}
+var skills = []int{1, 2, 3, 4}
+
+// operation 操作者(玩家)
+// 注意operation() 接收的是 Hero 接口，这是非常重要的，这也是接口的最重要的应用
+func operation(h Hero) {
+	fmt.Println("开始王者操作：")
+	rand.Seed(time.Now().UnixNano())
+	for i := 0; ; i++ {
+		tmp := i % 4
+		switch tmp {
+		case 0:
+			m := move[rand.Intn(len(move)-1)]
+			h.Move(m)
+		case 1:
+			s := skills[rand.Intn(len(skills)-1)]
+			h.Skills(s)
+		case 2:
+			e := equipments[rand.Intn(len(equipments)-1)]
+			h.AddEquipments(e)
+		}
+		time.Sleep(2 * time.Second)
+	}
+}
+
+func main() {
+	var hy = Houyi{}
+	operation(hy)
+}
+```
+
 ## 接口断言
 
 接口断言是指从一个接口类型中提取出具体的值和类型信息的操作。在 `Golang` 中，接口断言可以使用类型断言的方式进行实现。如果一个接口变量 `x` 的底层类型是 `T` 类型，我们可以使用 `x.(T)` 的方式对其进行类型断言，其中 `.(T)` 表示将 `x` 转换为 `T` 类型。
@@ -169,8 +246,6 @@ func main() {
 - 接口还用于帮助减少重复/样板代码。
 
 在需要动态类型参数的函数和方法的情况下，接口非常有用，例如接受任何类型值的 `Println` 函数。
-
-
 
 ## 思考题
 

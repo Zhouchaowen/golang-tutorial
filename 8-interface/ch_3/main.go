@@ -6,12 +6,17 @@ import (
 	"time"
 )
 
+// Hero 定义一个英雄接口，包含：
+// 1.释放技能方法 Skills
+// 2.添加装备方法 AddEquipments
+// 3.上下左右移动方法 Move
 type Hero interface {
 	Skills(index int)
 	AddEquipments(eq string)
 	Move(direction string)
 }
 
+// Houyi 英雄后裔实现 Hero 接口
 type Houyi struct {
 	Equipments []string
 }
@@ -33,6 +38,8 @@ var move = []string{"上", "下", "左", "右"}
 var equipments = []string{"斗篷", "电刀", "黑切", "破军"}
 var skills = []int{1, 2, 3, 4}
 
+// operation 操作者(玩家)
+// 注意operation() 接收的是 Hero 接口，这是非常重要的，这也是接口的最重要的应用
 func operation(h Hero) {
 	fmt.Println("开始王者操作：")
 	rand.Seed(time.Now().UnixNano())

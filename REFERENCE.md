@@ -1,3 +1,5 @@
+https://go.dev/doc/faq
+
 https://golangbot.com/learn-golang-series/
 
 https://www.practical-go-lessons.com/

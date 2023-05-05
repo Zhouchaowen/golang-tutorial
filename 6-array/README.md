@@ -23,11 +23,11 @@
 
 在 `Golang` 中，数组是具有**相同数据类型**的一组**固定长度**的数据项的集合。数组中的每个元素可以通过**索引**来访问，索引从 0 开始计数。数组的长度在创建时就已经确定，并且不可更改。创建一个数组的语法格式:
 
-![6-2.arrayDefinition.png](../image/6-2.arrayDefinition.png)
-
 ```go
 var array [length]type
 ```
+
+![6-2.arrayDefinition.png](../image/6-2.arrayDefinition.png)
 
 其中，`array`表示变量名称，`length` 表示数组的长度，`type` 表示数组元素的数据类型。
 
@@ -333,7 +333,7 @@ array[low:high:cap]
 
 ```go
 a := [5]int{0,1,2,3,4,5}
-a[1:3] // 1,2 len 2 cap 3
+a[1:3] // 1,2 len 2 cap 5
 ```
 
 例如，给定一个数组 `a := [5]int{0, 1, 2, 3, 4,5}`，则 `a[1:3]` 将会得到一个切片 `[1, 2]`。如果省略 `low` 则默认从 0 开始，如果省略 `high` 则默认到切片的末尾。
@@ -341,7 +341,7 @@ a[1:3] // 1,2 len 2 cap 3
 ```go
 slice[low:high:cap]
 a := [5]int{0,1,2,3,4,5}
-a[1:3:3] // 1,2 len 2 cap 3
+a[1:3:3] // 1,2 len 2 cap 2
 ```
 
 在截取切片时还可以指定容量，格式为 `slice[low:high:cap]`，其中 `cap` 是截取后切片的容量。如果省略 `cap`，则新切片的容量等于从 `low` 开始的剩余容量，也就是原始切片的容量减去 `low`。如果指定了 `cap`，则新切片的容量将是 `cap-low`。

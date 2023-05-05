@@ -18,7 +18,9 @@ func Steps1() {
 	fmt.Printf("\tmpIntInt:%+v len:%d\n",
 		mpIntInt,
 		len(mpIntInt)) // len 可以获取当前 map 存储的映射数量
-	// mpIntInt[1] =1 // 定义后没有初始化的 map 为 nil, nil 映射不能添加键,添加报错 panic: assignment to entry in nil map
+
+	// 定义后没有初始化的 map 为 nil, nil 映射不能添加键,添加报错 panic: assignment to entry in nil map
+	// mpIntInt[1] =1
 
 	// nil 映射可以读, 值为对应类型零值, ok 为 false
 	v, ok := mpIntInt[1]
