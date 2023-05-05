@@ -516,3 +516,5 @@ https://www.pengrl.com/p/16608/
 https://xie.infoq.cn/article/e87f45801f8b694babe5db07e
 
 https://www.liwenzhou.com/posts/Go/struct_memory_layout/
+
+https://blog.frognew.com/2020/08/go-struct-memory-alignment.html

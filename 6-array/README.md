@@ -395,7 +395,7 @@ func Steps5() {
 	// interceptionSliceIntCap[2] 超出当前len, 打印报错 panic: runtime error: index out of range [2] with length 2
 	//fmt.Printf("interceptionSliceIntCap[2]:%d",interceptionSliceIntCap[2])
 
-	// 通过指针偏移强行获取底层元素（这种方式时不安全的）
+	// 通过指针偏移强行获取底层元素（这种方式是不安全的）
 	fmt.Printf("\tinterceptionSliceCap[2]:%d\n", *(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&interceptionSliceIntCap[0])) + uintptr(16))))
 
 	// Steps 5-6: 修改interceptionSliceCap[2]的值为33,底层切片sliceInt对应[3]位置改变33
@@ -428,6 +428,8 @@ func copy(dst, src []T) int
 ```
 
 其中`dst` 是目标切片，`src` 是源切片，`T` 是切片元素类型。`copy` 函数会将源切片的元素复制到目标切片中，并返回实际复制的元素个数（复制长度为两个切片长度的最小值）。
+
+![6-5.copySliceArray.png](../image/6-5.copySliceArray.png)
 
 需要注意的是，`copy` 函数不会创建新的切片，只是将源切片的元素复制到目标切片中。如果目标切片长度小于源切片长度，只会复制目标切片长度的元素，而源切片中剩余的元素会被丢弃。如果目标切片长度大于源切片长度，只会复制源切片长度的元素，而目标切片中剩余的元素会保持原值不变。
 
@@ -509,10 +511,6 @@ func main() {
 
 ## 数组与切片参数传递时的区别
 
-**当数组作为函数参数传递时，会进行一次数组拷贝**。也就是说，传递给函数的是一个新的数组，这个新数组和原数组具有相同的值，在函数内部对新数组的修改不会影响原数组。
-
-**当切片作为函数参数传递时，会传递切片的指针(也是拷贝，只是拷贝的是指针)**。也就是说，在函数内部对切片的修改会影响原切片。需要注意的是，在函数内部将一个新的切片赋值给原切片的变量时，这不会影响到原切片。因为函数内部的变量是在函数内部的作用域范围内的，它与原切片变量是两个不同的变量。
-
 ```go
 package main
 
@@ -569,6 +567,14 @@ func main() {
 	Steps4()
 }
 ```
+
+**当数组作为函数参数传递时，会进行一次数组拷贝**。也就是说，传递给函数的是一个新的数组，这个新数组和原数组具有相同的值，在函数内部对新数组的修改不会影响原数组。
+
+![6-6.arrayParam.png](../image/6-6.arrayParam.png)
+
+**当切片作为函数参数传递时，会传递切片的指针(也是拷贝，只是拷贝的是指针)**。也就是说，在函数内部对切片的修改会影响原切片。需要注意的是，在函数内部将一个新的切片赋值给原切片的变量时，这不会影响到原切片。因为函数内部的变量是在函数内部的作用域范围内的，它与原切片变量是两个不同的变量。
+
+![6-6.sliceParam.png](../image/6-6.sliceParam.png)
 
 ## 思考题
 
@@ -629,6 +635,8 @@ func .....
 - 切片和数组的关系 ?
 
 ## 参考
+
+https://i6448038.github.io/2018/08/11/array-and-slice-principle/
 
 https://gfw.go101.org/article/value-part.html
 

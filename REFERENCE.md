@@ -1,5 +1,7 @@
 https://golangbot.com/learn-golang-series/
 
+https://www.practical-go-lessons.com/
+
 https://gobyexample-cn.github.io/
 
 https://go-zh.org/doc/effective_go.html
