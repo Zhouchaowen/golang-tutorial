@@ -8,6 +8,8 @@
 - `Goroutine` 中 `sync.WaitGroup` 的使用
 - `Goroutine` 小实验: 并发的下载图片
 - `Goroutine` 的并发安全问题
+  - 原子操作
+  - 加锁保护
 
 ## Goroutine基础
 
@@ -26,7 +28,9 @@ func test(){
 go test()
 ```
 
-一个`go func()`会启动一个后台并发任务, 大概流程是通过`go`关键字将这个`func()`打包成一个任务, 然后提交给`Golang`的并发调度器, 并发调度器会根据一定策略来执行这些任务。
+一个`go func()`会启动一个后台并发任务, 大概流程是通过`go`关键字将这个`func()`打包成一个任务, 然后提交给`Golang`的并发调度器, 并发调度器会根据一定策略来执行这些任务。[图片来源](https://strikefreedom.top/archives/high-performance-implementation-of-goroutine-pool)
+
+![9-1.goroutine.png](../image/9-1.goroutine.png)
 
 ```go
 package main
@@ -208,9 +212,13 @@ func main() {
 
 当多个`Goroutine`**并发修改同一个变量**时有可能会产生**并发安全问题**导致结果不一致, 因为**修改操作可能是非原子的**。这种情况可以将修改变成**原子操作**(`atomic`)或通过**加锁保护**(`sync.Mutex`, `sync.RWMutex`), 让修改的步骤**串行执行**防止并发安全问题。
 
+![9-2.concurrenceSave.png](../image/9-2.concurrenceSave.png)
+
+### 原子操作
+
 **什么是原子操作(`atomic`)？**
 
-原子操作是指一个不可中断的操作(一条`CPU`指令)，它要么完全执行，要么完全不执行, 例如`count = 1`
+原子操作是指一个不可中断的操作(一条`CPU`指令)，它要么完全执行并且它的所有**副作用**(修改)都是可见的，要么根本不执行，所以当前线程的原子操作**其他所有线程都可以看到操作之前或之后的状态**。
 
 **什么是非原子操作？**
 
@@ -232,7 +240,11 @@ func main() {
 
 **非原子操作为什么导致并发安全问题？**
 
-在多核下，多个`Goroutine`同时以**非原子的方式**修改一个共享变量时(`count++`操作), 如果一个 `Goroutine` 读取了变量`count`的值，并且在它修改`count`的值之前，另一个 `Goroutine` 修改了这个`count`的值，那么该 `Goroutine `的修改操作将会**被覆盖或丢失**，从而导致数据不一致。如下示例将展示这种现象：
+在多核下，多个`Goroutine`同时以**非原子的方式**修改一个共享变量时(`count++`操作), 如果一个 `Goroutine` 读取了变量`count`的值，并且在它修改`count`的值之前，另一个 `Goroutine` 修改了这个`count`的值，那么该 `Goroutine `的修改操作将会**被覆盖或丢失**，从而导致数据不一致。
+
+![9-2.concurrenceSave2.png](../image/9-2.concurrenceSave2.png)
+
+如下示例将展示这种现象：
 
 ```go
 package main
@@ -308,6 +320,10 @@ func main() {
 在 `NoConcurrence()` 函数中，使用非原子操作 `sum++` 进行累加，会出现并发安全问题，因为多个`Goroutine`同时对 `sum` 进行写操作，会导致结果不正确。执行该函数后，累加结果不等于20000000。
 
 在 `Concurrence()` 函数中，使用原子操作 `atomic.AddInt64` 进行累加，保证了在多个`Goroutine`同时对 `sum` 进行写操作时，每次只有一个`Goroutine`能够成功操作，其余`Goroutine`则需要等待。这样可以保证 `sum` 的值的正确性。执行该函数后，累加结果等于20000000。
+
+![9-3.atomOperation.png](../image/9-3.atomOperation.png)
+
+### 加锁保护
 
 **加锁保护(`sync.Mutex`, `sync.RWMutex`)**
 
@@ -429,6 +445,16 @@ func main() {
 
 ## 参考
 
+https://learnku.com/articles/41728
+
+https://strikefreedom.top/archives/high-performance-implementation-of-goroutine-pool
+
+https://ssup2.github.io/theory_analysis/Golang_Goroutine_Scheduling/
+
+https://dev.to/ahmedash95/understand-golang-channels-and-how-to-monitor-with-grafana-154
+
+https://learnku.com/articles/62146
+
 https://blog.boot.dev/golang/gos-waitgroup-javascripts-promiseall/
 
 https://gfw.go101.org/article/control-flows-more.html
@@ -440,3 +466,11 @@ https://zhuanlan.zhihu.com/p/431422464
 https://segmentfault.com/a/1190000019576884
 
 https://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html
+
+https://www.cnblogs.com/javaleon/p/4292656.html
+
+https://stackoverflow.com/questions/39795265/will-atomic-operations-block-other-threads
+
+https://www.modb.pro/db/78813
+
+https://www.eet-china.com/mp/a125392.html

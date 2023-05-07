@@ -2,6 +2,8 @@
 
 `Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现**共享内存**，可以安全地传递数据，避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
 
+![10-1.channel.jpeg](../image/10-1.channel.jpeg)
+
 `Channel` 可以分为有缓冲或无缓冲。**无缓冲的 `Channel`，**也称为同步 `Channel`，**发送操作和接收操作必须同时准备就绪**，否则会被阻塞。**有缓冲的 `Channel`，**也称为异步 `Channel`，**发送操作会在 `Channel` 缓冲区未满的情况下立即返回**，接收操作也会在 `Channel` 缓冲区不为空的情况下立即返回，否则会被阻塞。
 
 ## 目录
@@ -55,7 +57,7 @@ func main() {
 
 首先通过 `make` 函数创建了一个无缓冲的 `int` 类型的 `Channel c`，即：`c := make(chan int)`。
 
-然后通过 `go` 关键字定义了一个匿名的 `Goroutine`，用于从 `Channel c` 中接收数据。匿名函数 `Goroutine` 中，使用 `<-` 语法从 `Channel c` 中接收值，并将其赋值给变量 `num`。接收完值后，使用 `fmt.Printf` 打印出接收到的值。
+然后通过 `go` 关键字启动了一个 `Goroutine`，用于从 `Channel c` 中接收数据。匿名函数 `Goroutine` 中，使用 `<-` 语法从 `Channel c` 中接收值，并将其赋值给变量 `num`。接收完值后，使用 `fmt.Printf` 打印出接收到的值。
 
 接着，在 `main`函数 中，**使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中**，即`c <- 1`。
 
@@ -70,6 +72,8 @@ make(chan T)
 ```
 
 在无缓冲的 `Channel` 中，**发送和接收操作是同步**的。如果一个 `Goroutine` 向一个无缓冲的 `Channel` 发送数据，它将一直阻塞，直到另一个 `Goroutine` 从该 `Channel` 中接收到数据。同样地，如果一个 `Goroutine` 从一个无缓冲的 `Channel` 中接收数据，它将一直阻塞，直到另一个 `Goroutine` 向该 `Channel` 中发送数据。
+
+![10-2.noBufferChannel.png](../image/10-2.noBufferChannel.png)
 
 ```go
 package main
@@ -141,6 +145,8 @@ make(chan T,size)
 缓冲 `Channel` 是带有缓冲区的 `Channel`，创建时需要指定缓冲区大小，例如 `make(chan int, 10)` 创建了一个缓冲区大小为 10 的整型 `Channel`。
 
 缓冲 `Channel` 中, **当缓冲区未满时，发送操作是非阻塞的，如果缓冲区已满，则发送操作会阻塞**，直到有一个接收操作接收了一个值, 才能继续发送。当缓冲区非空时，接收操作是非阻塞的，如果缓冲区为空，则接收操作会阻塞，直到有一个发送操作发送了一个值。
+
+![10-2.bufferChannel.png](../image/10-2.bufferChannel.png)
 
 ```go
 package main
@@ -363,5 +369,12 @@ func main() {
 
 ## 参考
 
+https://dev.to/ahmedash95/understand-golang-channels-and-how-to-monitor-with-grafana-154
 
+http://legendtkl.com/2017/07/30/understanding-golang-channel/
 
+https://halfrost.com/go_channel/
+
+https://blog.devgenius.io/golang-channels-eb25a34f95db
+
+https://www.modb.pro/db/146628

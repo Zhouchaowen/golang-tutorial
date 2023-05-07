@@ -284,6 +284,8 @@ go test -run="Cover$" -coverprofile=coverage.out
 go tool cover -html=coverage.out
 ```
 
+![11-1.coverage.png](../image/11-1.coverage.png)
+
 ## 基准测试
 
 在 `Golang` 中，基准测试是通过 `testing` 包提供的 `benchmark` 功能实现的。在测试文件中，我们可以使用 `func BenchmarkXXX(b *testing.B)` 格式的函数来表示基准测试，其中 `XXX` 是被测试函数的名称，其中`b` 是一个 `*testing.B` 类型的指针，用于控制测试的次数和时间等参数。
