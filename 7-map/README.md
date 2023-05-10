@@ -18,7 +18,7 @@
 var mapName map[keyType]valueType
 ```
 
-其中`mapName`表示变量名称，`keyType`表示键的类型，`valueType`表示值的类型。需要注意的是，这里**只是声明了`map`变量并没有初始化**，如果直接使用将会引发运行时错误。正确的初始化方式是使用`make`函数：
+其中`mapName`表示变量名称，`keyType`表示键的类型，`valueType`表示值的类型。需要注意的是，这里**只是声明了`map`变量并没有初始化**，如果**添加或修改**将会引发运行时错误。正确的初始化方式是使用`make`函数：
 
 ```go
 mapName := make(map[keyType]valueType,[size]) // size 可选

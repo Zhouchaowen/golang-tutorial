@@ -1,5 +1,7 @@
 # Gin基础
 
+`Gin`是一个使用`Go`语言编写的轻量级`Web`框架，旨在提供高性能和易用性。它具有简洁的`API`设计和快速的路由引擎，使得构建`Web`应用程序变得简单和高效。
+
 ## 入门Demo
 
 ```go
@@ -25,6 +27,30 @@ func main() {
 
 // curl --location --request GET '127.0.0.1:8080/hello'
 ```
+
+如上代码使用`Gin`框架创建一个简单的`HTTP`服务器的示例。其中`import "github.com/gin-gonic/gin"`：导入了`gin`包。
+
+1. `r := gin.Default()`：创建了一个默认的路由引擎实例`r`, 包括了一些中间件和默认设置。
+
+2. `r.GET("/hello", func(c *gin.Context) { ... })`定义了一个路由和他对应的处理函数：当客户端以`GET`方法请求`/hello`路径时，将执行后面的匿名函数。这个函数的参数`c *gin.Context`表示当前请求的上下文，可以用于获取请求的参数、处理响应等操作。
+
+3. `c.JSON(200, gin.H{ "message": "Golang Tutorial!" })`表示通过`c.JSON`方法返回一个`JSON`格式的响应。这里返回的是状态码200和一个包含一个键值对`"message": "Golang Tutorial!"`的`map`。
+
+4. `r.Run()`表示启动`HTTP`服务器，在默认地址`0.0.0.0:8080`上提供服务。这将使服务器开始接受来自客户端的请求，并将其路由到适当的处理函数。
+
+需要注意，执行这段代码之前，需要确保已经安装了Gin框架及其依赖，可以使用`go get`命令安装：
+
+```go
+go get -u github.com/gin-gonic/gin
+```
+
+之后，可以使用`go run`命令运行这个Go程序：
+
+```go
+go run main.go
+```
+
+这样就可以启动HTTP服务器并监听来自客户端的请求。当客户端请求`/hello`路径时，服务器将返回`JSON`格式的响应，其中包含了一个键值对`"message": "Golang Tutorial!"`。
 
 ## 请求方法
 
@@ -88,6 +114,11 @@ func main() {
 // curl --location --request OPTIONS '127.0.0.1:8080/some'
 ```
 
+如上代码定义了多个路由和处理函数来处理不同的`HTTP`请求方法。下面是代码的解释：
+
+1. `router.GET("/some", func(c *gin.Context) { ... })`：定义了一个`GET`方法的路由`/some`，并指定了对应的处理函数。当客户端以`GET`方法请求`/some`路径时，执行后面的匿名函数。函数中使用`c.JSON`方法返回一个`JSON`格式的响应，状态码为200。
+2. 类似地，通过`router.POST`、`router.PUT`、`router.DELETE`等方法，定义了其他HTTP请求方法（`POST、PUT、DELETE、PATCH、HEAD、OPTIONS`）的路由和对应的处理函数。
+
 ## 响应格式
 
 ```go
@@ -138,6 +169,15 @@ func main() {
 // curl --location --request GET '127.0.0.1:8080/someXML'
 // curl --location --request GET '127.0.0.1:8080/someYAML'
 ```
+
+如上代码定义了多个路由和处理函数来返回不同格式的响应，包括`JSON`、`XML`和`YAML`。下面是代码的解释：
+
+1. `r.GET("/someJSON", func(c *gin.Context) { ... })`：定义了一个`GET`方法的路由`/someJSON`，并指定了对应的处理函数。当客户端以`GET`方法请求`/someJSON`路径时，执行后面的匿名函数。函数中使用`c.JSON`方法返回一个`JSON`格式的响应，状态码为200。
+2. `r.GET("/moreJSON", func(c *gin.Context) { ... })`定义了另一个GET方法的路由`/moreJSON`，并使用结构体变量`msg`来返回`JSON`格式的响应。结构体`msg`包含`Name`、`Message`和`Number`字段，这些字段的值将被转换为`JSON`格式的响应(注意，通过使用`json`标签来指定结构体字段在`JSON`中的名称)。
+3. `r.GET("/someXML", func(c *gin.Context) { ... })`返回一个`XML`格式的响应，状态码为200。
+4. `r.GET("/someYAML", func(c *gin.Context) { ... })`返回一个YAML格式的响应，状态码为200。
+
+通过不同的路由，服务器将返回不同格式的响应。对于`/someJSON`和`/moreJSON`路径，服务器将返回JSON格式的响应。对于`/someXML`路径，服务器将返回XML格式的响应。对于`/someYAML`路径，服务器将返回YAML格式的响应。
 
 ## 参数绑定
 
@@ -682,3 +722,7 @@ func main() {
 ## 参考
 
 https://www.liwenzhou.com/posts/Go/zap-in-gin/
+
+https://juejin.cn/post/7064770224515448840
+
+https://www.cnblogs.com/ahfuzhang/p/16854798.html
