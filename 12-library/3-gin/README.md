@@ -137,6 +137,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
 
+	// 返回一个结构体，将会编码为Json格式
 	r.GET("/moreJSON", func(c *gin.Context) {
 		// You also can use a struct
 		var msg struct {
@@ -152,10 +153,12 @@ func main() {
 		c.JSON(http.StatusOK, msg)
 	})
 
+	// 返回XML格式数据
 	r.GET("/someXML", func(c *gin.Context) {
 		c.XML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
 
+	// 返回YAML数据
 	r.GET("/someYAML", func(c *gin.Context) {
 		c.YAML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
@@ -209,8 +212,7 @@ func main() {
 		c.String(http.StatusOK, message)
 	})
 
-	// 确切的路由在参数路由之前解析，无论它们的定义顺序如何。
-	// 以 /user/groups 开头的路由永远不会被匹配为 /user/:name/ 的路由
+	// 确切的路由在参数路由之前解析，无论它们的定义顺序如何，以 /user/groups 开头的路由永远不会被匹配为 /user/:name/ 的路由
 	router.GET("/user/groups", func(c *gin.Context) {
 		c.String(http.StatusOK, "The available groups are [...]")
 	})
@@ -224,6 +226,10 @@ func main() {
 // curl --location --request GET '127.0.0.1:8080/user/groups/bac'
 ```
 
+第一个路由处理程序使用`GET`方法，并使用"/user/:name"模式注册了一个路由。这意味着当应用程序接收到形如"/user/john"的`HTTP`请求时，该处理程序将被调用。
+
+第二个路由处理程序也使用`GET`方法，并使用"/user/:name/*action"模式注册了一个路由。这个模式表示该路由将匹配以"/user/:name"开头的`URL`路径，后面紧跟着一个或多个路径段。例如，"/user/john/send"将匹配这个路由。
+
 ### Get+Post 参数
 
 ```go
@@ -235,6 +241,8 @@ import (
 )
 
 func GetMethod(c *gin.Context) {
+	// 解析路由参数 firstname 没有该参数将所有默认值 Guest
+	// 将解析URL /welcome?firstname=Jane&lastname=Doe
 	firstname := c.DefaultQuery("firstname", "Guest")
 	lastname := c.Query("lastname") // shortcut for c.Request.URL.Query().Get("lastname")
 
@@ -242,8 +250,9 @@ func GetMethod(c *gin.Context) {
 }
 
 func PostMethod(c *gin.Context) {
-	message := c.PostForm("message")
+	// 解析POST 提交的数据
 	nick := c.DefaultPostForm("nick", "anonymous")
+	message := c.PostForm("message")
 
 	c.JSON(200, gin.H{
 		"status":  "posted",
@@ -269,8 +278,6 @@ func GetPostMethod(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
-	// Query string parameters are parsed using the existing underlying request object.
-	// The request responds to a url matching:  /welcome?firstname=Jane&lastname=Doe
 	router.GET("/welcome", GetMethod)
 
 	router.POST("/form_post", PostMethod)
@@ -320,6 +327,7 @@ type Login struct {
 func main() {
 	router := gin.Default()
 
+	// 将绑定URI参数示例 xx.xx.xx.xx:8080/thinkerou/987fbc97-4bed-5078-9f07-9141ba07c9f3
 	router.GET("/:name/:id", func(c *gin.Context) {
 		var person Person
 		if err := c.ShouldBindUri(&person); err != nil {
@@ -329,7 +337,7 @@ func main() {
 		c.JSON(200, gin.H{"name": person.Name, "uuid": person.ID})
 	})
 
-	// Example for binding JSON ({"user": "manu", "password": "123"})
+	// 绑定 JSON 的示例 ({"user": "manu", "password": "123"})
 	router.POST("/loginJSON", func(c *gin.Context) {
 		var json Login
 		if err := c.ShouldBindJSON(&json); err != nil {
@@ -345,7 +353,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 	})
 
-	// Example for binding a HTML form (user=manu&password=123)
+	// 绑定 HTML 表单的示例 (user=manu&password=123)
 	router.POST("/loginForm", func(c *gin.Context) {
 		var form Login
 		// This will infer what binder to use depending on the content-type header.
@@ -362,10 +370,11 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 	})
 
-	// function only binds the query params and not the post data. (user=manu&password=123)
+	// 函数仅绑定查询参数，而不绑定发布数据。 (user=manu&password=123)
 	router.POST("/loginQuery", func(c *gin.Context) {
 		var form Login
 		// This will infer what binder to use depending on the content-type header.
+		// c.ShouldBind(&x)
 		if err := c.ShouldBindQuery(&form); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -434,8 +443,33 @@ var bookableDate validator.Func = func(fl validator.FieldLevel) bool {
 	return true
 }
 
+func getBookable(context *gin.Context) {
+	var book Booking
+	if err := context.ShouldBindQuery(&book); err == nil {
+		context.JSON(200, gin.H{"message": "book date is valid"})
+	} else {
+		context.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+	}
+}
+
+type Login struct {
+	UserName string `form:"user_name" binding:"required"`
+	PassWord string `form:"pass_word" binding:"required,min=8"` // 密码必须大于8位
+}
+
+func LoginHandler(context *gin.Context) {
+	var login Login
+	if err := context.ShouldBindQuery(&login); err == nil {
+		context.JSON(200, gin.H{"message": "lgoin date is valid"})
+	} else {
+		context.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+	}
+}
+
 func main() {
 	router := gin.Default()
+
+	router.GET("/login", LoginHandler)
 
 	// 注册验证器
 	validate, ok := binding.Validator.Engine().(*validator.Validate)
@@ -448,18 +482,11 @@ func main() {
 	router.Run()
 }
 
-func getBookable(context *gin.Context) {
-	var book Booking
-	if err := context.ShouldBindWith(&book, binding.Query); err == nil {
-		context.JSON(200, gin.H{"message": "book date is valid"})
-	} else {
-		context.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
-	}
-}
+// curl --location --request GET 'http://127.0.0.1:8080/login?user_name=zcw&pass_word=asdasda'
+// curl --location --request GET 'http://127.0.0.1:8080/login?user_name=zcw&pass_word=asdasdas'
 
 // check_in=2022-01-11&check_out=2022-01-12 (输入的日期必须大于今天的日期，否则验证失败)
 // curl --location --request GET 'http://127.0.0.1:8080/bookable?check_in=2022-01-11&check_out=2022-01-12'
-
 ```
 
 ## 文件上传
@@ -476,14 +503,14 @@ import (
 
 func main() {
 	router := gin.Default()
-	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	// 为多部分表单设置内存下限（默认值为 32 MiB）
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 	router.POST("/upload", func(c *gin.Context) {
-		// Single file
+		// 单个文件
 		file, _ := c.FormFile("Filename")
 		log.Println(file.Filename)
 
-		// Upload the file to specific dst.
+		// 将文件上传到特定的 dst。
 		c.SaveUploadedFile(file, "./"+file.Filename)
 
 		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
@@ -492,8 +519,8 @@ func main() {
 }
 
 /*
-curl --location --request POST '127.0.0.1:8080/upload' \
---form 'Filename=@"/Users/Pictures/psc.jpg"'
+	curl --location --request POST '127.0.0.1:8080/upload' \
+	--form 'Filename=@"/Users/Pictures/psc.jpg"'
 */
 ```
 
@@ -560,13 +587,13 @@ func main() {
 	// 默认情况下创建没有任何中间件的路由器
 	r := gin.New()
 
-	// 全局中间件
+	// 全局日志中间件
 	r.Use(gin.Logger())
 
-	// 恢复中间件从任何恐慌中恢复，如果有，则写入 500。
+	// 全局恢复中间件从任何恐慌中恢复，如果有，则写入 500。
 	r.Use(gin.Recovery())
 
-	// 添加中间件在context中添加一个key-value
+	// 自定义中间件，在context中添加一个key-value
 	r.Use(func(c *gin.Context) {
 		fmt.Println("I am middleware")
 		c.Set("flag", "I am middleware")
@@ -578,9 +605,9 @@ func main() {
 		fmt.Println("end")
 	})
 
-	// Per route middleware, you can add as many as you desire.
+	// 每个路由中间件，您可以根据需要添加任意数量的中间件。
 	r.GET("/middleware", func(c *gin.Context) {
-		c.String(http.StatusOK, c.Keys["flag"].(string))
+		c.String(http.StatusOK, c.Keys["flag"].(string)) // 从上下文读取flag的value
 	})
 
 	// Listen and serve on 0.0.0.0:8080
@@ -716,8 +743,6 @@ func main() {
 	log.Println("Server exiting")
 }
 ```
-
-
 
 ## 参考
 

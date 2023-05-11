@@ -20,6 +20,7 @@ type Login struct {
 func main() {
 	router := gin.Default()
 
+	// 将绑定URI参数示例 xx.xx.xx.xx:8080/thinkerou/987fbc97-4bed-5078-9f07-9141ba07c9f3
 	router.GET("/:name/:id", func(c *gin.Context) {
 		var person Person
 		if err := c.ShouldBindUri(&person); err != nil {
@@ -29,7 +30,7 @@ func main() {
 		c.JSON(200, gin.H{"name": person.Name, "uuid": person.ID})
 	})
 
-	// Example for binding JSON ({"user": "manu", "password": "123"})
+	// 绑定 JSON 的示例 ({"user": "manu", "password": "123"})
 	router.POST("/loginJSON", func(c *gin.Context) {
 		var json Login
 		if err := c.ShouldBindJSON(&json); err != nil {
@@ -45,7 +46,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 	})
 
-	// Example for binding a HTML form (user=manu&password=123)
+	// 绑定 HTML 表单的示例 (user=manu&password=123)
 	router.POST("/loginForm", func(c *gin.Context) {
 		var form Login
 		// This will infer what binder to use depending on the content-type header.
@@ -62,10 +63,11 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
 	})
 
-	// function only binds the query params and not the post data. (user=manu&password=123)
+	// 函数仅绑定查询参数，而不绑定发布数据。 (user=manu&password=123)
 	router.POST("/loginQuery", func(c *gin.Context) {
 		var form Login
 		// This will infer what binder to use depending on the content-type header.
+		// c.ShouldBind(&x)
 		if err := c.ShouldBindQuery(&form); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

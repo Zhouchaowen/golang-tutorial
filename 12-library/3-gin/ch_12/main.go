@@ -12,6 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 优雅关闭
+
 func main() {
 	router := gin.Default()
 	router.GET("/", func(c *gin.Context) {

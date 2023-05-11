@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+// 路由分组
+
 func main() {
 	router := gin.Default()
 

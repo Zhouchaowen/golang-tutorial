@@ -11,8 +11,6 @@ var variableName T
 flag.[T]Var(&variableName, "cmd name", "default value", "some descriptive information")
 ```
 
-
-
 ```go
 // go run main.go -name golang -debug -age 20 -score 80 -timeout=10m
 package main
@@ -47,7 +45,7 @@ func main() {
 
 ```
 
-`flag.String()` - 用于定义一个字符串类型的命令行标志参数。例如：
+`flag.String()`  用于定义一个字符串类型的命令行标志参数。例如：
 
 ```go
 var name = flag.String("name", "defaultName", "The name to be used.")

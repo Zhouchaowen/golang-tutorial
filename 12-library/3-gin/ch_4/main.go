@@ -23,8 +23,7 @@ func main() {
 		c.String(http.StatusOK, message)
 	})
 
-	// 确切的路由在参数路由之前解析，无论它们的定义顺序如何。
-	// 以 /user/groups 开头的路由永远不会被匹配为 /user/:name/ 的路由
+	// 确切的路由在参数路由之前解析，无论它们的定义顺序如何，以 /user/groups 开头的路由永远不会被匹配为 /user/:name/ 的路由
 	router.GET("/user/groups", func(c *gin.Context) {
 		c.String(http.StatusOK, "The available groups are [...]")
 	})

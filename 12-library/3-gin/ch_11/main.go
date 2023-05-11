@@ -19,6 +19,7 @@ func main() {
 
 	logger, _ := zap.NewProduction()
 
+	// 集成zap日志组件
 	r.Use(ginzap.GinzapWithConfig(logger, &ginzap.Config{
 		UTC:        true,
 		TimeFormat: time.RFC3339,

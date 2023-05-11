@@ -6,6 +6,8 @@ import (
 )
 
 func GetMethod(c *gin.Context) {
+	// 解析路由参数 firstname 没有该参数将所有默认值 Guest
+	// 将解析URL /welcome?firstname=Jane&lastname=Doe
 	firstname := c.DefaultQuery("firstname", "Guest")
 	lastname := c.Query("lastname") // shortcut for c.Request.URL.Query().Get("lastname")
 
@@ -13,8 +15,9 @@ func GetMethod(c *gin.Context) {
 }
 
 func PostMethod(c *gin.Context) {
-	message := c.PostForm("message")
+	// 解析POST 提交的数据
 	nick := c.DefaultPostForm("nick", "anonymous")
+	message := c.PostForm("message")
 
 	c.JSON(200, gin.H{
 		"status":  "posted",
@@ -40,8 +43,6 @@ func GetPostMethod(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
-	// Query string parameters are parsed using the existing underlying request object.
-	// The request responds to a url matching:  /welcome?firstname=Jane&lastname=Doe
 	router.GET("/welcome", GetMethod)
 
 	router.POST("/form_post", PostMethod)

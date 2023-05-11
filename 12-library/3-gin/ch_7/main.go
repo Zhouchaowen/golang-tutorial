@@ -27,8 +27,33 @@ var bookableDate validator.Func = func(fl validator.FieldLevel) bool {
 	return true
 }
 
+func getBookable(context *gin.Context) {
+	var book Booking
+	if err := context.ShouldBindQuery(&book); err == nil {
+		context.JSON(200, gin.H{"message": "book date is valid"})
+	} else {
+		context.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+	}
+}
+
+type Login struct {
+	UserName string `form:"user_name" binding:"required"`
+	PassWord string `form:"pass_word" binding:"required,min=8"` // 密码必须大于8位
+}
+
+func LoginHandler(context *gin.Context) {
+	var login Login
+	if err := context.ShouldBindQuery(&login); err == nil {
+		context.JSON(200, gin.H{"message": "lgoin date is valid"})
+	} else {
+		context.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+	}
+}
+
 func main() {
 	router := gin.Default()
+
+	router.GET("/login", LoginHandler)
 
 	// 注册验证器
 	validate, ok := binding.Validator.Engine().(*validator.Validate)
@@ -41,14 +66,8 @@ func main() {
 	router.Run()
 }
 
-func getBookable(context *gin.Context) {
-	var book Booking
-	if err := context.ShouldBindWith(&book, binding.Query); err == nil {
-		context.JSON(200, gin.H{"message": "book date is valid"})
-	} else {
-		context.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
-	}
-}
+// curl --location --request GET 'http://127.0.0.1:8080/login?user_name=zcw&pass_word=asdasda'
+// curl --location --request GET 'http://127.0.0.1:8080/login?user_name=zcw&pass_word=asdasdas'
 
 // check_in=2022-01-11&check_out=2022-01-12 (输入的日期必须大于今天的日期，否则验证失败)
 // curl --location --request GET 'http://127.0.0.1:8080/bookable?check_in=2022-01-11&check_out=2022-01-12'

@@ -13,6 +13,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
 
+	// 返回一个结构体，将会编码为Json格式
 	r.GET("/moreJSON", func(c *gin.Context) {
 		// You also can use a struct
 		var msg struct {
@@ -28,10 +29,12 @@ func main() {
 		c.JSON(http.StatusOK, msg)
 	})
 
+	// 返回XML格式数据
 	r.GET("/someXML", func(c *gin.Context) {
 		c.XML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
 
+	// 返回YAML数据
 	r.GET("/someYAML", func(c *gin.Context) {
 		c.YAML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
