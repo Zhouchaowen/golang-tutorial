@@ -30,7 +30,7 @@ git clone git@github.com:Zhouchaowen/golang-tutorial.git
 - [Interface](https://github.com/Zhouchaowen/golang-tutorial/tree/master/8-interface)
 - [Goroutine](https://github.com/Zhouchaowen/golang-tutorial/tree/master/9-goroutine)
 - [Channel](https://github.com/Zhouchaowen/golang-tutorial/tree/master/10-channel)
-- [Test](https://github.com/Zhouchaowen/golang-tutorial/tree/master/11-channel)
+- [Test](https://github.com/Zhouchaowen/golang-tutorial/tree/master/11-test)
 - [Library](https://github.com/Zhouchaowen/golang-tutorial/tree/master/12-library)
 
 ## 关键字
