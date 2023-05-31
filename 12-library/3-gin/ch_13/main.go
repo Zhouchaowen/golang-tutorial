@@ -1,72 +1,178 @@
-// main.go
 package main
 
 import (
 	"fmt"
-	"log"
-	"time"
-
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
-func useGzip(engine *gin.Engine) {
-	engine.Use(gzip.Gzip(gzip.DefaultCompression))
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
 
-func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	engine := gin.New()
-	// engine.Use(gzip.Gzip(gzip.DefaultCompression))  //如果需要开启gzip压缩，取消这一行的注释
-	engine.Handle("POST", "/query", downloadFile)
-	engine.Handle("GET", "/", homepage)
-	engine.Run(":8080")
+func Cors(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Add("Access-Control-Allow-Headers", "Content-Type")
+
+	c.Next()
 }
 
-func downloadFile(ctx *gin.Context) {
-	// 此处省略查询的业务逻辑
-	//  todo:
-	// 下面开始下载的准备
-	ctx.Writer.WriteHeader(200)
-	ctx.Header("Content-Type", "text/plain; charset=utf-8")
-	ctx.Header("Transfer-Encoding", "chunked") // 告诉浏览器，分段的流式的输出数据
-	//   ctx.Header("Content-Encoding", "gzip") // 输出不是gzip内容，又加上这个头，浏览器会拒收。这里是个实验，不要加这行代码
-	now := time.Now()
-	fileName := now.Format("20060102_150405.csv")
-	ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", fileName)) // 设置下载的文件名
-	ctx.Writer.WriteHeaderNow()
-	// 下面模拟一个周期非常长的数据处理和下载过程
-	for i := 0; i < 100; i++ {
-		ctx.Writer.WriteString("\"")
-		ctx.Writer.WriteString("hahah")
-		ctx.Writer.WriteString("\"\t")
-		ctx.Writer.WriteString("\"")
-		ctx.Writer.WriteString(time.Now().Format("2006-01-02 15:04:05"))
-		ctx.Writer.WriteString("\"\n")
-		ctx.Writer.Flush() // 产生一定的数据后， flush到浏览器端
-		time.Sleep(time.Duration(500) * time.Millisecond)
+func checkChunk(c *gin.Context) {
+	hash := c.Query("hash")
+	hashPath := fmt.Sprintf("./uploadFile/%s", hash)
+	chunkList := []string{}
+	isExistPath, err := PathExists(hashPath)
+	if err != nil {
+		fmt.Println("获取hash路径错误", err)
+	}
+
+	if isExistPath {
+		files, err := ioutil.ReadDir(hashPath)
+		state := 0
+		if err != nil {
+			fmt.Println("文件读取错误", err)
+		}
+		for _, f := range files {
+			fileName := f.Name()
+			chunkList = append(chunkList, fileName)
+			fileBaseName := strings.Split(fileName, ".")[0]
+			if fileBaseName == hash {
+				state = 1
+			}
+		}
+
+		c.JSON(200, gin.H{
+			"state":     state,
+			"chunkList": chunkList,
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"state":     0,
+			"chunkList": chunkList,
+		})
 	}
 }
 
-func homepage(ctx *gin.Context) {
-	ctx.Header("Content-Type", "text/html")
-	ctx.Writer.WriteString(`
-<html>
-<body>
-open window and to download:
-<a href="javascript:download()">download</a>
-<script>
-function download(){
-    var handle = window.open("about:blank", "my_download_window");
-	document.forms[0].target = "my_download_window";
-	document.forms[0].json.value="ahfu test";
-	document.forms[0].submit();
+func uploadChunk(c *gin.Context) {
+	fileHash := c.PostForm("hash")
+	file, err := c.FormFile("file")
+	hashPath := fmt.Sprintf("./uploadFile/%s", fileHash)
+	if err != nil {
+		fmt.Println("获取上传文件失败", err)
+	}
+
+	isExistPath, err := PathExists(hashPath)
+	if err != nil {
+		fmt.Println("获取hash路径错误", err)
+	}
+
+	if !isExistPath {
+		os.Mkdir(hashPath, os.ModePerm)
+	}
+
+	err = c.SaveUploadedFile(file, fmt.Sprintf("./uploadFile/%s/%s", fileHash, file.Filename))
+	if err != nil {
+		c.String(400, "0")
+		fmt.Println(err)
+	} else {
+		chunkList := []string{}
+		files, err := ioutil.ReadDir(hashPath)
+		if err != nil {
+			fmt.Println("文件读取错误", err)
+		}
+		for _, f := range files {
+			fileName := f.Name()
+
+			if f.Name() == ".DS_Store" {
+				continue
+			}
+			chunkList = append(chunkList, fileName)
+		}
+
+		c.JSON(200, gin.H{
+			"chunkList": chunkList,
+		})
+	}
 }
-</script>
-<form action="/query" method="POST" enctype="multipart/form-data">
-<input type="hidden" name="json" value=""/>
-</form>
-</body>
-</html>
-`)
+
+func mergeChunk(c *gin.Context) {
+	hash := c.Query("hash")
+	fileName := c.Query("fileName")
+	hashPath := fmt.Sprintf("./uploadFile/%s", hash)
+
+	isExistPath, err := PathExists(hashPath)
+	if err != nil {
+		fmt.Println("获取hash路径错误", err)
+	}
+
+	if !isExistPath {
+		c.JSON(400, gin.H{
+			"message": "文件夹不存在",
+		})
+		return
+	}
+	isExistFile, err := PathExists(hashPath + "/" + fileName)
+	if err != nil {
+		fmt.Println("获取hash路径文件错误", err)
+	}
+	fmt.Println("文件是否存在", isExistFile)
+	if isExistFile {
+		c.JSON(200, gin.H{
+			"fileUrl": fmt.Sprintf("http://127.0.0.1:9999/uploadFile/%s/%s", hash, fileName),
+		})
+		return
+	}
+
+	files, err := ioutil.ReadDir(hashPath)
+	if err != nil {
+		fmt.Println("合并文件读取失败", err)
+	}
+	complateFile, err := os.Create(hashPath + "/" + fileName)
+	defer complateFile.Close()
+	for _, f := range files {
+		//.DS_Store
+		//file, err := os.Open(hashPath + "/" + f.Name())
+		//if err != nil {
+		//	fmt.Println("文件打开错误", err)
+		//}
+
+		if f.Name() == ".DS_Store" {
+			continue
+		}
+
+		fileBuffer, err := ioutil.ReadFile(hashPath + "/" + f.Name())
+		if err != nil {
+			fmt.Println("文件打开错误", err)
+		}
+		complateFile.Write(fileBuffer)
+	}
+
+	c.JSON(200, gin.H{
+		"fileUrl": fmt.Sprintf("http://127.0.0.1:9999/uploadFile/%s/%s", hash, fileName),
+	})
+
 }
+
+func main() {
+	router := gin.Default()
+
+	router.Use(Cors)
+	router.GET("/checkChunk", checkChunk)
+
+	router.POST("/uploadChunk", uploadChunk)
+
+	router.GET("/mergeChunk", mergeChunk)
+
+	router.Run("127.0.0.1:9999")
+}
+
+// https://juejin.cn/post/6844904159372656654

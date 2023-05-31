@@ -23,7 +23,7 @@ func appendValueSlice(slice []int) {
 	fmt.Printf("\tslice addr: %p\n", &slice)
 }
 
-// 切片作为函数参数时传递的是指针类型的全拷贝(array的uintptr指针，len，cap)
+// Steps5 切片作为函数参数时传递的是指针类型的全拷贝(array的uintptr指针，len，cap)
 func Steps5() {
 	//var sliceInt = make([]int,2,2)
 	var sliceInt = make([]int, 2, 10)
@@ -48,8 +48,8 @@ func Steps5() {
 
 func appendPointerSlice(slice *[]int) {
 	fmt.Printf("\tslice value addr: %p\n", slice)        // 参数 slice 存储的值(这个值是一个地址) == sliceInt
-	fmt.Printf("\tslice value addr value: %p\n", *slice) //  参数 slice 存储的值(这个值是一个地址)，取出这个值 sliceInt.Value
-	fmt.Printf("\tslice addr: %p\n", &slice)             //  参数 slice 这个变量本身的地址
+	fmt.Printf("\tslice value addr value: %p\n", *slice) // 参数 slice 存储的值(这个值是一个地址)，取出这个值 sliceInt.Value
+	fmt.Printf("\tslice addr: %p\n", &slice)             // 参数 slice 这个变量本身的地址
 	// slice 的addr是新的，对应的len,cap也是和sliceInt隔离的，
 	// 所以添加100后实际地址上其实是有值，只是通过len限制，我们无法看到。
 	*slice = append(*slice, 100)

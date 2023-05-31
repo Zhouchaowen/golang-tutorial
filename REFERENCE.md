@@ -34,8 +34,6 @@ https://github.com/ardanlabs/gotraining
 
 https://github.com/cyent/golang/
 
-https://github.com/FeiChaiCom/go-netdisk
-
 https://www.yuque.com/qyuhen/go/gfe2k0
 
 https://learnku.com/articles/58970
@@ -46,7 +44,7 @@ https://github.com/hyper0x/Golang_Puzzlers
 
 https://github.com/duanbiaowu/go-examples-for-beginners
 
-
+https://colobu.com/2016/10/12/go-file-operations/
 
 
 

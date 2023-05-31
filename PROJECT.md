@@ -6,6 +6,8 @@
 
 [Cloudreve](https://github.com/cloudreve/Cloudreve): 云盘系统
 
+https://github.com/FeiChaiCom/go-netdisk 简易网盘系统
+
 https://github.com/xusenlin/forest-blog markdown 文档
 
 https://github.com/go-sonic/sonic 开源博客平台

@@ -25,12 +25,12 @@ func main() {
 		TimeFormat: time.RFC3339,
 		Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
 			fields := []zapcore.Field{}
-			// log request ID
+			// log request ID 日志请求标识
 			if requestID := c.Writer.Header().Get("X-Request-Id"); requestID != "" {
 				fields = append(fields, zap.String("request_id", requestID))
 			}
 
-			// log trace and span ID
+			// log trace and span ID 日志跟踪和跨度 ID
 			if trace.SpanFromContext(c.Request.Context()).SpanContext().IsValid() {
 				fields = append(fields, zap.String("trace_id", trace.SpanFromContext(c.Request.Context()).SpanContext().TraceID().String()))
 				fields = append(fields, zap.String("span_id", trace.SpanFromContext(c.Request.Context()).SpanContext().SpanID().String()))

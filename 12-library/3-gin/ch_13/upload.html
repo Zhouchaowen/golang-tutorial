@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/spark-md5/3.0.0/spark-md5.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+<input type="file">
+
+<script>
+    document.querySelector('input').onchange = function(e) {
+        const file = this.files[0]
+        const sliceBuffer = []
+        let sliceSize = file.size
+        while(sliceSize > 1024 * 1024) {
+            const blobPart = file.slice(sliceBuffer.length * 1024 * 1024, (sliceBuffer.length + 1) * 1024 * 1024)
+            sliceBuffer.push(
+                blobPart
+            )
+            sliceSize -= (1024 * 1024)
+        }
+
+        if(sliceSize > 0) {
+            sliceBuffer.push(
+                file.slice(sliceBuffer.length * 1024 * 1024, file.size)
+            )
+        }
+
+        const fileReader = new FileReader()
+        fileReader.onload = function(res){
+            const result = fileReader.result
+            const fileHash = SparkMD5.hashBinary(result)
+
+            checkFileChunkState(fileHash)
+                .then(res => {
+                    let { chunkList, state } = res
+                    if(state === 1) {
+                        alert("已经上传完成")
+                        return
+                    }
+
+                    chunkList = chunkList.map(e => parseInt(e))
+
+                    const chunkRequests = []
+                    sliceBuffer.forEach((buffer, i) => {
+                        if(!chunkList.includes(i)) {
+                            const blob = new File([buffer], `${i}`)
+                            chunkRequests.push(
+                                uploadFileChunk(fileHash, blob)
+                            )
+                        }
+                    })
+                    return Promise.all(chunkRequests)
+                })
+                .then(res => {
+                    return new Promise(resolve => {
+                        res.forEach(e => {
+                            e.json().then(({chunkList}) => {
+                                if(chunkList.length === sliceBuffer.length) {
+                                    mergeChunkFile(fileHash, file.name).then(res => {
+                                        resolve(res)
+                                    })
+                                }
+                            })
+                        })
+                    })
+                }).then(res => {
+                console.log(res)
+            })
+        }
+        fileReader.onerror = function(err) {
+            console.log("报错了", err.target.error)
+        }
+        fileReader.readAsBinaryString(this.files[0])
+
+    }
+
+    function uploadFileChunk(hash, file) {
+        let formData = new FormData
+        formData.append('file', file)
+        formData.append('hash', hash)
+        return fetch("http://127.0.0.1:9999/uploadChunk", {
+            method: "POST",
+            body: formData
+        })
+    }
+
+    function checkFileChunkState(hash) {
+        return new Promise(resolve => {
+            fetch("http://127.0.0.1:9999/checkChunk?hash=" + hash)
+                .then(r => r.json())
+                .then(response => {
+                    resolve(response)
+                })
+        })
+    }
+
+    function mergeChunkFile(hash, fileName) {
+        return new Promise(resolve => {
+            fetch(`http://127.0.0.1:9999/mergeChunk?hash=${hash}&fileName=${fileName}`)
+                .then(r => r.json())
+                .then(r => {
+                    resolve(r)
+                })
+        })
+    }
+
+</script>
+</body>
+</html>

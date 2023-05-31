@@ -445,6 +445,12 @@ func main() {
 
 ## 参考
 
+https://taoshu.in/go/memory-model.html [精]
+
+https://github.com/LeoYang90/Golang-Internal-Notes/blob/master/Go%20%E5%86%85%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B.md
+
+https://colobu.com/2021/07/13/Updating-the-Go-Memory-Model/
+
 https://learnku.com/articles/41728
 
 https://strikefreedom.top/archives/high-performance-implementation-of-goroutine-pool

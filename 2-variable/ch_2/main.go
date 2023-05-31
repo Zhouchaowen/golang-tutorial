@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"unsafe"
 )
 
 /*
@@ -19,7 +20,8 @@ import (
 // var 语句声明全局变量并赋值
 var aa int64 = 3
 
-func main() {
+// Steps1 声明变量并赋值
+func Steps1() {
 	// 声明局部变量并赋初始值
 	var a int = 1
 
@@ -38,23 +40,84 @@ func main() {
 	var i interface{} = true
 	//var j,k = 1,"Golang Tutorial" // 多变量声明并赋值
 
-	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
-	fmt.Printf("aa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
-	fmt.Printf("b value:%d  b type:%s\n", b, reflect.TypeOf(b))
-	fmt.Printf("c value:%f  c type:%s\n", c, reflect.TypeOf(c))
-	fmt.Printf("d value:%s  d type:%s\n", d, reflect.TypeOf(d))
-	fmt.Printf("e value:%t  e type:%s\n", e, reflect.TypeOf(e))
-	fmt.Printf("f value:%c  f type:%s\n", f, reflect.TypeOf(f))
-	fmt.Printf("g value:%c  g type:%s\n", g, reflect.TypeOf(g))
-	fmt.Printf("h value:%s  h type:%s\n", h, reflect.TypeOf(h))
-	fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
+	fmt.Printf("\ta value:%d  a type:%s\n", a, reflect.TypeOf(a))
+	fmt.Printf("\taa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
+	fmt.Printf("\tb value:%d  b type:%s\n", b, reflect.TypeOf(b))
+	fmt.Printf("\tc value:%f  c type:%s\n", c, reflect.TypeOf(c))
+	fmt.Printf("\td value:%s  d type:%s\n", d, reflect.TypeOf(d))
+	fmt.Printf("\te value:%t  e type:%s\n", e, reflect.TypeOf(e))
+	fmt.Printf("\tf value:%c  f type:%s\n", f, reflect.TypeOf(f))
+	fmt.Printf("\tg value:%c  g type:%s\n", g, reflect.TypeOf(g))
+	fmt.Printf("\th value:%s  h type:%s\n", h, reflect.TypeOf(h))
+	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
+}
+
+// Steps2 interface被动态赋值
+func Steps2() {
+	var i interface{} = true
+	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
 
 	// i 被重新赋值, 类型转换为string
 	i = "tutorial"
-	fmt.Printf("i value:%s  i type:%s\n", i, reflect.TypeOf(i))
+	fmt.Printf("\ti value:%s  i type:%s\n", i, reflect.TypeOf(i))
+}
 
+// Steps3 证明interface底层是由type和data组成
+func Steps3() {
+	/*
+		interface底层由两部分组成  _type ptr, data ptr
+		type eface struct {
+			_type *_type
+			data  unsafe.Pointer
+		}
+	*/
+
+	var i interface{} = true
+	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
+
+	fmt.Printf("\ti size:%d\n", unsafe.Sizeof(i))
+	fmt.Printf("\ti addr:%p\n", &i)
+	fmt.Printf("\ti type pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(&i)))
+	fmt.Printf("\ti data pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))
+	fmt.Printf("\ti data pointer *value %t\n", *(*bool)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))))
+
+	fmt.Printf("\t---------------------------\n")
+	// i 被重新赋值, 类型转换为string
+	i = "tutorial"
+	fmt.Printf("\ti value:%s  i type:%s\n", i, reflect.TypeOf(i))
+
+	fmt.Printf("\ti size:%d\n", unsafe.Sizeof(i))
+	fmt.Printf("\ti addr:%p\n", &i)
+	fmt.Printf("\ti type pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(&i)))
+	fmt.Printf("\ti data pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))
+	fmt.Printf("\ti data pointer *value %s\n", *(*string)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))))
+
+	// 等同如上
+	type eface struct {
+		_type *struct{} // *_type
+		data  unsafe.Pointer
+	}
+	s := *(*eface)(unsafe.Pointer(&i))
+	fmt.Printf("\ti %+v\n", s)
+	fmt.Printf("\ti._type: %+v\n", s._type)
+	fmt.Printf("\ti.data:  %+v\n", *(*string)(s.data))
+}
+
+// Steps4 字符串
+func Steps4() {
 	// 定义字符串变量并初始化为 Golang Tutorial
 	str := "Golang Tutorial"
 	strLength := len(str) // len() 函数可以获取字符串的长度
-	fmt.Printf("str value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(i))
+	fmt.Printf("\tstr value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(str))
+}
+
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()
+	fmt.Println("Steps2():")
+	Steps2()
+	fmt.Println("Steps3():")
+	Steps3()
+	fmt.Println("Steps4():")
+	Steps4()
 }

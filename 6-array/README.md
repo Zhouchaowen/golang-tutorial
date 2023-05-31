@@ -24,12 +24,12 @@
 在 `Golang` 中，数组是具有**相同数据类型**的一组**固定长度**的数据项的集合。数组中的每个元素可以通过**索引**来访问，索引从 0 开始计数。数组的长度在创建时就已经确定，并且不可更改。创建一个数组的语法格式:
 
 ```go
-var array [length]type
+var ArrayName [length]type
 ```
 
 ![6-2.arrayDefinition.png](../image/6-2.arrayDefinition.png)
 
-其中，`array`表示变量名称，`length` 表示数组的长度，`type` 表示数组元素的数据类型。
+其中，`ArrayName`表示变量名称，`length` 表示数组的长度，`type` 表示数组元素的数据类型。
 
 ```go
 package main
@@ -151,21 +151,24 @@ func main() {
 
 首先，代码定义了一个全局变量 `sliceByte`，它是一个 `[]byte` 类型的切片。
 
-接着，在 `Steps1()` 函数中，定义了一个名为 `sliceInt` 的 `[]int` 类型的切片，并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的值、长度和容量。
+接着，在 `Steps1()` 函数中，定义了一个名为 `sliceInt` 的 `[]int` 类型的切片
+
+![6-3.sliceAppend.png](../image/6-3.slice.png)
+
+并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的值、长度和容量。
 
 ```go
- sliceInt:0x0
-&sliceInt:0xc0000a4018
-&sliceInt:0xc0000b2008 sliceInt:[1] len:1 cap:1
-&sliceInt:0xc0000b2030 sliceInt:[1 2] len:2 cap:2
-&sliceInt:0xc0000b6020 sliceInt:[1 2 3] len:3 cap:4
-&sliceInt:0xc0000b6020 sliceInt:[1 2 3 4] len:4 cap:4
-&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5] len:5 cap:8
-&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6] len:6 cap:8
-&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6 7] len:7 cap:8
-&sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6 7 8] len:8 cap:8
-&sliceInt:0xc0000ba000 sliceInt:[1 2 3 4 5 6 7 8 9] len:9 cap:16
-&sliceInt:0xc0000ba000 sliceInt:[1 2 3 4 5 6 7 8 9 10] len:10 cap:16
+sliceInt:[] len:0 cap:0
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b2008 sliceInt:[1] len:1 cap:1
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b2030 sliceInt:[1 2] len:2 cap:2
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b6020 sliceInt:[1 2 3] len:3 cap:4
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b6020 sliceInt:[1 2 3 4] len:4 cap:4
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5] len:5 cap:8
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6] len:6 cap:8
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6 7] len:7 cap:8
+&sliceInt:0xc0000a4018 sliceInt:0xc0000b8040 sliceInt:[1 2 3 4 5 6 7 8] len:8 cap:8
+&sliceInt:0xc0000a4018 sliceInt:0xc0000ba080 sliceInt:[1 2 3 4 5 6 7 8 9] len:9 cap:16
+&sliceInt:0xc0000a4018 sliceInt:0xc0000ba080 sliceInt:[1 2 3 4 5 6 7 8 9 10] len:10 cap:16
 ```
 
 ![6-3.sliceAppend.png](../image/6-3.sliceAppend.png)

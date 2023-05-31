@@ -39,12 +39,12 @@ func Steps1() {
 
 	fmt.Printf("\td value %+v\n", d)
 
+	fmt.Printf("\tdome.B: %c\n", d.B)
+
 	// 访问结构体内的成员使用点. , 格式为：结构体变量.成员
 	d.a = false // 修改a字段的值
 
 	fmt.Printf("\td value %+v\n", d)
-
-	fmt.Printf("\tdome.B: %c\n", d.B)
 }
 
 func Steps2() {
@@ -98,6 +98,28 @@ func Steps4() {
 	}
 }
 
+func Steps5() {
+	d := Demo{ // 创建一个 Demo 类型的结构体实例
+		a: true,
+		B: 'b',
+		C: 1,
+		D: 1.0,
+		E: "E",
+		F: []int{1},
+		G: map[string]int{"GOLANG": 1},
+	}
+
+	// 结构体的字段内存地址排列
+	fmt.Printf("\tvariable b   addr %p\n", &d)
+	fmt.Printf("\tvariable b.a addr %p\n", &d.a)
+	fmt.Printf("\tvariable b.B addr %p\n", &d.B)
+	fmt.Printf("\tvariable b.C addr %p\n", &d.C)
+	fmt.Printf("\tvariable b.D addr %p\n", &d.D)
+	fmt.Printf("\tvariable b.E addr %p\n", &d.E)
+	fmt.Printf("\tvariable b.F addr %p\n", &d.F)
+	fmt.Printf("\tvariable b.G addr %p\n", &d.G)
+}
+
 func main() {
 	fmt.Println("Steps1():")
 	Steps1()
@@ -107,4 +129,6 @@ func main() {
 	Steps3()
 	fmt.Println("Steps4():")
 	Steps4()
+	fmt.Println("Steps5():")
+	Steps5()
 }
