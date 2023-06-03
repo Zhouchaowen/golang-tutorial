@@ -100,6 +100,16 @@ var slice []type
 
 其中，`type` 表示切片中元素的数据类型。
 
+![6-3.sliceMemory.png](../image/6-3.sliceMemory.png)
+
+创建并初始化切片(以int类型为例)：
+
+```go
+var slice = []int{1,2,3}
+```
+
+![6-3.sliceMemory2.png](../image/6-3.sliceMemory2.png)
+
 ### 定义切片
 
 ```go
@@ -153,7 +163,7 @@ func main() {
 
 接着，在 `Steps1()` 函数中，定义了一个名为 `sliceInt` 的 `[]int` 类型的切片
 
-![6-3.sliceAppend.png](../image/6-3.slice.png)
+![6-3.slice.png](../image/6-3.slice.png)
 
 并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的值、长度和容量。
 
@@ -197,9 +207,24 @@ func Steps2() {
 		cap(sliceString))
 
 	// 数组地址
-	fmt.Printf("\t&sliceString    addr: %p\n", &sliceString)
-	fmt.Printf("\t&sliceString[0] addr: %p\n", &sliceString[0])
-	fmt.Printf("\t&sliceString[1] addr: %p\n", &sliceString[1])
+	fmt.Printf("\t         &sliceString addr: %p\n", &sliceString)
+	fmt.Printf("\t    sliceString value addr: %p\n", sliceString)
+	fmt.Printf("\t&sliceString[0] value addr: %p\n", &sliceString[0])
+	fmt.Printf("\t&sliceString[1] value addr: %p\n", &sliceString[1])
+
+	// Steps 2-2: 初始化切片
+	sliceInt := []int{1, 2, 3}
+	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+		sliceInt,
+		len(sliceInt),
+		cap(sliceInt))
+
+	// 数组地址
+	fmt.Printf("\t         &sliceInt addr: %p\n", &sliceInt)
+	fmt.Printf("\t    sliceInt value addr: %p\n", sliceInt)
+	fmt.Printf("\t&sliceInt[0] value addr: %p\n", &sliceInt[0])
+	fmt.Printf("\t&sliceInt[1] value addr: %p\n", &sliceInt[1])
+	fmt.Printf("\t&sliceInt[2] value addr: %p\n", &sliceInt[2])
 }
 
 // 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
@@ -571,13 +596,13 @@ func main() {
 }
 ```
 
-**当数组作为函数参数传递时，会进行一次数组拷贝**。也就是说，传递给函数的是一个新的数组，这个新数组和原数组具有相同的值，在函数内部对新数组的修改不会影响原数组。
-
-![6-6.arrayParam.png](../image/6-6.arrayParam.png)
-
 **当切片作为函数参数传递时，会传递切片的指针(也是拷贝，只是拷贝的是指针)**。也就是说，在函数内部对切片的修改会影响原切片。需要注意的是，在函数内部将一个新的切片赋值给原切片的变量时，这不会影响到原切片。因为函数内部的变量是在函数内部的作用域范围内的，它与原切片变量是两个不同的变量。
 
 ![6-6.sliceParam.png](../image/6-6.sliceParam.png)
+
+**当数组作为函数参数传递时，会进行一次数组拷贝**。也就是说，传递给函数的是一个新的数组，这个新数组和原数组具有相同的值，在函数内部对新数组的修改不会影响原数组。
+
+![6-6.arrayParam.png](../image/6-6.arrayParam.png)
 
 ## 思考题
 

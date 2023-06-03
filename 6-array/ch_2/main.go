@@ -73,6 +73,20 @@ func Steps2() {
 	fmt.Printf("\t    sliceString value addr: %p\n", sliceString)
 	fmt.Printf("\t&sliceString[0] value addr: %p\n", &sliceString[0])
 	fmt.Printf("\t&sliceString[1] value addr: %p\n", &sliceString[1])
+
+	// Steps 2-2: 初始化切片
+	sliceInt := []int{1, 2, 3} // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+		sliceInt,
+		len(sliceInt),
+		cap(sliceInt))
+
+	// 数组地址
+	fmt.Printf("\t         &sliceInt addr: %p\n", &sliceInt)
+	fmt.Printf("\t    sliceInt value addr: %p\n", sliceInt)
+	fmt.Printf("\t&sliceInt[0] value addr: %p\n", &sliceInt[0])
+	fmt.Printf("\t&sliceInt[1] value addr: %p\n", &sliceInt[1])
+	fmt.Printf("\t&sliceInt[2] value addr: %p\n", &sliceInt[2])
 }
 
 // Steps3 通过 make 创建切片

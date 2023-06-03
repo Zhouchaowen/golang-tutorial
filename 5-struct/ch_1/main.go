@@ -118,6 +118,18 @@ func Steps5() {
 	fmt.Printf("\tvariable b.E addr %p\n", &d.E)
 	fmt.Printf("\tvariable b.F addr %p\n", &d.F)
 	fmt.Printf("\tvariable b.G addr %p\n", &d.G)
+
+	fmt.Printf("\t-----------------\n")
+
+	c := d
+	fmt.Printf("\tvariable c   addr %p\n", &c)
+	fmt.Printf("\tvariable c.a addr %p\n", &c.a)
+	fmt.Printf("\tvariable c.B addr %p\n", &c.B)
+	fmt.Printf("\tvariable c.C addr %p\n", &c.C)
+	fmt.Printf("\tvariable c.D addr %p\n", &c.D)
+	fmt.Printf("\tvariable c.E addr %p\n", &c.E)
+	fmt.Printf("\tvariable c.F addr %p\n", &c.F)
+	fmt.Printf("\tvariable c.G addr %p\n", &c.G)
 }
 
 func main() {

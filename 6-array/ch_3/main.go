@@ -110,8 +110,9 @@ func Steps4() {
 	fmt.Printf("\tsliceInt memery size:%d\n", unsafe.Sizeof(sliceInt)) // &sliceInt 获取的是sliceInt变量本身的地址
 
 	fmt.Printf("\tsliceInt variable address:%p\n", &sliceInt) // &sliceInt 获取的是sliceInt变量本身的地址
-	fmt.Printf("\tsliceInt value address:%p\n", sliceInt)     //  sliceInt 获取切片底层数据的地址
+	fmt.Printf("\tsliceInt value    address:%p\n", sliceInt)  //  sliceInt 获取切片底层数据的地址
 
+	fmt.Printf("\t-----------------------------\n")
 	/*
 		切片是一个指针持有者类型，底层由三部分组成  array ptr, len, cap
 		type slice struct {
@@ -128,6 +129,7 @@ func Steps4() {
 	fmt.Printf("\tsliceInt data cap  value 0x%x\n", (*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&sliceInt))+uintptr(16))))
 	fmt.Printf("\tsliceInt data cap *value %d\n", *(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&sliceInt)) + uintptr(16))))
 
+	fmt.Printf("\t-----------------------------\n")
 	// 等同于上面的结果
 	type slice struct {
 		array unsafe.Pointer
@@ -136,6 +138,8 @@ func Steps4() {
 	}
 	s := *(*slice)(unsafe.Pointer(&sliceInt))
 	fmt.Printf("\tsliceInt %+v\n", s)
+
+	fmt.Printf("\t-----------------------------\n")
 
 	// 通过偏移量获取切片上的值
 	fmt.Printf("\tsliceInt data array pointer value[0] %d\n", *(*int)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(&sliceInt)))))
