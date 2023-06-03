@@ -304,7 +304,7 @@ func Steps3() {
 	case flag > 6, flag < 10: // case 可以设置多个条件。flag 大于6或小于10都能执行当前case流程
 		fmt.Println("\tcase flag > 6 || flag < 10 flag:", flag)
 	case flag > 6 && flag < 10: // case 可以设置组合条件。flag 大于6并且小于10都才能执行当前case流程
-		fmt.Println("\tcase flag > 6 || flag < 10 flag:", flag)
+		fmt.Println("\tcase flag > 6 && flag < 10 flag:", flag)
 	}
 }
 
@@ -462,8 +462,7 @@ package main
 
 import "fmt"
 
-// 捕捉处理异常 recover
-func main() {
+func Steps1()  {
 	defer func() {
 		if err := recover(); err != nil {
 			// 捕捉错误 run err: runtime error: integer divide by zero
@@ -474,7 +473,13 @@ func main() {
 	a := 10
 	b := 0
 	_ = a / b // 发生 panic
-	fmt.Println("return")
+	fmt.Println("return Steps1")
+}
+
+// 捕捉处理异常 recover
+func main() {
+	Steps1()
+	fmt.Println("return main")
 }
 ```
 

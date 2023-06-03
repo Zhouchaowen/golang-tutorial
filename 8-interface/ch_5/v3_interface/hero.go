@@ -10,9 +10,9 @@ func NewHero(name string) Hero {
 	case "HouYi":
 		return &HouYi{}
 	case "YaSe":
-		return &HouYi{}
+		return &YaSe{}
 	case "ZhaoYun":
-		return &HouYi{}
+		return &ZhaoYun{}
 	}
 	return nil
 }

@@ -1,6 +1,6 @@
 # Channel
 
-`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现**共享内存**，可以安全地传递数据，避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
+`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现**共享内存**，可以安全地传递数据，可以避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
 
 ![10-1.channel.jpeg](../image/10-1.channel.jpeg)
 
@@ -32,7 +32,7 @@ import (
 	"time"
 )
 
-// 定义 channel, channel 是带有类型的管道，可以通过信道操作符 <- 来发送或者接收值
+// 定义 channel, channel 是带有类型的管道，可以通过channel操作符 <- 来发送或者接收值
 func main() {
 	// 信道在使用前必须通过内建函数 make 来创建
 
@@ -61,7 +61,7 @@ func main() {
 
 接着，在 `main`函数 中，**使用 `<-` 语法将整数值 `1` 发送到 `Channel c` 中**，即`c <- 1`。
 
-最后，为了保证 `Goroutine` 有足够的时间去接收 `Channel` 中的值，通过 `<-time.After(time.Second * 3)` 等待 3 秒钟之后，打印出 "return"。如果将 `<-time.After(time.Second * 3)` 去掉，那么程序可能在打印 "return" 之前就结束了，因为 `Goroutine` 没有足够的时间执行接收 `Channel` 中的值。
+最后，为了保证 `Goroutine` 有足够的时间去接收 `Channel` 中的值，通过 `<-time.After(time.Second * 3)` 等待 3 秒钟之后，打印出 "return"。如果将 `<-time.After(time.Second * 3)` 去掉，那么程序可能在打印 "return" 之前就结束了，因为 `Goroutine` 没有足够的时间接收 `Channel` 中的值。
 
 ## 无缓冲Channel
 
@@ -167,7 +167,7 @@ func producer(c chan int, n int) {
 func consumer(c chan int) {
 	for {
 		num, ok := <-c // 从channel c中接收值
-    if !ok { // ok 代表是否接受到channel c的值,ok=true代表接收到,ok=false代表channel已经被close了
+    	if !ok { // ok 代表是否接受到channel c的值,ok=true代表接收到,ok=false代表channel已经被close了
 			fmt.Println("consumer closed")
 			return
 		}

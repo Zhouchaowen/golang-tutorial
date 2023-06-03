@@ -123,7 +123,7 @@ import (
 func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10
-  result := handler(x, y)
+    result := handler(x, y)
 	return result
 }
 

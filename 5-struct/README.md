@@ -146,7 +146,7 @@ Steps2():
 ```go
 type User struct {
 	UserName string `json:"user_name"`
-  PassWord string `json:"pass_word" orm:"passw"`
+    PassWord string `json:"pass_word" orm:"passw"`
 }
 ```
 
@@ -329,13 +329,17 @@ func (d Demo) printB() {
 	fmt.Printf("%+v\n", d.B)
 }
 
+func printB(d Demo) {
+	fmt.Printf("%+v\n", d.B)
+}
+
 v := Demo{true, 'G', 1, 1.0, "Golang Tutorial", []int{1, 2}, map[string]int{"Golang": 0, "Tutorial": 1}}
 v.printB() // 打印 G
 ```
 
 `v`是`Demo`结构体的一个实例，当调用`v.printB()`结构体方法时，`v`实例中的数据会拷贝一份给结构体方法`printB()`中的接收者`d`, 这样在`printB()`中调用`d.B`时就可以获取到`G`这个字符了。
 
-需要注意的是，上面定义的这些方法都是值方法。**`v`实例赋值给接收者`d`是通过拷贝一份数据的方式**，所以在方法中**修改接收者`d`的数据并不会影响到`v`实例的数据**。
+需要注意的是，上面定义的这些方法都是值方法。**`v`实例赋值给值接收者`d`是通过拷贝一份数据的方式**，所以在方法中**修改接收者`d`的数据并不会影响到`v`实例的数据**。
 
 ```go
 v.ModifyE()
@@ -480,7 +484,8 @@ func main() {
 1. 通过结构体方法的形式实现加减乘除
 ```go
 type numb struct {
-	a,b int
+	a int
+    b int
 }
 
 func (n numb) add() int {
@@ -515,6 +520,4 @@ https://www.pengrl.com/p/16608/
 
 https://xie.infoq.cn/article/e87f45801f8b694babe5db07e
 
-https://www.liwenzhou.com/posts/Go/struct_memory_layout/
-
-https://blog.frognew.com/2020/08/go-struct-memory-alignment.html
+https://www.liwenzhou.com/posts/Go/struct_memory_layout

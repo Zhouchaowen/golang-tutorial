@@ -165,7 +165,7 @@ func main() {
 
 ![6-3.slice.png](../image/6-3.slice.png)
 
-并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的值、长度和容量。
+并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的地址、值、长度和容量。
 
 ```go
 sliceInt:[] len:0 cap:0

@@ -20,7 +20,8 @@
 
 ```go
 type interfaceName interface {
-	functionName()
+	functionName() // 方法组
+    ......
   // functionName2(type) type
 }
 ```
@@ -48,7 +49,7 @@ func (d BlackSwan) GaGaga() {
 }
 ```
 
-调用
+调用接口方法
 
 ```go
 func main() {
