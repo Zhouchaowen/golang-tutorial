@@ -16,7 +16,7 @@
 在`golang`中每个独立运行的 `Go` 程序都至少包含三部分`package main`, `import`, `func main()`
 
 ```go
-package main // 定义了包名,只有定义了main的包才能独立运行
+package main // 定义了包名,只有定义在 main 包中的 main 函数才能独立运行
 
 // 导入: 标准库和第三方库
 import (
@@ -25,7 +25,7 @@ import (
 
 // main 函数,程序的入口
 func main() {
-	// 调用标准库 fmt 在控制台打印 hello world 字符串
+	// 调用标准库 fmt 中的 Println 函数在控制台打印 hello world 字符串
 	fmt.Println("hello world")
 }
 
@@ -47,15 +47,22 @@ func main() {
 ```go
 package main
 
+/*
+	1.导入标准库
+	2.导入第三方库
+*/
+
 // 导入: 标准库和第三方库
 import (
 	"fmt"
-	"math/rand" // 导入rand库
+	"math/rand" // 导入 rand 库
+	"time"
 )
 
-// main 函数,程序的入口。
+// main 函数,程序的入口
 func main() {
-	// 调用标准库 fmt 在控制台打印 hello world 字符串
+	// 设置随机数种子（暂不用了解）
+	rand.Seed(time.Now().UnixNano())
 	// rand.Intn(10) 函数返回一个取值范围在[0,n)的伪随机int值，如果n<=0会panic。
 	fmt.Println("hello world", rand.Intn(10))
 }
@@ -90,19 +97,25 @@ const (
 ```go
 package main
 
+/*
+	1.导出变量
+	2.导出函数
+*/
+
 // 导入: 标准库和第三方库
 import (
 	"fmt"
 	"math"
 )
 
-// main 函数,程序的入口。
+// main 函数,程序的入口
 func main() {
-	// 注意：在导入一个包时，你只能引用其中已导出的名字。任何“未导出”的名字在该包外均无法访问
+	// 注意：在导入一个包时，你只能引用其中 已导出 的函数,变量,常量。任何“未导出”的函数,变量,常量在该包外均无法访问
 
-	// 什么是导出？首字母大写代表导出,小写代表不导出
+	// 什么是导出？函数,变量,常量首字母大写则代表导出,小写代表不导出
+
 	//fmt.Println("intSize",math.intSize) // 引用未导出变量将报错
-	fmt.Println("MaxInt", math.MaxInt) // 引用导出的变量
+	fmt.Println("MaxInt", math.MaxInt)
 }
 ```
 
@@ -115,6 +128,11 @@ func main() {
 ```go
 package main
 
+/*
+	1.包别名
+	2.匿名包
+*/
+
 // 导入: 标准库和第三方库
 import (
 	"fmt"
@@ -122,7 +140,7 @@ import (
 	_ "math/rand" // 匿名包，主要用于引入一些驱动的init函数的初始化
 )
 
-// main 函数,程序的入口。
+// main 函数,程序的入口
 func main() {
 	fmt.Println("MaxInt", m.MaxInt) // 引用导出变量的时候也要用别名
 }

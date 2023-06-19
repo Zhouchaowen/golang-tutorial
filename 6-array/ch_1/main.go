@@ -56,6 +56,9 @@ func Steps1() {
 
 	fmt.Printf("\tarrayInt len: %d\n", len(arrayInt))
 	fmt.Printf("\tarrayInt cap: %d\n", cap(arrayInt))
+
+	var arr [10]bool
+	fmt.Printf("\tarr memory size:%d\n", unsafe.Sizeof(arr))
 }
 
 // Steps2 二维数组

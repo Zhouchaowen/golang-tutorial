@@ -27,6 +27,8 @@
 var ArrayName [length]type
 ```
 
+数组内存布局：
+
 ![6-2.arrayDefinition.png](../image/6-2.arrayDefinition.png)
 
 其中，`ArrayName`表示变量名称，`length` 表示数组的长度，`type` 表示数组元素的数据类型。
@@ -92,13 +94,13 @@ func main() {
 
 ## 切片基础用法
 
-在 `Golang` 中，切片是一个**引用类型**(指针持有者类型)，它是一个动态数组，可以根据需要**动态增加或减少大小**。创建一个切片的语法格式：
+在 `Golang` 中，切片是一个**引用类型**(指针持有者类型)，它是一个动态数组，可以根据需要**动态增加或减少大小**。创建一个切片的语法格式：其中，`type` 表示切片中元素的数据类型。
 
 ```go
 var slice []type
 ```
 
-其中，`type` 表示切片中元素的数据类型。
+切片内存布局：
 
 ![6-3.sliceMemory.png](../image/6-3.sliceMemory.png)
 
@@ -159,9 +161,7 @@ func main() {
 }
 ```
 
-首先，代码定义了一个全局变量 `sliceByte`，它是一个 `[]byte` 类型的切片。
-
-接着，在 `Steps1()` 函数中，定义了一个名为 `sliceInt` 的 `[]int` 类型的切片
+首先，代码定义了一个全局变量 `sliceByte`，它是一个 `[]byte` 类型的切片。接着，在 `Steps1()` 函数中，定义了一个名为 `sliceInt` 的 `[]int` 类型的切片
 
 ![6-3.slice.png](../image/6-3.slice.png)
 
@@ -449,18 +449,6 @@ func main() {
 
 切片拷贝不是将新旧切片直接赋值，这样**只会赋值切片的引用**，他们底层还是共用的同一片存储空间，修改新切片会导致旧切片也一起变。
 
-所以真正的拷贝是将旧的切片的所有元素复制到新的切片中，可以使用内建函数 `copy` 来完成。其函数为：
-
-```go
-func copy(dst, src []T) int
-```
-
-其中`dst` 是目标切片，`src` 是源切片，`T` 是切片元素类型。`copy` 函数会将源切片的元素复制到目标切片中，并返回实际复制的元素个数（复制长度为两个切片长度的最小值）。
-
-![6-5.copySliceArray.png](../image/6-5.copySliceArray.png)
-
-需要注意的是，`copy` 函数不会创建新的切片，只是将源切片的元素复制到目标切片中。如果目标切片长度小于源切片长度，只会复制目标切片长度的元素，而源切片中剩余的元素会被丢弃。如果目标切片长度大于源切片长度，只会复制源切片长度的元素，而目标切片中剩余的元素会保持原值不变。
-
 ```go
 package main
 
@@ -498,6 +486,27 @@ func Steps1() {
 		cap(sliceIntTmp))
 }
 
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()
+}
+```
+
+所以真正的拷贝是将旧的切片的所有元素复制到新的切片中，可以使用内建函数 `copy` 来完成。其函数为：
+
+```go
+func copy(dst, src []T) int
+```
+
+其中`dst` 是目标切片，`src` 是源切片，`T` 是切片元素类型。`copy` 函数会将源切片的元素复制到目标切片中，并返回实际复制的元素个数（复制长度为两个切片长度的最小值）。
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
 // Steps2 深拷贝
 func Steps2() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -530,12 +539,16 @@ func Steps2() {
 }
 
 func main() {
-	fmt.Println("Steps1():")
-	Steps1()
 	fmt.Println("Steps2():")
 	Steps2()
 }
 ```
+
+Copy切片抽象图：
+
+![6-5.copySliceArray.png](../image/6-5.copySliceArray.png)
+
+需要注意的是，`copy` 函数不会创建新的切片，只是将源切片的元素复制到目标切片中。如果目标切片长度小于源切片长度，只会复制目标切片长度的元素，而源切片中剩余的元素会被丢弃。如果目标切片长度大于源切片长度，只会复制源切片长度的元素，而目标切片中剩余的元素会保持原值不变。
 
 ## 数组与切片参数传递时的区别
 

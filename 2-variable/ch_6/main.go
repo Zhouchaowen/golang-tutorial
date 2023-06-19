@@ -19,7 +19,7 @@ import "fmt"
 
 // Steps1 定义指针变量
 func Steps1() {
-	// 定义一个 int 类型的指针变量, 默认值为nil
+	// 定义一个 int 类型的指针变量, 默认值零值为nil
 	var a *int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b *float32 // float64
 	var c *bool
@@ -44,22 +44,23 @@ func Steps2() {
 	// 定义了一个指针变量 a, 指针变量只能存储地址
 	var a *int
 
-	fmt.Println("\ta value:", a) // 打印 a 存储的地址值
-	fmt.Println("\ta addr:", a)  // 打印 a 自己的地址值
+	fmt.Println("\ta value:", a) // 打印 a 变量存储的地址值
+	fmt.Println("\ta addr:", &a) // 打印 a 变量自己的地址值
 
 	// 取空指针变量存储地址上的值会导致 panic: runtime error: invalid memory address or nil pointer dereference
-	//fmt.Println("a value:", *a) // *a 代表取出 a 存储的地址, 并获取该地址上存储的值
+	//fmt.Println("a value:", *a) // *a 代表取出 a 变量存储的地址, 并获取该地址上存储的值
 
 	fmt.Println("\tb value:", b)  // 打印 b 的值
 	fmt.Println("\tb addr :", &b) // 打印 b 的地址
 
 	// & 表示取 b 变量的地址并赋值给 a, 改动 a 就相当于改动 b
 	a = &b
-	fmt.Println("\ta value:", a)             // 打印 a 存储的地址值
-	fmt.Println("\ta value over value:", *a) // *a 代表取出 a 存储的地址, 并获取该地址上存储的值
+	fmt.Println("\ta value:", a)             // 打印 a 变量存储的地址值
+	fmt.Println("\ta value over value:", *a) // *a 代表取出 a 变量存储的地址, 并获取该地址上存储的值
 
-	*a = 2                       // *a 取出a存储的地址，并修该地址上存储的值(赋值为 2)
+	*a = 2                       // *a 取出 a 变量存储的地址，并修该地址上存储的值(赋值为 2)
 	fmt.Println("\ta value:", a) // 打印 a 存储的地址值
+	fmt.Println("\ta value over value:", *a)
 	fmt.Println("\tb value:", b) // 打印 b 的值
 
 	c := &a
@@ -79,6 +80,8 @@ func Steps3() {
 	fmt.Println("\tnew(int) value: ", a)
 	fmt.Println("\tnew(int) value over value: ", *a)
 	fmt.Println("\t*int value: ", b)
+	// 取空指针变量存储地址上的值会导致,这就是a := new(int)和var b *int创建指针的区别
+	//fmt.Println("\t*int value over value: ", *b)
 
 	c := new(string)
 	var d *string

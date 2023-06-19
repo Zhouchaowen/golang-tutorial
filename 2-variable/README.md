@@ -81,7 +81,10 @@ var variableName = 1
 ```go
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 /*
 	通过 var 定义变量
@@ -92,10 +95,10 @@ import "fmt"
 */
 
 // var 语句可以声明全局变量
-// 全局变量: 函数外声明的变量，全局变量作用域可以在当前的整个包甚至外部包(被导出后)使用
+// 全局变量: 函数外声明的变量,全局变量作用域可以在当前的整个包甚至外部包(被导出后)使用
 var aa int64
 
-// 可以在 var 中定义多个全局变量
+// 可以在 var() 中定义多个全局变量
 var (
 	bb int8
 	cc int16
@@ -103,11 +106,13 @@ var (
 	ee string
 )
 
-func main() {
-	// var 语句用于声明一个变量列表,默认值为对应零值，并且声明变量后不使用该变量的话将会抛出错误。
-  
-  // 如下 var a int 定义了一个 int 类型的局部变量 a (局部变量：函数内声明的变量，作用域只在函数体内)
+func Steps1() {
+	// var 语句用于声明一个变量列表,默认值为对应类型零值,
+	// 并且声明变量后不使用该变量的话将会抛出错误(该规则适用于函数内定义的变量)
+
+	// 如下 var a int 定义了一个 int 类型的局部变量 a (局部变量：函数内声明的变量,作用域只在函数体内),
 	// 这意味着 a 只能在 main 函数内使用（函数的参数和返回值也是局部变量）
+
 	var a int         // 整型 uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b float32     // 浮点型 float64
 	var c bool        // 布尔型
@@ -127,17 +132,22 @@ func main() {
 	// 	  接口类型为   nil
 
 	// 打印对应零值
-	fmt.Println("int zero value: ", a)
-	fmt.Println("int64 zero value: ", aa)
-	fmt.Println("float32 zero value: ", b)
-	fmt.Println("bool zero value: ", c)
-	fmt.Println("string zero value: ", d)
-	fmt.Println("byte zero value: ", e)
-	fmt.Println("rune zero value: ", f)
-	fmt.Println("interface zero value: ", g)
+	fmt.Println("\tint zero value: ", a)
+	fmt.Println("\tint64 zero value: ", aa)
+	fmt.Println("\tfloat32 zero value: ", b)
+	fmt.Println("\tbool zero value: ", c)
+	fmt.Println("\tstring zero value: ", d)
+	fmt.Println("\tbyte zero value: ", e)
+	fmt.Println("\trune zero value: ", f)
+	fmt.Println("\tinterface zero value: ", g)
 
-	fmt.Println("string zero value: ", h)
-	fmt.Println("string zero value: ", i)
+	fmt.Println("\tstring zero value: ", h)
+	fmt.Println("\tstring zero value: ", i)
+}
+是我            6
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()
 }
 ```
 
@@ -153,21 +163,23 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"unsafe"
 )
 
 // var 语句声明全局变量并赋值
 var aa int64 = 3
 
-func main() {
+// Steps1 声明变量并赋值
+func Steps1() {
 	// 声明局部变量并赋初始值
 	var a int = 1
 
-	// 如果初始化值已存在，则可以省略类型，Go编译器会自动推导类型
+	// 如果初始化值已存在,则可以省略类型,Go编译器会自动推导类型
 	var b = 2       // 自动推导为int型
 	var c = 3.2     // 自动推导为float64型
 	var d = "hello" // 自动推导为string型
 
-	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明, 但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
+	// 在函数中,简洁赋值语句 := 可在类型明确的地方代替 var 声明,但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
 	e := true
 
 	var f byte = 'a'
@@ -175,23 +187,26 @@ func main() {
 
 	var h interface{} = "golang"
 	var i interface{} = true
-	//var j,k = 1,"Golang Tutrial" // 多变量声明并赋值
+	var j, k = 1, "Golang Tutorial" // 多变量声明并赋值
 
-	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
-	fmt.Printf("aa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
-	fmt.Printf("b value:%d  b type:%s\n", b, reflect.TypeOf(b))
-	fmt.Printf("c value:%f  c type:%s\n", c, reflect.TypeOf(c))
-	fmt.Printf("d value:%s  d type:%s\n", d, reflect.TypeOf(d))
-	fmt.Printf("e value:%t  e type:%s\n", e, reflect.TypeOf(e))
-	fmt.Printf("f value:%c  f type:%s\n", f, reflect.TypeOf(f))
-	fmt.Printf("g value:%c  g type:%s\n", g, reflect.TypeOf(g))
-	fmt.Printf("h value:%s  h type:%s\n", h, reflect.TypeOf(h))
-	fmt.Printf("i value:%t  i type:%s\n", i, reflect.TypeOf(i))
+	// 打印变量的 value, 通过 reflect.TypeOf 函数获取变量对应类型
+	fmt.Printf("\ta value:%d  a type:%s\n", a, reflect.TypeOf(a))
+	fmt.Printf("\taa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
+	fmt.Printf("\tb value:%d  b type:%s\n", b, reflect.TypeOf(b))
+	fmt.Printf("\tc value:%f  c type:%s\n", c, reflect.TypeOf(c))
+	fmt.Printf("\td value:%s  d type:%s\n", d, reflect.TypeOf(d))
+	fmt.Printf("\te value:%t  e type:%s\n", e, reflect.TypeOf(e))
+	fmt.Printf("\tf value:%c  f type:%s\n", f, reflect.TypeOf(f))
+	fmt.Printf("\tg value:%c  g type:%s\n", g, reflect.TypeOf(g))
+	fmt.Printf("\th value:%s  h type:%s\n", h, reflect.TypeOf(h))
+	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
+	fmt.Printf("\tj value:%d  j type:%s\n", j, reflect.TypeOf(j))
+	fmt.Printf("\tk value:%s  k type:%s\n", k, reflect.TypeOf(k))
+}
 
-	// 定义字符串变量并初始化为 Golang Tutorial
-	str := "Golang Tutorial"
-	strLength := len(str) // len() 函数可以获取字符串的长度
-	fmt.Printf("str value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(i))
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()	
 }
 ```
 
@@ -227,11 +242,86 @@ fmt.Printf("i value:%s  i type:%s\n", i, reflect.TypeOf(i))
 
 ![1-1.package](../image/2-4.interface-boolTostring.png)
 
+完整代码
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"unsafe"
+)
+
+// Steps3 interface被动态赋值
+func Steps3() {
+	var i interface{} = true
+	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
+
+	// i 被重新赋值, 类型转换为string
+	i = "tutorial"
+	fmt.Printf("\ti value:%s  i type:%s\n", i, reflect.TypeOf(i))
+}
+
+// Steps4 证明interface底层是由type和data组成
+func Steps4() {
+	/*
+		interface底层由两部分组成  _type ptr, data ptr
+		type eface struct {
+			_type *_type
+			data  unsafe.Pointer
+		}
+	*/
+
+	var i interface{} = true
+	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
+
+	fmt.Printf("\ti size:%d\n", unsafe.Sizeof(i))
+	fmt.Printf("\ti addr:%p\n", &i)
+	fmt.Printf("\ti type pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(&i)))
+	fmt.Printf("\ti data pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))
+	fmt.Printf("\ti data pointer *value %t\n", *(*bool)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))))
+
+	fmt.Printf("\t---------------------------\n")
+	// i 被重新赋值, 类型转换为string
+	i = "tutorial"
+	fmt.Printf("\ti value:%s  i type:%s\n", i, reflect.TypeOf(i))
+
+	fmt.Printf("\ti size:%d\n", unsafe.Sizeof(i))
+	fmt.Printf("\ti addr:%p\n", &i)
+	fmt.Printf("\ti type pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(&i)))
+	fmt.Printf("\ti data pointer value 0x%x\n", *(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))
+	fmt.Printf("\ti data pointer *value %s\n", *(*string)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&i)) + uintptr(8))))))
+
+	// 等同如上
+	type eface struct {
+		_type *struct{} // *_type
+		data  unsafe.Pointer
+	}
+	s := *(*eface)(unsafe.Pointer(&i))
+	fmt.Printf("\ti %+v\n", s)
+	fmt.Printf("\ti._type: %+v\n", s._type)
+	fmt.Printf("\ti.data:  %+v\n", *(*string)(s.data))
+}
+
+func main() {
+	fmt.Println("Steps3():")
+	Steps3()
+	fmt.Println("Steps4():")
+	Steps4()
+}
+```
+
 ## 类型转换
 
 在`Golang`中可以将**相近类型的数据进行强转**, 格式为`variableName2 := T(variableName1)`。 需要注意的是，**不是所有类型之间都可以进行转换**。例如，您不能将一个字符串转换为一个整数或浮点型等。
 
-当进行类型转换时，必须**确保类型转换是安全的**，如果转换失败，则会引发一个**运行时错误**导致程序崩溃。另外，由于类型转换可能导致精度**损失或溢出**，因此在进行类型转换时应特别小心。
+```go
+b := float64(a)
+var b float64 = float64(a)
+```
+
+当进行类型转换时，必须**确保类型转换是安全的**，如果转换失败，则会引发一个**运行时错误**导致程序崩溃。
 
 ```go
 package main
@@ -243,10 +333,11 @@ import (
 
 /*
 	类型转换
+	var variableName2 T = T(variableName1)
 	variableName2 := T(variableName1)
 */
 
-func main() {
+func Steps1() {
 	var a int = 1
 
 	// 表达式 T(v) 将值 v 转换为类型 T
@@ -257,36 +348,61 @@ func main() {
 	// 简洁形式 uint(b) 将值 b 转换为 uint 类型并赋值给 c
 	c := uint(b)
 
-	fmt.Printf("a value:%d  a type:%s\n", a, reflect.TypeOf(a))
-	fmt.Printf("b value:%f  b type:%s\n", b, reflect.TypeOf(b))
-	fmt.Printf("c value:%d  c type:%s\n", c, reflect.TypeOf(c))
+	fmt.Printf("\ta value:%d  a type:%s\n", a, reflect.TypeOf(a))
+	fmt.Printf("\tb value:%f  b type:%s\n", b, reflect.TypeOf(b))
+	fmt.Printf("\tc value:%d  c type:%s\n", c, reflect.TypeOf(c))
+  
+	//var d = bool(c) // panic 不能将 c (uint 类型的变量)转换为 bool 类型
+}
 
-	fmt.Printf("*************************************************************\n")
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()
+}
+```
 
+另外，由于类型转换可能导致精度**损失或溢出**，因此在进行类型转换时应特别小心。
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"unsafe"
+)
+
+func Steps2() {
 	d := uint8(255) // 将常量值 255 转换为 uint8 类型并赋值给 d
 	fmt.Printf("d value:%d  d type:%s\n", d, reflect.TypeOf(d))
 
-	// 注意：类型转换 不能超过转换类型的范围
+	// 注意：类型转换不能超过转换类型的范围
 	//e := uint8(256) // 编译错误, 常量256超出了uint8最大存储限制, 不能转换
 
-	// 转换时, 超过转换的类型范围时将导致数据溢出
+	// 转换时,超过转换的类型范围时将导致数据溢出
 	var f uint16 = 256
 	g := uint8(f) // uint8最大为255, 溢出后从0开始, 所以g等于0
 	ff := f + 1
 	h := uint8(ff) // 如上可知h等于1
 
-	fmt.Printf("f  binary value:%016b f  value:%d   f type:%s\n", f, f, reflect.TypeOf(f))
-	fmt.Printf("g  binary value:%016b g  value:%d     g type:%s\n", g, g, reflect.TypeOf(g))
-	fmt.Printf("ff binary value:%016b ff value:%d  ff type:%s\n", ff, ff, reflect.TypeOf(ff))
-	fmt.Printf("h  binary value:%016b h  value:%d     h type:%s\n", h, h, reflect.TypeOf(h))
+	// uint16   uint8
+	// 2 byte   1 byte
+	// 16 bit   8 bit
 
-	j := 10    // 自动推导为int型
-	l := 100.1 // 自动推导为float64型
+	// 00000001 00000000    f
+	//          00000000    g
+	// 00000001 00000001    ff
+	//          00000001    h
 
-	// 在Go中不同类型的数据不能直接计算，需进行类型转换
-	p := float64(j) * l
+	fmt.Printf("\tf  sizeof:%dbyte  binary value:%016b f  value:%d   f type:%s\n", unsafe.Sizeof(f), f, f, reflect.TypeOf(f))
+	fmt.Printf("\tg  sizeof:%dbyte  binary value:%016b g  value:%d     g type:%s\n", unsafe.Sizeof(g), g, g, reflect.TypeOf(g))
+	fmt.Printf("\tff sizeof:%dbyte  binary value:%016b ff value:%d  ff type:%s\n", unsafe.Sizeof(ff), ff, ff, reflect.TypeOf(ff))
+	fmt.Printf("\th  sizeof:%dbyte  binary value:%016b h  value:%d     h type:%s\n", unsafe.Sizeof(h), h, h, reflect.TypeOf(h))
+}
 
-	fmt.Printf("p value:%f  p type:%s\n", p, reflect.TypeOf(p))
+func main() {
+	fmt.Println("Steps2():")
+	Steps2()
 }
 ```
 
@@ -298,12 +414,11 @@ var f uint16 = 256
 g := uint8(f) // uint8最大为255, 溢出后从0开始, 所以g等于0
 ff := f + 1
 h := uint8(ff) // 如上可知h等于1
-2*2*2*2 = 16 * 2*2*2*2
 
-257 = 2^8 +2^0
- 1111 1111  255
-10000 0000  +1 == 0 256
-10000 0001  +2 == 1 257
+ 
+ 1111 1111    255 2^7
+10000 0000 +1 256 2^8
+10000 0001 +2 257 2^8+2^0
 ```
 
 其中`uint16`类型的`f`转换为`uint8`类型的`g`,由于`f`存储的值为256超过`uint8`最大可存储值，导致数据溢出。转换时会从`uint16`起始位置截取`uint8`占用的位数(8位), 然后赋值给`g`, 如下图展示：
@@ -313,6 +428,35 @@ h := uint8(ff) // 如上可知h等于1
 `uint16`类型的`ff`转换为`uint8`类型的`h`， 如下图展示：
 
 ![overflow2.png](../image/2-5.overflow2.png)
+
+不同类型进行计算时需要转换为相同类型，注意精度丢失：
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func Steps3() {
+	j := 10    // 自动推导为int型
+	l := 100.1 // 自动推导为float64型
+
+	// 在Go中不同类型的数据不能直接计算，需进行类型转换
+	p := float64(j) * l
+
+	fmt.Printf("\t p value:%.2f  p type:%s\n", p, reflect.TypeOf(p))
+
+	pp := j * int(l)
+	fmt.Printf("\tpp value:%d     p type:%s\n", pp, reflect.TypeOf(pp))
+}
+
+func main() {
+	fmt.Println("Steps3():")
+	Steps3()
+}
+```
 
 注意：如果要在类型之间进行转换，但不确定是否能够安全地进行转换，可以使用**类型断言**。类型断言可以判断**一个接口类型(interface{})的值是否属于指定类型**。如果是，则返回转换后的值，否则返回一个错误。（该知识点将在`Interface{}`章节讲解）
 
@@ -336,35 +480,39 @@ import (
 	"reflect"
 )
 
-// const NameOfVariable [type] = value  type 可以省略让编译器推导
+/*
+	1.声明局部常量
+	2.声明全局变量
+	3.iota赋值
+*/
 
-/* 常量的声明与变量类似，使用 const 关键字, 常量中的数据类型只可以是字符、字符串、布尔值或数值
-  const constantName = value
-  const constantName T = value
+/*
+	const NameOfVariable [type] = value  type 可以省略让编译器推导
+	const constantName = value
+	const constantName T = value
 */
 
 // 常量定义的时候必须赋值，定义后值不能被修改
 
-// 全局常量
 const PI = 3.14
 const NAME = "Golang-tutorial"
 const OK bool = true
 
-// 可以在 const 中定义多个常量
+// 可以通过 const() 定义多个常量
 const (
 	MaxUint8  = math.MaxUint8
 	MaxUint16 = math.MaxUint16
 )
 
-// iota 定义常量, iota的值是const语句块里的行索引，行索引从0开始
+// iota 定义常量, iota的值是const语句块里的行索引,行索引从0开始
 const (
-	One   = iota // 第一行 One值等于0
-	Two          // 第二行 Two值等于1
-	Three        // 第三行 Three值等于2
+	One   = iota // 第一行 One值等于 0
+	Two          // 第二行 Two值等于 1
+	Three        // 第三行 Three值等于 2
 )
 
 func main() {
-	// 函数内也可以定义常量（局部常量）
+	// 函数内也可以定义常量(局部常量)
 	const World = "World"
 	fmt.Println("Hello", World)
 
@@ -374,6 +522,8 @@ func main() {
 	fmt.Printf("One value:%d  One type:%s\n", One, reflect.TypeOf(One))
 	fmt.Printf("Two value:%d  Two type:%s\n", Two, reflect.TypeOf(Two))
 	fmt.Printf("Three value:%d  Three type:%s\n", Three, reflect.TypeOf(Three))
+
+	//MaxUint8 = math.MaxUint32 // 修改常量值将会报错
 }
 ```
 
@@ -494,7 +644,7 @@ import "fmt"
 
 // Steps1 定义指针变量
 func Steps1() {
-	// 定义一个 int 类型的指针变量, 默认值为nil
+	// 定义一个 int 类型的指针变量, 默认值零值为nil
 	var a *int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b *float32 // float64
 	var c *bool
@@ -528,32 +678,32 @@ package main
 import "fmt"
 
 // 注释 ①
-var b = 1
+var b = 100
 
 // Steps2 指针变量赋值与取值
 func Steps2() {
 	// 定义了一个指针变量 a, 指针变量只能存储地址
 	var a *int
 
-	fmt.Println("\ta value:", a) // 打印 a 存储的地址值
-	fmt.Println("\ta addr:", a)  // 打印 a 自己的地址值
+	fmt.Println("\ta value:", a) // 打印 a 变量存储的地址值
+	fmt.Println("\ta addr:", &a) // 打印 a 变量自己的地址值
 
 	// 取空指针变量存储地址上的值会导致 panic: runtime error: invalid memory address or nil pointer dereference
-	//fmt.Println("a value:", *a) // *a 代表取出 a 存储的地址, 并获取该地址上存储的值
+	//fmt.Println("a value:", *a) // *a 代表取出 a 变量存储的地址, 并获取该地址上存储的值
 
 	fmt.Println("\tb value:", b)  // 打印 b 的值
 	fmt.Println("\tb addr :", &b) // 打印 b 的地址
 
-	// & 表示取 b 变量的地址并赋值给 a, 改动 a 就相当于改动 b
+	// 注释 ② & 表示取 b 变量的地址并赋值给 a, 改动 a 就相当于改动 b
 	a = &b
-	fmt.Println("\ta value:", a)             // 打印 a 存储的地址值
-	fmt.Println("\ta value over value:", *a) // *a 代表取出 a 存储的地址, 并获取该地址上存储的值
+	fmt.Println("\ta value:", a)             // 打印 a 变量存储的地址值
+	fmt.Println("\ta value over value:", *a) // *a 代表取出 a 变量存储的地址, 并获取该地址上存储的值
 
-	*a = 2                       // *a 取出a存储的地址，并修该地址上存储的值(赋值为 2)
+	*a = 2                       // *a 取出 a 变量存储的地址，并修该地址上存储的值(赋值为 2)
 	fmt.Println("\ta value:", a) // 打印 a 存储的地址值
+	fmt.Println("\ta value over value:", *a)
 	fmt.Println("\tb value:", b) // 打印 b 的值
 
-  // 注释②
 	c := &a
 	// Go指针不支持算术运算, 下面这两行编译不通过。
 	// c++
@@ -569,13 +719,17 @@ func main() {
 }
 ```
 
-在上面的代码中，注释① 我们定义了一个整数变量 `b`，并将其初始化为 1。 注释② 我们使用取地址符 `&` 来获取变量 `b` 的内存地址，并将其赋值给指针变量 `a`。现在，指针变量 `a` 指向了变量 `b` 的内存地址，打印`a`存储的地址和地址上的具体值。
+在上面的代码中，注释① 我们定义了一个整数变量 `b`，并将其初始化为 100。 注释② 我们使用取地址符 `&` 来获取变量 `b` 的内存地址，并将其赋值给指针变量 `a`。现在，指针变量 `a` 指向了变量 `b` 的内存地址，打印`a`变量存储的地址和地址上的具体值。
 
 ![2-2.pointerVariate](../image/2-2.pointerVariate.png)
 
+`*a` 代表取出`a`变量存储的地址, 并获取该地址上存储的值
+
+![2-2.pointerAddrValue](../image/2-2.pointerAddrValue.png)
+
 需要注意的是，指针变量只能指向相同类型的变量。例如，如果我们定义了一个整数类型的指针变量，那么它只能指向整数类型的变量，而不能指向字符串、浮点数或其他类型的变量。
 
-- 通过内置函数new创建指针
+- 通过内置函数`new`创建指针
 
 使用 `new` 函数创建的指针变量默认值是**零值**，也就是说它们的值为 **0、false、空字符或者空指针**，具体取决于变量类型。
 

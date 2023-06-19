@@ -11,11 +11,11 @@ import (
 */
 
 /*
-	定义函数变量
-	var variableName = func
+	通过var声明一个函数变量
+	var variableName = func(... T) ...T
 */
 
-// compute有名函数接收2个int型参数和一个匿名函数(该匿名函数接收2个int类型参数返回一个int类型值)
+// compute有名函数接收2个int型参数和1个匿名函数(该匿名函数接收2个int类型参数返回1个int类型值)
 func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10

@@ -25,12 +25,12 @@ func Steps1() {
 	// 声明局部变量并赋初始值
 	var a int = 1
 
-	// 如果初始化值已存在，则可以省略类型，Go编译器会自动推导类型
+	// 如果初始化值已存在,则可以省略类型,Go编译器会自动推导类型
 	var b = 2       // 自动推导为int型
 	var c = 3.2     // 自动推导为float64型
 	var d = "hello" // 自动推导为string型
 
-	// 在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明, 但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
+	// 在函数中,简洁赋值语句 := 可在类型明确的地方代替 var 声明,但 := 结构不能在函数外使用,也就是说不能用于声明全局变量
 	e := true
 
 	var f byte = 'a'
@@ -38,8 +38,9 @@ func Steps1() {
 
 	var h interface{} = "golang"
 	var i interface{} = true
-	//var j,k = 1,"Golang Tutorial" // 多变量声明并赋值
+	var j, k = 1, "Golang Tutorial" // 多变量声明并赋值
 
+	// 打印变量的 value, 通过 reflect.TypeOf 函数获取变量对应类型
 	fmt.Printf("\ta value:%d  a type:%s\n", a, reflect.TypeOf(a))
 	fmt.Printf("\taa value:%d  aa type:%s\n", aa, reflect.TypeOf(aa))
 	fmt.Printf("\tb value:%d  b type:%s\n", b, reflect.TypeOf(b))
@@ -50,10 +51,20 @@ func Steps1() {
 	fmt.Printf("\tg value:%c  g type:%s\n", g, reflect.TypeOf(g))
 	fmt.Printf("\th value:%s  h type:%s\n", h, reflect.TypeOf(h))
 	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
+	fmt.Printf("\tj value:%d  j type:%s\n", j, reflect.TypeOf(j))
+	fmt.Printf("\tk value:%s  k type:%s\n", k, reflect.TypeOf(k))
 }
 
-// Steps2 interface被动态赋值
+// Steps2 字符串
 func Steps2() {
+	// 定义字符串变量并初始化为 Golang Tutorial
+	str := "Golang Tutorial"
+	strLength := len(str) // len() 函数可以获取字符串的长度
+	fmt.Printf("\tstr value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(str))
+}
+
+// Steps3 interface被动态赋值
+func Steps3() {
 	var i interface{} = true
 	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
 
@@ -62,8 +73,8 @@ func Steps2() {
 	fmt.Printf("\ti value:%s  i type:%s\n", i, reflect.TypeOf(i))
 }
 
-// Steps3 证明interface底层是由type和data组成
-func Steps3() {
+// Steps4 证明interface底层是由type和data组成
+func Steps4() {
 	/*
 		interface底层由两部分组成  _type ptr, data ptr
 		type eface struct {
@@ -101,14 +112,6 @@ func Steps3() {
 	fmt.Printf("\ti %+v\n", s)
 	fmt.Printf("\ti._type: %+v\n", s._type)
 	fmt.Printf("\ti.data:  %+v\n", *(*string)(s.data))
-}
-
-// Steps4 字符串
-func Steps4() {
-	// 定义字符串变量并初始化为 Golang Tutorial
-	str := "Golang Tutorial"
-	strLength := len(str) // len() 函数可以获取字符串的长度
-	fmt.Printf("\tstr value:%s str length:%d str type:%s\n", str, strLength, reflect.TypeOf(str))
 }
 
 func main() {

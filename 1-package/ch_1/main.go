@@ -1,4 +1,4 @@
-package main // 定义了包名,只有定义了main的包才能独立运行
+package main // 定义了包名,只有定义在 main 包中的 main 函数才能独立运行
 
 // 导入: 标准库和第三方库
 import (
@@ -7,7 +7,7 @@ import (
 
 // main 函数,程序的入口
 func main() {
-	// 调用标准库 fmt 在控制台打印 hello world 字符串
+	// 调用标准库 fmt 中的 Println 函数在控制台打印 hello world 字符串
 	fmt.Println("hello world")
 }
 
