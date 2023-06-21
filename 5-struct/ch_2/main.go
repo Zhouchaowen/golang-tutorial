@@ -18,7 +18,7 @@ import (
 // Demo 值接收者
 type Demo struct {
 	a bool
-	// 大写表示导出，包外能引用
+	// 大写表示导出,包外能引用
 	B byte
 	C int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	D float32 // float64
@@ -28,11 +28,19 @@ type Demo struct {
 }
 
 func (d Demo) print() {
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("d %+v\n", d)
 }
 
 func (d Demo) printB() {
-	fmt.Printf("%+v\n", d.B)
+	fmt.Printf("d.B %+v\n", d.B)
+}
+
+func print(d Demo) {
+	fmt.Printf("d %+v\n", d)
+}
+
+func printB(d Demo) {
+	fmt.Printf("d.B %+v\n", d.B)
 }
 
 func (d Demo) ModifyE() {
@@ -52,13 +60,19 @@ func main() {
 	v.print()
 	v.printB()
 
+	print(v)  // 等同于 v.print()
+	printB(v) // 等同于 v.printB()
+
 	// 值接收者 无法通过方法改变接收者内部值
 	v.ModifyE()
 	fmt.Printf("%+v\n", v)
 
+	fmt.Println("--------------")
 	fmt.Printf("v address:%p\n", &v)
-	// 值接收者
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr2()
 }

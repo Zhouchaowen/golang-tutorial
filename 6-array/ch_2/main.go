@@ -23,8 +23,12 @@ var sliceByte []byte
 func Steps1() {
 	// Steps 1-1: 类型 []T 表示一个元素类型为 T 的切片
 	// 切片拥有长度和容量, 切片在添加数据时会自动扩容, 可以通过len(),cap()获取切片长度和容量
+
+	// 类型为 int 的切片, 初始化后长度容量都为 0, 不指向任何底层数组
 	var sliceInt []int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceInt:%p sliceInt:%p sliceInt:%+v len:%d cap:%d\n",
+		&sliceInt,
+		sliceInt,
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -40,10 +44,6 @@ func Steps1() {
 			len(sliceInt),
 			cap(sliceInt))
 	}
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
-		sliceInt,
-		len(sliceInt),
-		cap(sliceInt))
 
 	// Steps 1-3: 获取切片长度
 	fmt.Println("\tsliceInt len:", len(sliceInt))
@@ -51,7 +51,7 @@ func Steps1() {
 	// Steps 1-4: 获取切片的容量
 	fmt.Println("\tsliceInt cap:", cap(sliceInt))
 
-	// Steps 1-5: nil 切片的长度和容量为 0 且没有底层数组
+	// Steps 1-5: 类型为 bool 的切片, 初始化后长度和容量为 0 且没有底层数组
 	var sliceBool []bool
 	fmt.Printf("\tsliceBool:%+v len:%d cap:%d\n",
 		sliceBool,
@@ -61,7 +61,7 @@ func Steps1() {
 
 // Steps2 定义并初始化切片
 func Steps2() {
-	// Steps 2-1: 初始化切片
+	// Steps 2-1: 定义并初始化切片
 	sliceString := []string{"Golang", "Tutorial"}
 	fmt.Printf("\tsliceString:%+v len:%d cap:%d\n",
 		sliceString,
@@ -93,25 +93,42 @@ func Steps2() {
 func Steps3() {
 	// Steps 3-1: 用内建函数 make 来创建切片
 	// make([]T,len,cap) 如下：创建一个 float32 类型, 长度为 5 的数组
+	// 和 var sliceFloat32 []float32 的区别是 make 创建的切片会分配底层数组并赋零值
 	sliceFloat32 := make([]float32, 5)
+	fmt.Printf("\t&sliceFloat32:%p sliceFloat32:%p sliceFloat32:%+v len:%d cap:%d\n",
+		&sliceFloat32,
+		sliceFloat32,
+		sliceFloat32,
+		len(sliceFloat32),
+		cap(sliceFloat32))
 	for i := 0; i < len(sliceFloat32); i++ {
 		sliceFloat32[i] = float32(i)
 	}
 
-	fmt.Printf("\tsliceFloat32:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceFloat32:%p sliceFloat32:%p sliceFloat32:%+v len:%d cap:%d\n",
+		&sliceFloat32,
+		sliceFloat32,
 		sliceFloat32,
 		len(sliceFloat32),
 		cap(sliceFloat32))
 
 	// 创建一个 float64 类型, 长度为 5, 容量为 10 的数组
 	sliceFloat64 := make([]float64, 5, 10)
+	fmt.Printf("\t&sliceFloat64:%p sliceFloat64:%p sliceFloat64:%+v len:%d cap:%d\n",
+		&sliceFloat64,
+		sliceFloat64,
+		sliceFloat64,
+		len(sliceFloat64),
+		cap(sliceFloat64))
 	//for i := 0 ;i < cap(sliceFloat64);i++ { // cap-len的部分并没有分配，不能直接赋值
 	//	sliceFloat64[i] = float64(i) // panic: runtime error: index out of range [5] with length 5
 	//}
 	for i := 0; i < len(sliceFloat64); i++ {
 		sliceFloat64[i] = float64(i)
 	}
-	fmt.Printf("\tsliceFloat64:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceFloat64:%p sliceFloat64:%p sliceFloat64:%+v len:%d cap:%d\n",
+		&sliceFloat64,
+		sliceFloat64,
 		sliceFloat64,
 		len(sliceFloat64),
 		cap(sliceFloat64))
@@ -152,50 +169,85 @@ func Steps4() {
 func Steps5() {
 	// Steps 5-1: 定义切片并初始化
 	sliceInt := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceInt:%p sliceInt:%p sliceInt:%+v len:%d cap:%d\n",
+		&sliceInt,
+		sliceInt,
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
+	for i := 0; i < len(sliceInt); i++ {
+		fmt.Printf("\t&sliceInt[%d]:%p\n", i, &sliceInt[i])
+	}
 
-	// Steps 5-2: 可以用 slice[low : high] or slice[low : high] 来截取数组或切片的一个片段长度为 high-low
+	fmt.Printf("\t--------------------------------\n")
+	// Steps 5-2: 可以用 array[low : high] or slice[low : high] 来截取数组或切片的一个片段长度为 high-low
 	// 注意: sliceInt[0:3] 等同于 sliceInt[:3]
 	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2 容量为9
-	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&interceptionSliceInt:%p interceptionSliceInt:%p interceptionSliceInt:%+v len:%d cap:%d\n",
+		&interceptionSliceInt,
+		interceptionSliceInt,
 		interceptionSliceInt,
 		len(interceptionSliceInt),
 		cap(interceptionSliceInt))
+	for i := 0; i < len(interceptionSliceInt); i++ {
+		fmt.Printf("\t&interceptionSliceInt[%d]:%p\n", i, &interceptionSliceInt[i])
+	}
+	/*
+		对比sliceInt[1],sliceInt[2]的地址和interceptionSliceInt[0],interceptionSliceInt[1]的地址, 会发现他们是相等滴
+		证明他们底层共用一片地址空间
+		&sliceInt[1]:0xc0000200f8
+		&sliceInt[2]:0xc000020100
 
+		&interceptionSliceInt[0]:0xc0000200f8
+		&interceptionSliceInt[1]:0xc000020100
+	*/
+
+	fmt.Printf("\t--------------------------------\n")
 	// Steps 5-3: 可以用 slice[low : high: cap] 来截取切片或数组的一个片段长度为 high-low,容量为cap
 	interceptionSliceIntCap := sliceInt[1:3:5] // 获取 sliceInt 下标 1-2 的元素:[1,2,3] 长度为2, 容量为4
-	fmt.Printf("\tinterceptionSliceIntCap:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&interceptionSliceIntCap:%p interceptionSliceIntCap:%p interceptionSliceIntCap:%+v len:%d cap:%d\n",
+		&interceptionSliceIntCap,
+		interceptionSliceIntCap,
 		interceptionSliceIntCap,
 		len(interceptionSliceIntCap),
 		cap(interceptionSliceIntCap))
+	for i := 0; i < len(interceptionSliceInt); i++ {
+		fmt.Printf("\t&interceptionSliceIntCap[%d]:%p\n", i, &interceptionSliceIntCap[i])
+	}
 
+	fmt.Printf("\t--------------------------------\n")
 	// Steps 5-4: 切片并不存储任何数据，它只是描述了底层数组中的一段
-	// 更改切片的元素会修改其底层数组中对应的元素,与它共享底层数组的切片都会观测到这些修改
-	interceptionSliceIntCap[0] = 111
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	// 更改切片的元素会修改其底层数组中对应的元素,与它共享底层数组的其它切片都会观测到这些修改
+	fmt.Printf("\t[modify before] sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
-	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t[modify before] interceptionSliceInt:%+v len:%d cap:%d\n",
+		interceptionSliceInt,
+		len(interceptionSliceInt),
+		cap(interceptionSliceInt))
+	interceptionSliceIntCap[0] = 111
+	fmt.Printf("\t[modify after ] sliceInt:%+v len:%d cap:%d\n",
+		sliceInt,
+		len(sliceInt),
+		cap(sliceInt))
+	fmt.Printf("\t[modify after ] interceptionSliceInt:%+v len:%d cap:%d\n",
 		interceptionSliceInt,
 		len(interceptionSliceInt),
 		cap(interceptionSliceInt))
 
+	fmt.Printf("\t--------------------------------\n")
+	// Steps 5-5: 通过unsafe.Pointer函数强行获取截取切片之外的数据
 	// interceptionSliceIntCap[2] 超出当前len, 打印报错 panic: runtime error: index out of range [2] with length 2
 	//fmt.Printf("interceptionSliceIntCap[2]:%d",interceptionSliceIntCap[2])
 
-	// 通过指针偏移强行获取底层元素（这种方式时不安全的）
+	// 通过指针偏移强行获取interceptionSliceIntCap[2]底层元素（这种方式是不安全的）
 	fmt.Printf("\tinterceptionSliceCap[2]:%d\n", *(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&interceptionSliceIntCap[0])) + uintptr(16))))
 
+	fmt.Printf("\t[modify before] sliceInt:%+v\n", sliceInt)
 	// Steps 5-6: 修改interceptionSliceCap[2]的值为33,底层切片sliceInt对应[3]位置改变33
 	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&interceptionSliceIntCap[0])) + uintptr(16))) = 33
-	fmt.Printf("\tsliceInt[3]:%d\n", sliceInt[3])
-
-	interceptionSliceIntCap[0] = 11
-	fmt.Printf("\tsliceInt[1]:%d\n", sliceInt[1])
+	fmt.Printf("\t[modify after ] sliceInt:%+v\n", sliceInt)
 }
 
 // Steps6 range 遍历切片

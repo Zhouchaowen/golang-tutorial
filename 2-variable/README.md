@@ -144,7 +144,7 @@ func Steps1() {
 	fmt.Println("\tstring zero value: ", h)
 	fmt.Println("\tstring zero value: ", i)
 }
-是我            6
+
 func main() {
 	fmt.Println("Steps1():")
 	Steps1()

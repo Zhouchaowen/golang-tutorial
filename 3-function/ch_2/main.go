@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-// compute函数(有名字的函数),接收两个整数，以及一个匿名函数作为参数。
+// compute函数(有名字的函数),接收 2 个整数，以及 1 个匿名函数作为参数。
+// handler func(x, y int) int 为匿名函数
 func compute(x, y int, handler func(x, y int) int) int {
 	x = x * 10
 	y = y * 10

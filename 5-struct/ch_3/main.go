@@ -27,11 +27,19 @@ type Demo struct {
 }
 
 func (d *Demo) print() {
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("d %+v\n", d)
 }
 
 func (d *Demo) printB() {
-	fmt.Printf("%+v\n", d.B)
+	fmt.Printf("d.B %+v\n", d.B)
+}
+
+func print(d *Demo) {
+	fmt.Printf("d %+v\n", d)
+}
+
+func printB(d *Demo) {
+	fmt.Printf("d.B %+v\n", d.B)
 }
 
 func (d *Demo) ModifyE() {
@@ -52,6 +60,9 @@ func main() {
 	v := Demo{true, 'G', 1, 1.0, "Golang Tutorial", []int{1, 2}, map[string]int{"Golang": 0, "Tutorial": 1}}
 	v.print()
 	v.printB()
+
+	print(&v)  // 等同于 v.print()
+	printB(&v) // 等同于 v.printB()
 
 	// 指针接收者 可以通过方法改变接收者内部值
 	v.ModifyE()

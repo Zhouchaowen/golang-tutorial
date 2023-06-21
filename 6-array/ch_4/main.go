@@ -12,7 +12,7 @@ import (
 // 数组参数和切片参数的区别
 
 func modifySlice0(slice []int) {
-	fmt.Printf("\t[modifySlice0] slice value    addr: %p\n", slice)
+	fmt.Printf("\t[modifySlice0] slice value    addr: %p\n", slice) // 改值等于 sliceInt 的值
 	fmt.Printf("\t[modifySlice0] slice variable addr: %p\n", &slice)
 	slice[0] = 1000
 }
@@ -54,7 +54,8 @@ func Steps4() {
 	fmt.Printf("\t[Steps4] arrInt variable addr: %p\n", &arrInt)
 	modifyArr0(arrInt) // 数组地址很特别,数组地址就等于第一个元素地址
 
-	fmt.Printf("\t[Steps4] len:%d cap:%d\n",
+	fmt.Printf("\t[Steps4] arrInt[0]:%+v len:%d cap:%d\n",
+		arrInt[0],
 		len(arrInt),
 		cap(arrInt))
 }

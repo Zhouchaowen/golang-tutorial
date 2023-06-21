@@ -41,7 +41,7 @@ func countWrapper(fn func(x, y int) int) func(x, y int) int {
 }
 
 func Steps4Plus() {
-	wrappedAdd := logWrapper(add) //
+	wrappedAdd := logWrapper(add)
 	wrappedCount := countWrapper(wrappedAdd)
 	wrappedCount(2, 3)
 	wrappedCount(2, 3)

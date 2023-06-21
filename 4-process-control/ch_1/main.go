@@ -13,7 +13,7 @@ import "fmt"
 // Steps1 通过 for 循环累加 0-9
 func Steps1() {
 	sum := 0
-	// for 循环
+	// for 关键字
 	// i := 0 初始化语句：在第一次迭代前执行
 	// i < 10 条件表达式：在每次迭代前求值
 	// i++    后置语句：在每次迭代的结尾执行
@@ -42,7 +42,10 @@ func Steps2() {
 // Steps3 range形式的循环遍历
 func Steps3() {
 	str := "Golang Tutorial"
-	for i, v := range str { // 遍历字符串
+	// 遍历字符串打印每个字符
+	// i: 字符串中每个字符的索引,从0开始
+	// v: 字符串中每个字符
+	for i, v := range str {
 		fmt.Printf("\ti:%d,v:%c\n", i, v)
 	}
 }

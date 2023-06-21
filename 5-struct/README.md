@@ -6,9 +6,11 @@
 
 - 结构体定义
 - 结构体Tag
+- 结构体内存布局
 - 定义结构体值方法
 - 定义结构体指针方法
 - 自定义类型
+- 结构体应用
 
 ## 结构体定义
 
@@ -234,6 +236,73 @@ Steps4():
 
 除了用于序列化和反序列化时的字段名，`tag` 还可以用于其他场景，比如表单验证、`ORM` 映射、日志记录等等。在这些场景下，可以使用 `tag` 来指定不同的元数据信息，方便程序的开发和维护。
 
+## 结构体内存布局
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// Demo 定义结构体
+type Demo struct {
+	// 小写表示不导出,包外不能引用
+	a bool
+	// 大写表示导出，包外能引用
+	B byte
+	C int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	D float32 // float64
+	E string
+	F []int
+	G map[string]int
+	H *int64
+}
+
+func Steps5() {
+	d := Demo{ // 创建一个 Demo 类型的结构体实例
+		a: true,
+		B: 'b',
+		C: 1,
+		D: 1.0,
+		E: "E",
+		F: []int{1},
+		G: map[string]int{"GOLANG": 1},
+	}
+
+	// 结构体的字段内存地址排列
+	fmt.Printf("\tvariable b   addr %p\n", &d)
+	fmt.Printf("\tvariable b.a addr %p\n", &d.a)
+	fmt.Printf("\tvariable b.B addr %p\n", &d.B)
+	fmt.Printf("\tvariable b.C addr %p\n", &d.C)
+	fmt.Printf("\tvariable b.D addr %p\n", &d.D)
+	fmt.Printf("\tvariable b.E addr %p\n", &d.E)
+	fmt.Printf("\tvariable b.F addr %p\n", &d.F)
+	fmt.Printf("\tvariable b.G addr %p\n", &d.G)
+	fmt.Printf("\tvariable b.H addr %p\n", &d.H)
+
+	fmt.Printf("\t-----------------\n")
+
+	c := d
+	fmt.Printf("\tvariable c   addr %p\n", &c)
+	fmt.Printf("\tvariable c.a addr %p\n", &c.a)
+	fmt.Printf("\tvariable c.B addr %p\n", &c.B)
+	fmt.Printf("\tvariable c.C addr %p\n", &c.C)
+	fmt.Printf("\tvariable c.D addr %p\n", &c.D)
+	fmt.Printf("\tvariable c.E addr %p\n", &c.E)
+	fmt.Printf("\tvariable c.F addr %p\n", &c.F)
+	fmt.Printf("\tvariable c.G addr %p\n", &c.G)
+	fmt.Printf("\tvariable c.H addr %p\n", &c.H)
+}
+
+func main() {
+	fmt.Println("Steps5():")
+	Steps5()
+}
+```
+
+![5-1.structMemory.png](../image/5-1.structMemory.png)
+
 ## 结构体方法
 
 除了定义数据字段之外，结构体类型还可以定义相关的方法。**方法是一种与特定类型相关联的函数**，可以对该类型的值进行操作。在 Go 语言中，可以通过结构体类型的名称和`func` 关键字来定义方法，语法如下：
@@ -267,7 +336,7 @@ import (
 	"fmt"
 )
 
-// 方法就是一类带特殊的 接收者 参数的函数,
+// 方法就是一类带特殊的 接收者 参数的函数
 // 接收者(可以是struct或自定义类型) 分为：
 //  	1.值接收者
 // 		2.指针接收者
@@ -275,7 +344,7 @@ import (
 // Demo 值接收者
 type Demo struct {
 	a bool
-	// 大写表示导出，包外能引用
+	// 大写表示导出,包外能引用
 	B byte
 	C int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	D float32 // float64
@@ -285,11 +354,19 @@ type Demo struct {
 }
 
 func (d Demo) print() {
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("d %+v\n", d)
 }
 
 func (d Demo) printB() {
-	fmt.Printf("%+v\n", d.B)
+	fmt.Printf("d.B %+v\n", d.B)
+}
+
+func print(d Demo) {
+	fmt.Printf("d %+v\n", d)
+}
+
+func printB(d Demo) {
+	fmt.Printf("d.B %+v\n", d.B)
 }
 
 func (d Demo) ModifyE() {
@@ -297,11 +374,11 @@ func (d Demo) ModifyE() {
 }
 
 func (d Demo) printAddr1() {
-	fmt.Printf("%p\n", &d)
+	fmt.Printf("d address:%p\n", &d)
 }
 
 func (d Demo) printAddr2() {
-	fmt.Printf("%p\n", &d)
+	fmt.Printf("d address:%p\n", &d)
 }
 
 func main() {
@@ -309,13 +386,20 @@ func main() {
 	v.print()
 	v.printB()
 
+	print(v)  // 等同于 v.print()
+	printB(v) // 等同于 v.printB()
+
 	// 值接收者 无法通过方法改变接收者内部值
 	v.ModifyE()
-	fmt.Printf("value %+v\n", v)
+	fmt.Printf("%+v\n", v)
 
-	// 值接收者
+	fmt.Println("--------------")
+	fmt.Printf("v address:%p\n", &v)
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr2()
 }
 ```
@@ -326,15 +410,16 @@ func main() {
 
 ```go
 func (d Demo) printB() {
-	fmt.Printf("%+v\n", d.B)
+	fmt.Printf("d.B %+v\n", d.B)
 }
 
 func printB(d Demo) {
-	fmt.Printf("%+v\n", d.B)
+	fmt.Printf("d.B %+v\n", d.B)
 }
 
 v := Demo{true, 'G', 1, 1.0, "Golang Tutorial", []int{1, 2}, map[string]int{"Golang": 0, "Tutorial": 1}}
 v.printB() // 打印 G
+printB(v) // 等同于 v.printB()
 ```
 
 `v`是`Demo`结构体的一个实例，当调用`v.printB()`结构体方法时，`v`实例中的数据会拷贝一份给结构体方法`printB()`中的接收者`d`, 这样在`printB()`中调用`d.B`时就可以获取到`G`这个字符了。
@@ -393,13 +478,20 @@ type Demo struct {
 	G map[string]int
 }
 
-// d *Demo 指针接收者
 func (d *Demo) print() {
-	fmt.Printf("%+v\n", d)
+	fmt.Printf("d %+v\n", d)
 }
 
 func (d *Demo) printB() {
-	fmt.Printf("%+v\n", d.B)
+	fmt.Printf("d.B %+v\n", d.B)
+}
+
+func print(d *Demo) {
+	fmt.Printf("d %+v\n", d)
+}
+
+func printB(d *Demo) {
+	fmt.Printf("d.B %+v\n", d.B)
 }
 
 func (d *Demo) ModifyE() {
@@ -407,11 +499,13 @@ func (d *Demo) ModifyE() {
 }
 
 func (d *Demo) printAddr1() {
-	fmt.Printf("%p\n", d)
+	fmt.Printf("d address:%p\n", &d)
+	fmt.Printf("d   value:%p\n", d)
 }
 
 func (d *Demo) printAddr2() {
-	fmt.Printf("%p\n", d)
+	fmt.Printf("d address:%p\n", &d)
+	fmt.Printf("d   value:%p\n", d)
 }
 
 func main() {
@@ -419,12 +513,20 @@ func main() {
 	v.print()
 	v.printB()
 
+	print(&v)  // 等同于 v.print()
+	printB(&v) // 等同于 v.printB()
+
 	// 指针接收者 可以通过方法改变接收者内部值
 	v.ModifyE()
 	fmt.Printf("%+v\n", v)
 
+	fmt.Println("--------------")
+	fmt.Printf("v address:%p\n", &v)
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr1()
+	fmt.Println("--------------")
 	v.printAddr2()
 }
 ```
@@ -479,8 +581,174 @@ func main() {
 }
 ```
 
+## 结构体应用
+
+通过`struct`结构体定义电脑各个组件和对应属性，然后将这些组装拼装在一起形成一个抽象的电脑并运行他。
+
+- 电脑组装器 在目录下创建computer.go文件
+
+```go
+package main
+
+import "fmt"
+
+type ComputerBuilder struct {
+	Computer
+}
+
+type Computer struct {
+	CPU
+	Memory
+	NetWork
+	Display
+}
+
+func (c *ComputerBuilder) SetCPU(cpu CPU) *ComputerBuilder {
+	c.CPU = cpu
+	return c
+}
+
+func (c *ComputerBuilder) SetMemory(mem Memory) *ComputerBuilder {
+	c.Memory = mem
+	return c
+}
+
+func (c *ComputerBuilder) SetNetWork(nt NetWork) *ComputerBuilder {
+	c.NetWork = nt
+	return c
+}
+
+func (c *ComputerBuilder) SetDisplay(dis Display) *ComputerBuilder {
+	c.Display = dis
+	return c
+}
+
+func (c *ComputerBuilder) Build() Computer {
+	return c.Computer
+}
+
+func (c Computer) RUN() {
+	c.CPU.operation()
+	c.Memory.InteractiveData()
+	c.NetWork.TransferData()
+	c.Display.Display()
+	fmt.Println("computer running")
+}
+```
+
+- CPU 在目录下创建cpu.go文件
+
+```go
+package main
+
+import "fmt"
+
+type CPU struct {
+	name       string
+	modelType  string
+	coreNumber int
+}
+
+func (c CPU) operation() {
+	fmt.Printf("%s %s %d is operation\n", c.name, c.modelType, c.coreNumber)
+}
+```
+
+- Memory 在目录下创建memory.go文件
+
+```go
+package main
+
+import "fmt"
+
+type Memory struct {
+	name string
+	typ  string
+	cap  int
+	mHz  int
+}
+
+func (m Memory) InteractiveData() {
+	fmt.Printf("%s %s %d %d is interactive data\n", m.name, m.typ, m.cap, m.mHz)
+}
+```
+
+- NetWork
+
+```go
+package main
+
+import "fmt"
+
+type NetWork struct {
+	name string
+	typ  string
+	rate int
+}
+
+func (n NetWork) TransferData() {
+	fmt.Printf("%s %s %d is transfer data\n", n.name, n.typ, n.rate)
+}
+```
+
+- Display 在目录下创建display.go文件
+
+```go
+package main
+
+import "fmt"
+
+type Display struct {
+	name string
+	typ  string
+}
+
+func (d Display) Display() {
+	fmt.Printf("%s %s is display data\n", d.name, d.typ)
+}
+
+```
+
+在目录下创建main.go文件并构建`ComputerBuilder`设置电脑并运行：
+
+```go
+package main
+
+/*
+	1.结构体组合
+*/
+
+func main() {
+	cb := &ComputerBuilder{}
+	cpu := CPU{
+		name:       "AMD Ryzen 5 5000",
+		modelType:  "十二线程",
+		coreNumber: 6,
+	}
+	mem := Memory{
+		name: "DDR4",
+		typ:  "金百达",
+		cap:  32,
+		mHz:  2666,
+	}
+
+	net := NetWork{
+		name: "Intel 82574L",
+		typ:  "千兆以太网",
+		rate: 1000,
+	}
+
+	dis := Display{
+		name: "AOC",
+		typ:  "4K",
+	}
+	c := cb.SetCPU(cpu).SetMemory(mem).SetNetWork(net).SetDisplay(dis).Build()
+	c.RUN()
+}
+```
 
 ## 思考题
+
 1. 通过结构体方法的形式实现加减乘除
 ```go
 type numb struct {

@@ -17,12 +17,13 @@ func Steps1() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	var sliceIntTmp []int
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
 
-	sliceIntTmp = sliceInt
+	sliceIntTmp = sliceInt // 将指向底层数组的指针赋值给了sliceIntTmp
+
 	fmt.Printf("\tsliceIntTmp:%+v len:%d cap:%d\n",
 		sliceIntTmp,
 		len(sliceIntTmp),
@@ -30,7 +31,7 @@ func Steps1() {
 
 	sliceIntTmp[0] = 111
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -45,7 +46,7 @@ func Steps2() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	var sliceIntTmp []int
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -61,7 +62,7 @@ func Steps2() {
 
 	sliceIntTmp[0] = 111
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -86,7 +87,7 @@ func Steps3() {
 	tmpSliceInt := sliceInt
 	fmt.Printf("\t-----------------------------\n")
 	fmt.Printf("\t         tmpSliceInt address:%p\n", &tmpSliceInt) // &tmpSliceInt 获取的是tmpSliceInt变量本身的地址
-	fmt.Printf("\t   tmpSliceInt value address:%p\n", tmpSliceInt)  //  tmpSliceInt 获取切片底层数据的地址
+	fmt.Printf("\t   tmpSliceInt value address:%p\n", tmpSliceInt)  //  tmpSliceInt 获取切片底层数据的地址,该地址等于 sliceInt 的地址
 
 	fmt.Printf("\ttmpSliceInt[0] value address:%p\n", &tmpSliceInt[0]) // &tmpSliceInt[0] 获取切片第一个值的地址
 	fmt.Printf("\ttmpSliceInt[1] value address:%p\n", &tmpSliceInt[1]) // &tmpSliceInt[1] 获取切片第二个值的地址
@@ -122,10 +123,14 @@ func Steps4() {
 		}
 	*/
 
-	fmt.Printf("\tsliceInt data array pointer  value 0x%x\n", (*uintptr)(unsafe.Pointer(&sliceInt)))
-	fmt.Printf("\tsliceInt data array pointer *value 0x%x\n", *(*uintptr)(unsafe.Pointer(&sliceInt)))
+	// sliceInt指向底层 array 的地址
+	fmt.Printf("\tsliceInt data array pointer  value 0x%x\n", (*uintptr)(unsafe.Pointer(&sliceInt)))  // sliceInt 变量的地址
+	fmt.Printf("\tsliceInt data array pointer *value 0x%x\n", *(*uintptr)(unsafe.Pointer(&sliceInt))) // sliceInt 变量存储的值(该值是一个地址)
+
+	// sliceInt的 len 存储的地址和值
 	fmt.Printf("\tsliceInt data len  value 0x%x\n", (*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&sliceInt))+uintptr(8))))
 	fmt.Printf("\tsliceInt data len *value %d\n", *(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&sliceInt)) + uintptr(8))))
+	// sliceInt的 cap 存储的地址和值
 	fmt.Printf("\tsliceInt data cap  value 0x%x\n", (*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&sliceInt))+uintptr(16))))
 	fmt.Printf("\tsliceInt data cap *value %d\n", *(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&sliceInt)) + uintptr(16))))
 

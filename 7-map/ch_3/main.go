@@ -22,7 +22,14 @@ func Steps3() {
 	fmt.Printf("\tmpIntString value addr:%p\n", mpIntString)
 	fmt.Println("\t-------------------------")
 	tmpIntString := make(map[int]string, 2)
-	tmpIntString = mpIntString
+	fmt.Printf("\ttmpIntString:%+v len:%d\n",
+		tmpIntString,
+		len(tmpIntString))
+	fmt.Printf("\ttmpIntString       addr:%p\n", &tmpIntString)
+	fmt.Printf("\ttmpIntString value addr:%p\n", tmpIntString)
+
+	tmpIntString = mpIntString // 将指向底层映射的指针赋值给了 tmpIntString
+
 	fmt.Printf("\ttmpIntString:%+v len:%d\n",
 		tmpIntString,
 		len(tmpIntString))
@@ -53,6 +60,12 @@ func Steps4() {
 	fmt.Println("\t-------------------------")
 
 	tmpIntString := make(map[int]string, 2)
+	fmt.Printf("\ttmpIntString:%+v len:%d\n",
+		tmpIntString,
+		len(tmpIntString))
+	fmt.Printf("\ttmpIntString       addr:%p\n", &tmpIntString)
+	fmt.Printf("\ttmpIntString value addr:%p\n", tmpIntString)
+
 	for k, v := range mpIntString {
 		tmpIntString[k] = v
 	}
@@ -85,7 +98,7 @@ func Steps5() {
 
 	fmt.Printf("\t---------------------\n")
 
-	var mpIntBool1 = map[int]bool{}
+	var mpIntBool1 = map[int]bool{} // 与 var mpIntBool map[int]bool 的区别; 会开辟内存空间
 	fmt.Printf("\tmpIntBool1:%+v len:%d\n",
 		mpIntBool1,
 		len(mpIntBool1))
@@ -95,7 +108,7 @@ func Steps5() {
 
 	fmt.Printf("\t---------------------\n")
 
-	mpIntBool2 := map[int]bool{}
+	mpIntBool2 := map[int]bool{} // 与 var mpIntBool map[int]bool 的区别; 会开辟内存空间
 	fmt.Printf("\tmpIntBool2:%+v len:%d\n",
 		mpIntBool2,
 		len(mpIntBool2))
@@ -105,14 +118,13 @@ func Steps5() {
 
 	fmt.Printf("\t---------------------\n")
 
-	var mpIntBool3 = make(map[int]bool, 10)
+	var mpIntBool3 = make(map[int]bool, 10) // 与 var mpIntBool map[int]bool 的区别; 会开辟内存空间
 	fmt.Printf("\tmpIntBool3:%+v len:%d\n",
 		mpIntBool3,
 		len(mpIntBool3))
 	fmt.Printf("\tmpIntBool3       size:%d\n", unsafe.Sizeof(mpIntBool3))
 	fmt.Printf("\tmpIntBool3       addr:%p\n", &mpIntBool3)
 	fmt.Printf("\tmpIntBool3 value addr:%p\n", mpIntBool3)
-
 }
 
 // Steps6 证明 map 的底层结构

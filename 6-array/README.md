@@ -36,7 +36,17 @@ var ArrayName [length]type
 ```go
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
+
+/*
+	1.定义局部数组
+	2.定义局部数组并赋值
+	3.通过下标赋值
+	4.定义全局数组
+*/
 
 type dome struct {
 	a int
@@ -45,42 +55,50 @@ type dome struct {
 
 var arrayUInt [3]uint
 
-// 定义数组, 数组必须指定大小
-func main() {
-	// 类型 [n]T 表示拥有 n 个 T 类型的值的数组
-	// 类型 [3]int 表示拥有 3 个 int 类型的值的数组, 默认值为0
+// Steps1 定义数组, 数组必须指定大小
+func Steps1() {
+	// 类型 [n]T 表示拥有 n 个 T 类型值的数组
+	// 类型 [3]int 表示拥有 3 个 int 类型值的数组, 默认值为 0
 	var arrayInt [3]int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
-	arrayInt[0] = 1
+	arrayInt[0] = 1     // 通过 [] 获取对应索引数据并修改
 	arrayInt[1] = 2
-	fmt.Printf("arrayInt: %+v\n", arrayInt)
+	fmt.Printf("\tarrayInt: %+v\n", arrayInt)
 
+	// 定义并初始化数组
 	arrayBool := [3]bool{false, true}
-	fmt.Printf("arrayBool: %+v\n", arrayBool)
+	fmt.Printf("\tarrayBool: %+v\n", arrayBool)
 
 	arrayFloat32 := [3]float32{1.0, 2.0} // float64
-	fmt.Printf("arrayFloat32: %+v\n", arrayFloat32)
+	fmt.Printf("\tarrayFloat32: %+v\n", arrayFloat32)
 
 	arrayString := [3]string{"Golang", "Tutorial"}
-	fmt.Printf("arrayString: %+v\n", arrayString)
+	fmt.Printf("\tarrayString: %+v\n", arrayString)
 
+	// 数组结构体
 	arrayStruct := [3]dome{{a: 1, b: 2.0}, {a: 11, b: 22.0}}
-	fmt.Printf("arrayStruct: %+v\n", arrayStruct)
+	fmt.Printf("\tarrayStruct: %+v\n", arrayStruct)
 
 	// 数组可以直接通过下标访问 T[x]
-	fmt.Printf("arrayInt[0]: %d\n", arrayInt[0])
+	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
 	// 数组可以直接通过下标修改 T[x] = y
 	arrayInt[0] = 11
-	fmt.Printf("arrayInt[0]: %d\n", arrayInt[0])
+	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
 	// 数组地址
-	fmt.Printf("arrayInt: %p\n", &arrayInt)
-	for i, v := range arrayInt {
-		fmt.Printf("&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
+	fmt.Printf("\tarrayInt: %p\n", arrayInt) // arrayInt: %!p([3]int=[11 2 0]),存储的不是地址值
+	fmt.Printf("\t&arrayInt: %p\n", &arrayInt)
+	for i, v := range arrayInt { // 数组的地址等于数组第一个元素的地址
+		fmt.Printf("\t&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
 	}
 
-	fmt.Printf("arrayInt len: %d\n", len(arrayInt))
-	fmt.Printf("arrayInt cap: %d\n", cap(arrayInt))
+	fmt.Printf("\tarrayInt len: %d\n", len(arrayInt))
+	fmt.Printf("\tarrayInt cap: %d\n", cap(arrayInt))
+}
+
+func main() {
+	fmt.Println("Steps1():")
+	Steps1()
 }
 ```
 
@@ -89,6 +107,39 @@ func main() {
 ![6-2.arrayDefinition2.png](../image/6-2.arrayDefinition2.png)
 
  `arrayBool := [3]bool{false, true}`表示定义一个大小为3的`bool`型数组, 并且初始化第一个元素为false, 第二个元素为true。
+
+二维数组的定义与遍历：
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// Steps2 二维数组
+func Steps2() {
+	arrayArrayString := [5][10]string{}
+	for i := 0; i < len(arrayArrayString); i++ {
+		for ii := 0; ii < len(arrayArrayString[i]); ii++ {
+			arrayArrayString[i][ii] = "-"
+		}
+	}
+
+	for i := 0; i < len(arrayArrayString); i++ {
+		fmt.Printf("\t")
+		for ii := 0; ii < len(arrayArrayString[i]); ii++ {
+			fmt.Printf(arrayArrayString[i][ii])
+		}
+		fmt.Println()
+	}
+}
+
+func main() {
+	fmt.Println("Steps2():")
+	Steps2()
+}
+```
 
 需要注意: 由于数组长度是固定的，因此在 `Golang` 中很少直接使用数组。更常见的是使用切片（`slice`），它是一个动态数组，可以根据需要动态增加或减少大小。
 
@@ -129,16 +180,27 @@ var sliceByte []byte
 func Steps1() {
 	// Steps 1-1: 类型 []T 表示一个元素类型为 T 的切片
 	// 切片拥有长度和容量, 切片在添加数据时会自动扩容, 可以通过len(),cap()获取切片长度和容量
-	var sliceInt []int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 
-	// Steps 1-2: append 向切片中添加元素（可能会导致内存重新分配）
-	for i := 0; i < 10; i++ {
-		sliceInt = append(sliceInt, i)
-	}
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	// 类型为 int 的切片, 初始化后长度容量都为 0, 不指向任何底层数组
+	var sliceInt []int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
+	fmt.Printf("\t&sliceInt:%p sliceInt:%p sliceInt:%+v len:%d cap:%d\n",
+		&sliceInt,
+		sliceInt,
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
+	//_ = sliceInt[0] // 在未初始化长度前直接通过下标读取或赋值数据将会报错, 只能通过 append 添加元素
+
+	// Steps 1-2: append 向切片中添加元素（可能会导致内存重新分配）
+	for i := 1; i < 11; i++ {
+		sliceInt = append(sliceInt, i)
+		fmt.Printf("\t&sliceInt:%p sliceInt:%p sliceInt:%+v len:%d cap:%d\n",
+			&sliceInt,
+			sliceInt,
+			sliceInt,
+			len(sliceInt),
+			cap(sliceInt))
+	}
 
 	// Steps 1-3: 获取切片长度
 	fmt.Println("\tsliceInt len:", len(sliceInt))
@@ -146,7 +208,7 @@ func Steps1() {
 	// Steps 1-4: 获取切片的容量
 	fmt.Println("\tsliceInt cap:", cap(sliceInt))
 
-	// Steps 1-5: nil 切片的长度和容量为 0 且没有底层数组
+	// Steps 1-5: 类型为 bool 的切片, 初始化后长度和容量为 0 且没有底层数组
 	var sliceBool []bool
 	fmt.Printf("\tsliceBool:%+v len:%d cap:%d\n",
 		sliceBool,
@@ -154,7 +216,7 @@ func Steps1() {
 		cap(sliceBool))
 }
 
-// 每个数组的大小都是固定的,而切片则为数组元素提供动态大小的、灵活的视角
+// 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
 func main() {
 	fmt.Println("Steps1():")
 	Steps1()
@@ -168,7 +230,7 @@ func main() {
 并使用 `append()` 函数向其中添加了 10 个元素。并通过 `fmt.Printf()` 函数，格式化输出切片的地址、值、长度和容量。
 
 ```go
-sliceInt:[] len:0 cap:0
+&sliceInt:0xc0000a4018 sliceInt:0x0 sliceInt:[] len:0 cap:0
 &sliceInt:0xc0000a4018 sliceInt:0xc0000b2008 sliceInt:[1] len:1 cap:1
 &sliceInt:0xc0000a4018 sliceInt:0xc0000b2030 sliceInt:[1 2] len:2 cap:2
 &sliceInt:0xc0000a4018 sliceInt:0xc0000b6020 sliceInt:[1 2 3] len:3 cap:4
@@ -199,7 +261,7 @@ import (
 
 // Steps2 定义并初始化切片
 func Steps2() {
-	// Steps 2-1: 初始化切片
+	// Steps 2-1: 定义并初始化切片
 	sliceString := []string{"Golang", "Tutorial"}
 	fmt.Printf("\tsliceString:%+v len:%d cap:%d\n",
 		sliceString,
@@ -227,7 +289,6 @@ func Steps2() {
 	fmt.Printf("\t&sliceInt[2] value addr: %p\n", &sliceInt[2])
 }
 
-// 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
 func main() {
 	fmt.Println("Steps2():")
 	Steps2()
@@ -261,31 +322,47 @@ import (
 func Steps3() {
 	// Steps 3-1: 用内建函数 make 来创建切片
 	// make([]T,len,cap) 如下：创建一个 float32 类型, 长度为 5 的数组
+	// 和 var sliceFloat32 []float32 的区别是 make 创建的切片会分配底层数组并赋零值
 	sliceFloat32 := make([]float32, 5)
+	fmt.Printf("\t&sliceFloat32:%p sliceFloat32:%p sliceFloat32:%+v len:%d cap:%d\n",
+		&sliceFloat32,
+		sliceFloat32,
+		sliceFloat32,
+		len(sliceFloat32),
+		cap(sliceFloat32))
 	for i := 0; i < len(sliceFloat32); i++ {
 		sliceFloat32[i] = float32(i)
 	}
 
-	fmt.Printf("\tsliceFloat32:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceFloat32:%p sliceFloat32:%p sliceFloat32:%+v len:%d cap:%d\n",
+		&sliceFloat32,
+		sliceFloat32,
 		sliceFloat32,
 		len(sliceFloat32),
 		cap(sliceFloat32))
 
 	// 创建一个 float64 类型, 长度为 5, 容量为 10 的数组
 	sliceFloat64 := make([]float64, 5, 10)
+	fmt.Printf("\t&sliceFloat64:%p sliceFloat64:%p sliceFloat64:%+v len:%d cap:%d\n",
+		&sliceFloat64,
+		sliceFloat64,
+		sliceFloat64,
+		len(sliceFloat64),
+		cap(sliceFloat64))
 	//for i := 0 ;i < cap(sliceFloat64);i++ { // cap-len的部分并没有分配，不能直接赋值
 	//	sliceFloat64[i] = float64(i) // panic: runtime error: index out of range [5] with length 5
 	//}
 	for i := 0; i < len(sliceFloat64); i++ {
 		sliceFloat64[i] = float64(i)
 	}
-	fmt.Printf("\tsliceFloat64:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceFloat64:%p sliceFloat64:%p sliceFloat64:%+v len:%d cap:%d\n",
+		&sliceFloat64,
+		sliceFloat64,
 		sliceFloat64,
 		len(sliceFloat64),
 		cap(sliceFloat64))
 }
 
-// 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
 func main() {
 	fmt.Println("Steps4():")
 	Steps3()
@@ -388,53 +465,87 @@ import (
 func Steps5() {
 	// Steps 5-1: 定义切片并初始化
 	sliceInt := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t&sliceInt:%p sliceInt:%p sliceInt:%+v len:%d cap:%d\n",
+		&sliceInt,
+		sliceInt,
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
+	for i := 0; i < len(sliceInt); i++ {
+		fmt.Printf("\t&sliceInt[%d]:%p\n", i, &sliceInt[i])
+	}
 
-	// Steps 5-2: 可以用 slice[low : high] or slice[low : high] 来截取数组或切片的一个片段长度为 high-low
+	fmt.Printf("\t--------------------------------\n")
+	// Steps 5-2: 可以用 array[low : high] or slice[low : high] 来截取数组或切片的一个片段长度为 high-low
 	// 注意: sliceInt[0:3] 等同于 sliceInt[:3]
-	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2,容量为9
-	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
+	interceptionSliceInt := sliceInt[1:3] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2 容量为9
+	fmt.Printf("\t&interceptionSliceInt:%p interceptionSliceInt:%p interceptionSliceInt:%+v len:%d cap:%d\n",
+		&interceptionSliceInt,
+		interceptionSliceInt,
 		interceptionSliceInt,
 		len(interceptionSliceInt),
 		cap(interceptionSliceInt))
+	for i := 0; i < len(interceptionSliceInt); i++ {
+		fmt.Printf("\t&interceptionSliceInt[%d]:%p\n", i, &interceptionSliceInt[i])
+	}
+	/*
+		对比sliceInt[1],sliceInt[2]的地址和interceptionSliceInt[0],interceptionSliceInt[1]的地址, 会发现他们是相等滴
+		证明他们底层共用一片地址空间
+		&sliceInt[1]:0xc0000200f8
+		&sliceInt[2]:0xc000020100
 
+		&interceptionSliceInt[0]:0xc0000200f8
+		&interceptionSliceInt[1]:0xc000020100
+	*/
+
+	fmt.Printf("\t--------------------------------\n")
 	// Steps 5-3: 可以用 slice[low : high: cap] 来截取切片或数组的一个片段长度为 high-low,容量为cap
-	interceptionSliceIntCap := sliceInt[1:3:5] // 获取 sliceInt 下标 1-2 的元素:[1,2] 长度为2, 容量为4
-	fmt.Printf("\tinterceptionSliceIntCap:%+v len:%d cap:%d\n",
+	interceptionSliceIntCap := sliceInt[1:3:5] // 获取 sliceInt 下标 1-2 的元素:[1,2,3] 长度为2, 容量为4
+	fmt.Printf("\t&interceptionSliceIntCap:%p interceptionSliceIntCap:%p interceptionSliceIntCap:%+v len:%d cap:%d\n",
+		&interceptionSliceIntCap,
+		interceptionSliceIntCap,
 		interceptionSliceIntCap,
 		len(interceptionSliceIntCap),
 		cap(interceptionSliceIntCap))
+	for i := 0; i < len(interceptionSliceInt); i++ {
+		fmt.Printf("\t&interceptionSliceIntCap[%d]:%p\n", i, &interceptionSliceIntCap[i])
+	}
 
+	fmt.Printf("\t--------------------------------\n")
 	// Steps 5-4: 切片并不存储任何数据，它只是描述了底层数组中的一段
-	// 更改切片的元素会修改其底层数组中对应的元素,与它共享底层数组的切片都会观测到这些修改
-	interceptionSliceIntCap[0] = 111
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	// 更改切片的元素会修改其底层数组中对应的元素,与它共享底层数组的其它切片都会观测到这些修改
+	fmt.Printf("\t[modify before] sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
-	fmt.Printf("\tinterceptionSliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t[modify before] interceptionSliceInt:%+v len:%d cap:%d\n",
+		interceptionSliceInt,
+		len(interceptionSliceInt),
+		cap(interceptionSliceInt))
+	interceptionSliceIntCap[0] = 111
+	fmt.Printf("\t[modify after ] sliceInt:%+v len:%d cap:%d\n",
+		sliceInt,
+		len(sliceInt),
+		cap(sliceInt))
+	fmt.Printf("\t[modify after ] interceptionSliceInt:%+v len:%d cap:%d\n",
 		interceptionSliceInt,
 		len(interceptionSliceInt),
 		cap(interceptionSliceInt))
 
+	fmt.Printf("\t--------------------------------\n")
+	// Steps 5-5: 通过unsafe.Pointer函数强行获取截取切片之外的数据
 	// interceptionSliceIntCap[2] 超出当前len, 打印报错 panic: runtime error: index out of range [2] with length 2
 	//fmt.Printf("interceptionSliceIntCap[2]:%d",interceptionSliceIntCap[2])
 
-	// 通过指针偏移强行获取底层元素（这种方式是不安全的）
+	// 通过指针偏移强行获取interceptionSliceIntCap[2]底层元素（这种方式是不安全的）
 	fmt.Printf("\tinterceptionSliceCap[2]:%d\n", *(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&interceptionSliceIntCap[0])) + uintptr(16))))
 
+	fmt.Printf("\t[modify before] sliceInt:%+v\n", sliceInt)
 	// Steps 5-6: 修改interceptionSliceCap[2]的值为33,底层切片sliceInt对应[3]位置改变33
 	*(*int)(unsafe.Pointer(uintptr(unsafe.Pointer(&interceptionSliceIntCap[0])) + uintptr(16))) = 33
-	fmt.Printf("\tsliceInt[3]:%d\n", sliceInt[3])
-
-	interceptionSliceIntCap[0] = 11
-	fmt.Printf("\tsliceInt[1]:%d\n", sliceInt[1])
+	fmt.Printf("\t[modify after ] sliceInt:%+v\n", sliceInt)
 }
 
-// 每个数组的大小都是固定的。而切片则为数组元素提供动态大小的、灵活的视角
 func main() {
 	fmt.Println("Steps5():")
 	Steps5()
@@ -463,12 +574,13 @@ func Steps1() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	var sliceIntTmp []int
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
 
-	sliceIntTmp = sliceInt
+	sliceIntTmp = sliceInt // 将指向底层数组的指针赋值给了sliceIntTmp
+
 	fmt.Printf("\tsliceIntTmp:%+v len:%d cap:%d\n",
 		sliceIntTmp,
 		len(sliceIntTmp),
@@ -476,7 +588,7 @@ func Steps1() {
 
 	sliceIntTmp[0] = 111
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -512,7 +624,7 @@ func Steps2() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	var sliceIntTmp []int
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -528,7 +640,7 @@ func Steps2() {
 
 	sliceIntTmp[0] = 111
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t   sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
@@ -559,46 +671,56 @@ import (
 	"fmt"
 )
 
-func modifySlice0(arr []int) {
-	arr[0] = 1000
+
+// 数组参数和切片参数的区别
+
+func modifySlice0(slice []int) {
+	fmt.Printf("\t[modifySlice0] slice value    addr: %p\n", slice) // 改值等于 sliceInt 的值
+	fmt.Printf("\t[modifySlice0] slice variable addr: %p\n", &slice)
+	slice[0] = 1000
 }
 
-// 切片作为函数参数时传递的是指针类型的值
+// Steps3 切片作为函数参数时传递的是指针类型的全拷贝(array的uintptr指针，len，cap)
 func Steps3() {
 	var sliceInt = []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t[Steps3] sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
 
+	fmt.Printf("\t[Steps3] sliceInt value    addr: %p\n", sliceInt)
+	fmt.Printf("\t[Steps3] sliceInt variable addr: %p\n", &sliceInt)
 	modifySlice0(sliceInt)
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
+	fmt.Printf("\t[Steps3] sliceInt:%+v len:%d cap:%d\n",
 		sliceInt,
 		len(sliceInt),
 		cap(sliceInt))
 }
 
-func modifyArr0(arr [10]int) {
+func modifyArr0(arr [10000000]int) {
+	fmt.Printf("\t[modifyArr0] arr value    addr: %p\n", &arr[0])
+	fmt.Printf("\t[modifyArr0] arr variable addr: %p\n", &arr)
 	arr[0] = 1000
 }
 
-// 数组作为函数参数时传递的是值类型的全拷贝
+// Steps4 数组作为函数参数时传递的是值类型的全拷贝([10]int的全部数据)
 func Steps4() {
-	var sliceInt = [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	var arrInt = [10000000]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
-		sliceInt,
-		len(sliceInt),
-		cap(sliceInt))
+	fmt.Printf("\t[Steps4] len:%d cap:%d\n",
+		len(arrInt),
+		cap(arrInt))
 
-	modifyArr0(sliceInt)
+	fmt.Printf("\t[Steps4] arrInt value    addr: %p\n", &arrInt[0])
+	fmt.Printf("\t[Steps4] arrInt variable addr: %p\n", &arrInt)
+	modifyArr0(arrInt) // 数组地址很特别,数组地址就等于第一个元素地址
 
-	fmt.Printf("\tsliceInt:%+v len:%d cap:%d\n",
-		sliceInt,
-		len(sliceInt),
-		cap(sliceInt))
+	fmt.Printf("\t[Steps4] arrInt[0]:%+v len:%d cap:%d\n",
+		arrInt[0],
+		len(arrInt),
+		cap(arrInt))
 }
 
 func main() {

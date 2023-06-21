@@ -16,7 +16,7 @@ import (
 type Demo struct {
 	// 小写表示不导出,包外不能引用
 	a bool
-	// 大写表示导出，包外能引用
+	// 大写表示导出,包外能引用
 	B byte
 	C int     // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	D float32 // float64
@@ -41,7 +41,7 @@ func Steps1() {
 
 	fmt.Printf("\tdome.B: %c\n", d.B)
 
-	// 访问结构体内的成员使用点. , 格式为：结构体变量.成员
+	// 访问或修改结构体内的成员使用点. , 格式为: 结构体变量.成员
 	d.a = false // 修改a字段的值
 
 	fmt.Printf("\td value %+v\n", d)
@@ -60,7 +60,7 @@ func Steps2() {
 
 	fmt.Printf("\td value %+v\n", d)
 
-	// 结构体字段使用点号来访问
+	// 访问或修改结构体内的成员使用点. , 格式为: 结构体变量.成员
 	d.a = 2 // 修改a字段的值
 
 	fmt.Printf("\td value %+v\n", d)
@@ -118,6 +118,7 @@ func Steps5() {
 	fmt.Printf("\tvariable b.E addr %p\n", &d.E)
 	fmt.Printf("\tvariable b.F addr %p\n", &d.F)
 	fmt.Printf("\tvariable b.G addr %p\n", &d.G)
+	fmt.Printf("\tvariable b.H addr %p\n", &d.H)
 
 	fmt.Printf("\t-----------------\n")
 
@@ -130,6 +131,7 @@ func Steps5() {
 	fmt.Printf("\tvariable c.E addr %p\n", &c.E)
 	fmt.Printf("\tvariable c.F addr %p\n", &c.F)
 	fmt.Printf("\tvariable c.G addr %p\n", &c.G)
+	fmt.Printf("\tvariable c.H addr %p\n", &c.H)
 }
 
 func main() {

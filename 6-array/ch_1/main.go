@@ -21,13 +21,14 @@ var arrayUInt [3]uint
 
 // Steps1 定义数组, 数组必须指定大小
 func Steps1() {
-	// 类型 [n]T 表示拥有 n 个 T 类型的值的数组
-	// 类型 [3]int 表示拥有 3 个 int 类型的值的数组, 默认值为0
+	// 类型 [n]T 表示拥有 n 个 T 类型值的数组
+	// 类型 [3]int 表示拥有 3 个 int 类型值的数组, 默认值为 0
 	var arrayInt [3]int // uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
-	arrayInt[0] = 1
+	arrayInt[0] = 1     // 通过 [] 获取对应索引数据并修改
 	arrayInt[1] = 2
 	fmt.Printf("\tarrayInt: %+v\n", arrayInt)
 
+	// 定义并初始化数组
 	arrayBool := [3]bool{false, true}
 	fmt.Printf("\tarrayBool: %+v\n", arrayBool)
 
@@ -37,6 +38,7 @@ func Steps1() {
 	arrayString := [3]string{"Golang", "Tutorial"}
 	fmt.Printf("\tarrayString: %+v\n", arrayString)
 
+	// 数组结构体
 	arrayStruct := [3]dome{{a: 1, b: 2.0}, {a: 11, b: 22.0}}
 	fmt.Printf("\tarrayStruct: %+v\n", arrayStruct)
 
@@ -48,22 +50,19 @@ func Steps1() {
 	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
 	// 数组地址
-	fmt.Printf("\tarrayInt: %p\n", arrayInt) // arrayInt: %!p([3]int=[11 2 0])，arrayInt没有地址
+	fmt.Printf("\tarrayInt: %p\n", arrayInt) // arrayInt: %!p([3]int=[11 2 0]),arrayInt存储的不是地址值
 	fmt.Printf("\t&arrayInt: %p\n", &arrayInt)
-	for i, v := range arrayInt {
+	for i, v := range arrayInt { // 数组的地址等于数组第一个元素的地址
 		fmt.Printf("\t&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
 	}
 
 	fmt.Printf("\tarrayInt len: %d\n", len(arrayInt))
 	fmt.Printf("\tarrayInt cap: %d\n", cap(arrayInt))
-
-	var arr [10]bool
-	fmt.Printf("\tarr memory size:%d\n", unsafe.Sizeof(arr))
 }
 
 // Steps2 二维数组
 func Steps2() {
-	arrayArrayString := [5][10]string{}
+	arrayArrayString := [5][10]string{} // 初始化一个 5x10 的二维数组
 	for i := 0; i < len(arrayArrayString); i++ {
 		for ii := 0; ii < len(arrayArrayString[i]); ii++ {
 			arrayArrayString[i][ii] = "-"
@@ -81,13 +80,13 @@ func Steps2() {
 
 // Steps3 数组的内存占用
 func Steps3() {
-	arrayBool := [3]bool{true}
+	arrayBool := [3]bool{true} // 3*1 byte
 	fmt.Printf("\t   arrayBool size: %+v\n", unsafe.Sizeof(arrayBool))
 
-	arrayFloat32 := [3]float32{1.0, 2.0}
+	arrayFloat32 := [3]float32{1.0, 2.0} // 3*4 byte
 	fmt.Printf("\tarrayFloat32 size: %+v\n", unsafe.Sizeof(arrayFloat32))
 
-	arrayString := [3]string{"Golang", "Tutorial", "Hello"}
+	arrayString := [3]string{"Golang", "Tutorial", "Hello"} // 3*16 byte
 	fmt.Printf("\t arrayString size: %+v\n", unsafe.Sizeof(arrayString))
 }
 
