@@ -6,6 +6,11 @@ import (
 	"golang-tutorial/8-interface/ch_4/v2_interface"
 )
 
+/*
+	通过 struct 来实现的 Computer, 不同类型的 Computer 必须要定义不同结构体, 因为 Computer 结构体保存的是 具体类型
+	通过 interface 来实现的 Computer, 不同类型的 Computer 不需要定义不同结构体, 因为 Computer 结构体保存的是 接口实现
+*/
+
 // 通过 _interface 构建一台 AMD CPU + 金士顿 Memory + 英特尔 NetWork + AOC Display 的电脑
 func CreateComputer1() {
 	cb := &v2_interface.ComputerBuilder{}
@@ -66,7 +71,7 @@ func CreateComputer2() {
 
 // 通过 _struct 构建一台 AMD CPU + 金士顿 Memory + 英特尔 NetWork + AOC Display 的电脑
 func CreateComputer3() {
-	cb := &v1_struct.ComputerBuilder{}
+	cb := &v1_struct.ComputerBuilder{} // 和v2_interface区别所在
 	cpu := v1_struct.AmdCPU{
 		Name:       "Ryzen 5 5000",
 		ModelType:  "十二线程",
@@ -95,7 +100,7 @@ func CreateComputer3() {
 
 // 构建一台 英特尔 CPU + 金士顿 Memory + 迈络思 NetWork + 飞利浦 Display 的电脑
 func CreateComputer4() {
-	cb := &v1_struct.ComputerBuilder2{}
+	cb := &v1_struct.ComputerBuilder2{} // 和v2_interface区别所在
 	cpu := v1_struct.IntelCPU{
 		Name:       "i9-13900K",
 		ModelType:  "二十四线程",

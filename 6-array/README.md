@@ -21,13 +21,13 @@
 
 ## 数组基础用法
 
-在 `Golang` 中，数组是具有**相同数据类型**的一组**固定长度**的数据项的集合。数组中的每个元素可以通过**索引**来访问，索引从 0 开始计数。数组的长度在创建时就已经确定，并且不可更改。创建一个数组的语法格式:
+在 `Golang` 中，数组是具有**相同数据类型**的一组**固定长度**的数据项的集合。数组中的每个元素可以通过**索引**来访问，索引从 0 开始计数。数组的长度在创建时就已经确定，并且不可更改，不同大小的数组被认为是不同的类型。创建一个数组的语法格式:
 
 ```go
 var ArrayName [length]type
 ```
 
-数组内存布局：
+数组内存布局(内存被分配为连续的块)：
 
 ![6-2.arrayDefinition.png](../image/6-2.arrayDefinition.png)
 
@@ -78,6 +78,8 @@ func Steps1() {
 	arrayStruct := [3]dome{{a: 1, b: 2.0}, {a: 11, b: 22.0}}
 	fmt.Printf("\tarrayStruct: %+v\n", arrayStruct)
 
+	fmt.Printf("\t------------------------------\n")
+
 	// 数组可以直接通过下标访问 T[x]
 	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
@@ -85,9 +87,25 @@ func Steps1() {
 	arrayInt[0] = 11
 	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
+	fmt.Printf("\t------------------------------\n")
+
+	// 不同大小的数组被认为是不同的类,不能直接赋值
+	var arrayInt1 [5]int
+	var arrayInt2 = [4]int{1, 2, 3}
+	//arrayInt1 = arrayInt2 // panic: cannot use arrayInt2 (variable of type [3]int) as [4]int value in assignment
+	fmt.Printf("\tarrayInt1: %+v\n", arrayInt1)
+	fmt.Printf("\tarrayInt2: %+v\n", arrayInt2)
+
+	fmt.Printf("\t------------------------------\n")
+	// 数组遍历方式一
+	for i := 0; i < len(arrayInt); i++ {
+		fmt.Printf("\tarrayInt[%d]:%d\n", i, arrayInt[i])
+	}
+
 	// 数组地址
-	fmt.Printf("\tarrayInt: %p\n", arrayInt) // arrayInt: %!p([3]int=[11 2 0]),存储的不是地址值
+	fmt.Printf("\tarrayInt: %p\n", arrayInt) // arrayInt: %!p([3]int=[11 2 0]),arrayInt存储的不是地址值
 	fmt.Printf("\t&arrayInt: %p\n", &arrayInt)
+	// 数组遍历方式二
 	for i, v := range arrayInt { // 数组的地址等于数组第一个元素的地址
 		fmt.Printf("\t&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
 	}
@@ -119,17 +137,27 @@ import (
 
 // Steps2 二维数组
 func Steps2() {
-	arrayArrayString := [5][10]string{}
+	arrayArrayString := [5][10]string{} // 初始化一个 5x10 的二维数组
 	for i := 0; i < len(arrayArrayString); i++ {
 		for ii := 0; ii < len(arrayArrayString[i]); ii++ {
 			arrayArrayString[i][ii] = "-"
 		}
 	}
 
+	// 遍历方式一
 	for i := 0; i < len(arrayArrayString); i++ {
 		fmt.Printf("\t")
 		for ii := 0; ii < len(arrayArrayString[i]); ii++ {
 			fmt.Printf(arrayArrayString[i][ii])
+		}
+		fmt.Println()
+	}
+	fmt.Printf("\t*************\n")
+	// 遍历方式二
+	for _, v := range arrayArrayString {
+		fmt.Printf("\t")
+		for _, vv := range v {
+			fmt.Printf(vv)
 		}
 		fmt.Println()
 	}
@@ -798,6 +826,8 @@ func .....
 - 切片和数组的关系 ?
 
 ## 参考
+
+https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/arrays/README.md
 
 https://i6448038.github.io/2018/08/11/array-and-slice-principle/
 

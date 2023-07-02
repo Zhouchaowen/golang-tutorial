@@ -22,7 +22,7 @@ func main() {
 	go listLanguage(language) // 通过goroutine启动该函数
 	go listTutorial(tutorial)
 
-	<-time.After(time.Second * 10) // 10s后执行下一行
+	<-time.After(time.Second * 10) // 10s后执行下一行(用于等待上面两个goroutine执行完成)
 	fmt.Println("return")
 }
 

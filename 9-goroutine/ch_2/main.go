@@ -31,11 +31,11 @@ func main() {
 	language := []string{"golang", "java", "c++", "python", "rust", "js"}
 	tutorial := []string{"入门", "初级", "中级", "高级", "专家"}
 
-	var wg sync.WaitGroup
+	var wg sync.WaitGroup // 改结构用于等待 goroutine 执行完成
 
 	wg.Add(2) // 设置需要等待 goroutine 的数量,目前为2
 
-	go listLanguage(language, &wg) // 通过 goroutine 启动该函数
+	go listLanguage(language, &wg) // 通过 goroutine 启动该函数, 将wg传递到函数中去(注意是传递的指针到函数中)
 
 	go func() { // 建议使用方式
 		defer wg.Done() // 程序运行完毕, 将等待数量减1

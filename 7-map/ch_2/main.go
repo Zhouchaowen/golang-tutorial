@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 /*
 	1.用内建函数 make 来创建map
@@ -67,7 +70,50 @@ func Steps2() {
 	}
 }
 
+// Steps3 不同方式创建map的区别
+func Steps3() {
+	var mpIntBool map[int]bool
+	fmt.Printf("\tmpIntBool:%+v len:%d\n",
+		mpIntBool,
+		len(mpIntBool))
+	fmt.Printf("\tmpIntBool       size:%d\n", unsafe.Sizeof(mpIntBool))
+	fmt.Printf("\tmpIntBool       addr:%p\n", &mpIntBool)
+	fmt.Printf("\tmpIntBool value addr:%p\n", mpIntBool)
+
+	fmt.Printf("\t---------------------\n")
+
+	var mpIntBool1 = map[int]bool{} // 与 var mpIntBool map[int]bool 的区别; 会开辟内存空间
+	fmt.Printf("\tmpIntBool1:%+v len:%d\n",
+		mpIntBool1,
+		len(mpIntBool1))
+	fmt.Printf("\tmpIntBool1       size:%d\n", unsafe.Sizeof(mpIntBool1))
+	fmt.Printf("\tmpIntBool1       addr:%p\n", &mpIntBool1)
+	fmt.Printf("\tmpIntBool1 value addr:%p\n", mpIntBool1)
+
+	fmt.Printf("\t---------------------\n")
+
+	mpIntBool2 := map[int]bool{} // 与 var mpIntBool map[int]bool 的区别; 会开辟内存空间
+	fmt.Printf("\tmpIntBool2:%+v len:%d\n",
+		mpIntBool2,
+		len(mpIntBool2))
+	fmt.Printf("\tmpIntBool2       size:%d\n", unsafe.Sizeof(mpIntBool2))
+	fmt.Printf("\tmpIntBool2       addr:%p\n", &mpIntBool2)
+	fmt.Printf("\tmpIntBool2 value addr:%p\n", mpIntBool2)
+
+	fmt.Printf("\t---------------------\n")
+
+	var mpIntBool3 = make(map[int]bool, 10) // 与 var mpIntBool map[int]bool 的区别; 会开辟内存空间
+	fmt.Printf("\tmpIntBool3:%+v len:%d\n",
+		mpIntBool3,
+		len(mpIntBool3))
+	fmt.Printf("\tmpIntBool3       size:%d\n", unsafe.Sizeof(mpIntBool3))
+	fmt.Printf("\tmpIntBool3       addr:%p\n", &mpIntBool3)
+	fmt.Printf("\tmpIntBool3 value addr:%p\n", mpIntBool3)
+}
+
 func main() {
 	fmt.Println("Steps2():")
 	Steps2()
+	fmt.Println("Steps3():")
+	Steps3()
 }

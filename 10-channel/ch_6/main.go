@@ -5,17 +5,21 @@ import (
 	"time"
 )
 
+/*
+	启动 goroutine 后我们必须要知道这个 goroutine 什么时候结束。
+*/
+
 // 通过 channel+select 控制 goroutine 退出
 func genNum(c, quit chan int) {
 	for i := 0; ; i++ {
 		// select 可以等待多个通信操作
-		// select 会阻塞等待可执行分支, 当多个分支都准备好时会随机选择一个执行。
+		// select 会阻塞等待可执行分支, 当多个分支都准备好时会随机选择一个执行
 		select {
 		case <-quit:
-			// 发送者可通过 close 关闭一个信道来表示没有需要发送的值了。
+			// 发送者可通过 close 关闭一个信道来表示没有需要发送的值了
 			close(c)
 			return
-		default: // 等同于 switch 的 default。当所以case都阻塞时如果有default则，执行default
+		default: // 等同于 switch 的 default; 当所以case都阻塞时如果有default则, 执行default
 			c <- i
 			time.Sleep(1 * time.Second)
 		}
@@ -28,7 +32,7 @@ func main() {
 	go genNum(c, quit)
 
 	// 循环 for v := range c 会不断从信道接收值，直到它被关闭
-	// 并且只有发送者才能关闭信道，而接收者不能。向一个已经关闭的信道发送数据会引发程序恐慌（panic）。
+	// 并且只有发送者才能关闭信道，而接收者不能。向一个已经关闭的信道发送数据会引发程序恐慌（panic）
 	for i := 0; i < 10; i++ {
 		fmt.Println("receive:", <-c)
 	}

@@ -21,10 +21,10 @@ func genNum(c chan int) {
 
 func main() {
 	c := make(chan int, 10)
-	go genNum(c)
+	go genNum(c) // 通过启动 goroutine 向 channel c 中写入数据
 
-	// 循环 for v := range c 会不断从信道接收值，直到它被关闭
-	// 并且只有发送者才能关闭信道，而接收者不能, 向一个已经关闭的信道发送数据会引发程序恐慌（panic）
+	// 循环 for v := range c 会不断从信道接收值, 直到它被关闭
+	// 并且只有发送者才能关闭信道, 而接收者不能, 向一个已经关闭的信道发送数据会引发程序恐慌（panic）
 	for v := range c {
 		fmt.Println("receive:", v)
 	}

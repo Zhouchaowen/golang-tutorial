@@ -42,6 +42,8 @@ func Steps1() {
 	arrayStruct := [3]dome{{a: 1, b: 2.0}, {a: 11, b: 22.0}}
 	fmt.Printf("\tarrayStruct: %+v\n", arrayStruct)
 
+	fmt.Printf("\t------------------------------\n")
+
 	// 数组可以直接通过下标访问 T[x]
 	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
@@ -49,9 +51,25 @@ func Steps1() {
 	arrayInt[0] = 11
 	fmt.Printf("\tarrayInt[0]: %d\n", arrayInt[0])
 
+	fmt.Printf("\t------------------------------\n")
+
+	// 不同大小的数组被认为是不同的类,不能直接赋值
+	var arrayInt1 [5]int
+	var arrayInt2 = [4]int{1, 2, 3}
+	//arrayInt1 = arrayInt2 // panic: cannot use arrayInt2 (variable of type [3]int) as [4]int value in assignment
+	fmt.Printf("\tarrayInt1: %+v\n", arrayInt1)
+	fmt.Printf("\tarrayInt2: %+v\n", arrayInt2)
+
+	fmt.Printf("\t------------------------------\n")
+	// 数组遍历方式一
+	for i := 0; i < len(arrayInt); i++ {
+		fmt.Printf("\tarrayInt[%d]:%d\n", i, arrayInt[i])
+	}
+
 	// 数组地址
 	fmt.Printf("\tarrayInt: %p\n", arrayInt) // arrayInt: %!p([3]int=[11 2 0]),arrayInt存储的不是地址值
 	fmt.Printf("\t&arrayInt: %p\n", &arrayInt)
+	// 数组遍历方式二
 	for i, v := range arrayInt { // 数组的地址等于数组第一个元素的地址
 		fmt.Printf("\t&arrayInt[%d]:%p value:%d\n", i, &arrayInt[i], v)
 	}
@@ -69,10 +87,20 @@ func Steps2() {
 		}
 	}
 
+	// 遍历方式一
 	for i := 0; i < len(arrayArrayString); i++ {
 		fmt.Printf("\t")
 		for ii := 0; ii < len(arrayArrayString[i]); ii++ {
 			fmt.Printf(arrayArrayString[i][ii])
+		}
+		fmt.Println()
+	}
+	fmt.Printf("\t*************\n")
+	// 遍历方式二
+	for _, v := range arrayArrayString {
+		fmt.Printf("\t")
+		for _, vv := range v {
+			fmt.Printf(vv)
 		}
 		fmt.Println()
 	}

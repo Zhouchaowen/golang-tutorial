@@ -12,7 +12,8 @@ import "fmt"
 // Steps1 定义和初始化map
 func Steps1() {
 	// Steps 1-1: map[T]X 表示定义了一个 Key 类型为 T, Value 类型为 X 的映射
-	// 注意key的T, Key 的 T 必须支持 == 和 != 比较, 才能用作 map 的 Key
+	// 1.注意 Key 的 T 必须支持 == 和 != 比较, 才能用作 map 的 Key
+	// 2.可以通过 [] 操作符对 map 的 Value 进行访问/修改
 	var mpIntInt map[int]int // 定义一个 int->int 的零值map
 	fmt.Printf("\t&mpIntInt:%p mpIntInt:%p mpIntInt:%+v len:%d\n",
 		&mpIntInt,
