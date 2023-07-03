@@ -38,6 +38,19 @@ func (d BlackSwan) GaGaga() {
 	fmt.Printf("%s, ga ga ga\n", d.Name)
 }
 
+type Dog struct {
+	Name string
+}
+
+// Dog 实现了GaGaga()函数
+func (d Dog) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d.Name)
+}
+
+func (d Dog) WangWangWang() {
+	fmt.Printf("%s, wang wang wang\n", d.Name)
+}
+
 func main() {
 	var d Duck
 
@@ -53,4 +66,17 @@ func main() {
 		Color: "黑色",
 	}
 	d.GaGaga()
+
+	// 接口与具体实现类调用时的对比
+	d = Dog{
+		Name: "小狗",
+	}
+	d.GaGaga()
+
+	dog := Dog{
+		Name: "哈士奇",
+	}
+	dog.GaGaga()
+	dog.WangWangWang()
+	fmt.Println(dog.Name)
 }

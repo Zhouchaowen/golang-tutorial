@@ -6,6 +6,8 @@
 
 `map`也是一种指针持有者类型,指针指向底层`hmap`结构。
 
+![7-2.mapMemory.png](../image/7-2.mapMemory.png)
+
 ## 目录
 
 - 定义 Map与赋值
@@ -20,11 +22,17 @@
 var mapName map[keyType]valueType
 ```
 
-其中`mapName`表示变量名称，`keyType`表示键的类型(**键必须是可比较的值**)，`valueType`表示值的类型。需要注意的是，这里**只是声明了`map`变量并没有初始化**，如果**添加或修改**将会引发运行时错误。正确的初始化方式是使用`make`函数：
+其中`mapName`表示变量名称，`keyType`表示键的类型(**键必须是可比较的值**)，`valueType`表示值的类型。需要注意的是，这里**只是声明了`map`变量并没有初始化**，如果**添加或修改**将会引发运行时错误。
+
+![7-3.mapMemory.png](../image/7-3.mapMemory.png)
+
+正确的初始化方式是使用`make`函数：
 
 ```go
 mapName := make(map[keyType]valueType,[size]) // size 可选
 ```
+
+![7-4.mapMemory.png](../image/7-4.mapMemory.png)
 
 或者直接定义并附上初始值：
 
@@ -263,6 +271,8 @@ func main() {
 }
 ```
 
+![7-5.mapMemory.png](../image/7-5.mapMemory.png)
+
 ## Map深浅拷贝
 
 `Map`拷贝不是将新旧`Map`直接赋值，这样**只会赋值`Map`内部的引用(指针)**，他们**底层**还是**共用的同一片存储空间**，修改新`Map`会导致旧`Map`也一起变。所以真正的拷贝是将旧的`Map`的所有元素复制到新的`Map`中。
@@ -461,6 +471,10 @@ type hmap struct {
 	extra *mapextra // optional fields
 }
 ```
+
+![7-6.mapMemory.png](../image/7-6.mapMemory.png)
+
+![7-7.mapMemory](../image/7-7.mapMemory.png)
 
 ## Map参数传递
 

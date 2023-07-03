@@ -70,6 +70,11 @@ package main
 
 import "fmt"
 
+/*
+	1.通过接口定义方法
+	2.实现接口定义方法
+*/
+
 // Duck 接口类型 定义一组方法签名的集合
 type Duck interface {
 	GaGaga() // 定义接口约定
@@ -119,13 +124,56 @@ func main() {
 }
 ```
 
-以上代码定义了一个接口类型 `Duck`，并定义了三个实现该接口的具体类型 `DonaldDuck`、`RubberDuck` 和 `BlackSwan`。
+以上代码定义了一个接口类型 `Duck`，并定义了三个实现该接口的具体类型 `DonaldDuck`、`RubberDuck`、 `BlackSwan`。
 
 其中，`DonaldDuck` 和 `RubberDuck` 都实现了 `GaGaga()` 方法，可以输出 `xxx, ga ga ga` 的字符串，而 `BlackSwan` 类型也实现了 `GaGaga()` 方法，输出 `xxx, ga ga ga`。
 
 然后，在 `main` 函数中，定义了一个 `Duck` 类型的变量 `d`，并将 `DonaldDuck`、`RubberDuck` 和 `BlackSwan` 类型的变量赋值给 `d`，这是因为这三个类型都实现了 `Duck` 接口，所以可以赋值给 `Duck` 类型的变量。
 
 然后分别调用 `d` 的 `GaGaga()` 方法，根据不同的类型，输出不同的字符串。
+
+```go
+package main
+
+import "fmt"
+
+
+// Duck 接口类型 定义一组方法签名的集合
+type Duck interface {
+	GaGaga() // 定义接口约定
+	// ....
+}
+
+type Dog struct {
+	Name string
+}
+
+// Dog 实现了GaGaga()函数
+func (d Dog) GaGaga() {
+	fmt.Printf("%s, ga ga ga\n", d.Name)
+}
+
+func (d Dog) WangWangWang() {
+	fmt.Printf("%s, wang wang wang\n", d.Name)
+}
+
+func main() {
+	var d Duck
+
+  // 接口与具体实现类调用时的对比
+	d = Dog{
+		Name: "小狗",
+	}
+	d.GaGaga()
+
+	dog := Dog{
+		Name: "哈士奇",
+	}
+	dog.GaGaga()
+	dog.WangWangWang()
+	fmt.Println(dog.Name)
+}
+```
 
 **总结:** 接口类型通常用于将具体类型的**实现细节与实现类型**的名称**分离**开。这种机制提供了非常强大的面向对象编程能力，使得`Go`语言的面向对象编程变得更加自然和简单。它可以**帮助**我们**构建高度抽象的代码**，使代码更加灵活、易于维护和扩展。
 
