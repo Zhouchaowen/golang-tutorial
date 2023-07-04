@@ -474,8 +474,6 @@ type hmap struct {
 
 ![7-6.mapMemory.png](../image/7-6.mapMemory.png)
 
-![7-7.mapMemory](../image/7-7.mapMemory.png)
-
 ## Map参数传递
 
 `map`的传递和切片的传递非常类似，传递的`map`在函数中改变值，会影响主函数中的`map` (导致这个问题的原因就是**深浅拷贝的问题**)。
