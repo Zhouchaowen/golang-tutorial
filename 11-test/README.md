@@ -293,6 +293,12 @@ go tool cover -html=coverage.out
 在下面的示例中，我们编写了一个基准测试函数 `BenchmarkAdd()`，用于测试 `add` 函数的性能。该函数会在 `b.N` 次测试中，多次调用 `add` 函数并测量其性能。在测试过程中，`Golang` 会自动调整测试次数，以使测试结果具有一定的可靠性。
 
 ```go
+func add(x, y int) int {
+	return x + y
+}
+```
+
+```go
 func BenchmarkAdd(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		add(1, 2)

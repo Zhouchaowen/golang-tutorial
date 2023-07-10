@@ -100,14 +100,14 @@ Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/heap
 Type: inuse_space
 Time: Apr 21, 2023 at 6:34pm (CST)
 Entering interactive mode (type "help" for commands, "o" for options)
-(pprof) top 
+(pprof) top # 通过top列出占用排行
 Showing nodes accounting for 1.31GB, 99.85% of 1.31GB total
 Dropped 15 nodes (cum <= 0.01GB)
       flat  flat%   sum%        cum   cum%
     1.31GB 99.85% 99.85%     1.31GB 99.85%  main.heap
          0     0% 99.85%     1.31GB 99.85%  main.main
          0     0% 99.85%     1.31GB 99.89%  runtime.main
-(pprof) list main.heap
+(pprof) list main.heap	# 通过list查看main.heap函数
 Total: 1.31GB
 ROUTINE ======================== main.heap in /Users/zdns/Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_1/main.go
     1.31GB     1.31GB (flat, cum) 99.85% of Total
@@ -116,7 +116,7 @@ ROUTINE ======================== main.heap in /Users/zdns/Desktop/code_study/gol
          .          .     20:		max := Gi
          .          .     21:		var buffer [][Mi]byte
          .          .     22:		for len(buffer)*Mi < max {
-    1.31GB     1.31GB     23:			buffer = append(buffer, [Mi]byte{})
+    1.31GB     1.31GB     23:			buffer = append(buffer, [Mi]byte{}) # 排查到具体占用位置
          .          .     24:		}
          .          .     25:		time.Sleep(time.Second)
          .          .     26:	}
@@ -167,14 +167,14 @@ func main() {
 }
 ```
 
-```
+```bash
 harris-3% go tool pprof http://127.0.0.1:6060/debug/pprof/profile
 Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/profile
 Type: cpu
 Time: Apr 22, 2023 at 5:18pm (CST)
 Duration: 30s, Total samples = 8.45s (28.17%)
 Entering interactive mode (type "help" for commands, "o" for options)
-(pprof) top 
+(pprof) top # 通过top列出占用排行
 Showing nodes accounting for 8420ms, 99.64% of 8450ms total
 Dropped 9 nodes (cum <= 42.25ms)
       flat  flat%   sum%        cum   cum%
@@ -182,7 +182,7 @@ Dropped 9 nodes (cum <= 42.25ms)
      240ms  2.84% 99.64%      240ms  2.84%  runtime.asyncPreempt
          0     0% 99.64%     8430ms 99.76%  main.main
          0     0% 99.64%     8430ms 99.76%  runtime.main
-(pprof) list main.cpu
+(pprof) list main.cpu  # 通过list查看main.cpu函数
 Total: 8.45s
 ROUTINE ======================== main.cpu in /Users/zdns/Desktop/code_study/golang-tutorial/12-library/3-pprof/ch_2/main.go
      8.18s      8.43s (flat, cum) 99.76% of Total
@@ -247,7 +247,7 @@ Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/allocs
 Type: alloc_space
 Time: Apr 22, 2023 at 5:44pm (CST)
 Entering interactive mode (type "help" for commands, "o" for options)
-(pprof) top
+(pprof) top # 通过top列出占用排行
 Showing nodes accounting for 17921.33kB, 100% of 17921.33kB total
 Showing top 10 nodes out of 16
       flat  flat%   sum%        cum   cum%
@@ -329,7 +329,7 @@ Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/goroutine
 Type: goroutine
 Time: Apr 22, 2023 at 5:28pm (CST)
 Entering interactive mode (type "help" for commands, "o" for options)
-(pprof) top
+(pprof) top # 通过top列出占用排行
 Showing nodes accounting for 293, 99.66% of 294 total
 Showing top 10 nodes out of 28
       flat  flat%   sum%        cum   cum%
@@ -423,7 +423,7 @@ Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/mutex
 Type: delay
 Time: Apr 23, 2023 at 9:30am (CST)
 Entering interactive mode (type "help" for commands, "o" for options)
-(pprof) top
+(pprof) top # 通过top列出占用排行
 Showing nodes accounting for 32.05s, 100% of 32.05s total
       flat  flat%   sum%        cum   cum%
     32.05s   100%   100%     32.05s   100%  sync.(*Mutex).Unlock (inline)
@@ -492,7 +492,7 @@ Fetching profile over HTTP from http://127.0.0.1:6060/debug/pprof/block
 Type: delay
 Time: Apr 23, 2023 at 9:31am (CST)
 Entering interactive mode (type "help" for commands, "o" for options)
-(pprof) top
+(pprof) top # 通过top列出占用排行
 Showing nodes accounting for 4s, 100% of 4s total
       flat  flat%   sum%        cum   cum%
         4s   100%   100%         4s   100%  runtime.chanrecv1
