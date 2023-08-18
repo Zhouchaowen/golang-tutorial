@@ -8,14 +8,17 @@ import (
 func main() {
 	r := gin.Default()
 
-	// gin.H is a shortcut for map[string]interface{}
 	r.GET("/someJSON", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
+		// c.JSON：返回JSON格式的数据, gin.H 实践就是一个map[string]interface{}
+		c.JSON(http.StatusOK, gin.H{
+			"message": "hey",
+			"status":  http.StatusOK,
+		})
 	})
 
 	// 返回一个结构体，将会编码为Json格式
 	r.GET("/moreJSON", func(c *gin.Context) {
-		// You also can use a struct
+		// 定义返回的 struct
 		var msg struct {
 			Name    string `json:"user"`
 			Message string
@@ -24,8 +27,8 @@ func main() {
 		msg.Name = "Lena"
 		msg.Message = "hey"
 		msg.Number = 123
-		// Note that msg.Name becomes "user" in the JSON
-		// Will output  :   {"user": "Lena", "Message": "hey", "Number": 123}
+		// 注意其中 msg.Name 在 JSON 中变为“user”, 应为指定了Json tag
+		// 返回结果: {"user": "Lena", "Message": "hey", "Number": 123}
 		c.JSON(http.StatusOK, msg)
 	})
 

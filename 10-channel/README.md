@@ -1,6 +1,6 @@
 # Channel
 
-`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现**共享内存**，可以安全地传递数据，可以避免了多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
+`Channel` 是 `Go` 语言中一种用于在 `Goroutine` 之间传递数据的机制。`Channel` 通过**通信**实现**共享内存**，可以安全地传递数据，可以避免多个 `Goroutine` 访问共享内存时出现的竞争和死锁问题。
 
 ![10-1.channel.jpeg](../image/10-1.channel.jpeg)
 

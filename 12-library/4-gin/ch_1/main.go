@@ -10,7 +10,7 @@ func main() {
 
 	// 当客户端以GET方法请求/hello路径时，会执行后面的匿名函数
 	r.GET("/hello", func(c *gin.Context) {
-		// c.JSON：返回JSON格式的数据
+		// c.JSON：返回JSON格式的数据, gin.H 实践就是一个map[string]interface{}
 		c.JSON(200, gin.H{
 			"message": "Golang Tutorial!",
 		})
