@@ -111,7 +111,7 @@ func Steps1() {
 	// 并且声明变量后不使用该变量的话将会抛出错误(该规则适用于函数内定义的变量)
 
 	// 如下 var a int 定义了一个 int 类型的局部变量 a (局部变量：函数内声明的变量,作用域只在函数体内),
-	// 这意味着 a 只能在 main 函数内使用（函数的参数和返回值也是局部变量）
+	// 这意味着 a 只能在 Steps1 函数内使用（函数的参数和返回值也是局部变量）
 
 	var a int         // 整型 uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var b float32     // 浮点型 float64
