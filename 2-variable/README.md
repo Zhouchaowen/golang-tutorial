@@ -76,7 +76,7 @@ var variableName int = 1
 var variableName = 1
 ```
 
-其中最常用的两种为`var variableName T`和`variableName := Value`（简短声明）。变量可以定义在函数外, 当做该`package`下的全局变量, 也可以定义在函数内当, 做该函数内的局部变量。
+其中最常用的两种为`var variableName T`和`variableName := Value`（简短声明）。变量可以定义在函数外, 当做该`package`下的全局变量, 也可以定义在函数内, 当做该函数内的局部变量。
 
 ```go
 package main
