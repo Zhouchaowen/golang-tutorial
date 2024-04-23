@@ -2,7 +2,7 @@
 
 在 `Go` 中，数组和切片是两个非常常用的数据结构。它们都可以存储一系列元素，但有着很大的区别。
 
-- **数组是一个固定大小的数据结构**，一旦**创建后，其大小就不能被改变**，数组中的所有元素必须是相同的类型。
+- **数组是一个固定大小的数据结构**，一旦**创建后，其大小就不能被改变**，数组中的所有元素必须是相同的类型。**大小不同的数组是不同的数据类型。**
 
 ![6-1.array.png](../image/6-1.array.png)
 
@@ -11,6 +11,8 @@
 ![6-1.slice.png](../image/6-1.slice.png)
 
 需要注意的是，**切片中的元素只是对底层数组的引用**，当切片被传递给函数时，函数中对切片元素的修改会反映在原始切片中。这种行为类似于指针，但切片比指针更安全，因为切片有长度信息，它可以帮助我们避免访问超出数组边界的元素。
+
+> 无论是数组还是切片本质上都是对一片连续内存空间的描述：描述存储数据的类型，描述存储边界。
 
 ## 目录
 
@@ -126,7 +128,7 @@ func main() {
 
  `arrayBool := [3]bool{false, true}`表示定义一个大小为3的`bool`型数组, 并且初始化第一个元素为false, 第二个元素为true。
 
-二维数组的定义与遍历：
+**二维数组的定义与遍历：**
 
 ```go
 package main
@@ -323,9 +325,11 @@ func main() {
 }
 ```
 
-如上代码使用了简短声明语法初始化了一个字符串类型的切片 `sliceString`，并且包含了两个元素 "Golang" 和 "Tutorial"。通过 `len()` 和 `cap()` 函数可以分别获取切片的长度和容量。
+如上代码使用了简短声明语法初始化了一个**字符串类型**的切片 `sliceString`，并且包含了两个元素 "Golang" 和 "Tutorial"。通过 `len()` 和 `cap()` 函数可以分别获取切片的长度和容量。
 
 ![6-3.sliceInit.png](../image/6-3.sliceInit.png)
+
+> 虽然字符串往往被看做一个整体，但是它实际上是一片连续的内存空间，我们也可以将它理解成一个由字符组成的数组
 
 ### 通过make创建切片
 
@@ -830,6 +834,8 @@ func .....
 https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/arrays/README.md
 
 https://i6448038.github.io/2018/08/11/array-and-slice-principle/
+
+https://go.dev/blog/slices-intro
 
 https://gfw.go101.org/article/value-part.html
 

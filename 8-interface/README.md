@@ -322,3 +322,5 @@ https://blog.boot.dev/golang/golang-interfaces/
 https://golangbyexample.com/interface-in-golang/
 
 https://betterprogramming.pub/a-comprehensive-guide-to-interfaces-in-go-6a945b795db
+
+https://make-sense.tech/type-convertion-of-slice-in-go
