@@ -22,11 +22,21 @@ func Steps1() {
 		len(mpIntInt)) // len 可以获取当前 map 存储的映射数量
 
 	// 定义后没有初始化的 map 为 nil(0x0), nil 映射不能添加键,否则报错 panic: assignment to entry in nil map
-	// mpIntInt[1] =1
+	//mpIntInt[1] = 1
 
 	// 未初始化的 map 不能写但可以读, 值为对应类型零值
 	v := mpIntInt[2]
 	fmt.Printf("\tmpIntInt[2]:%+v\n", v)
+
+	fmt.Printf("\t---------------------\n")
+
+	// 定义一个 int->int 的map并测试零值，对比 var mpIntInt map[int]int 的区别
+	var mpIntInt2 = map[int]int{} // 多了个 {}
+	fmt.Printf("\t&mpIntInt2:%p mpIntInt2:%p mpIntInt2:%+v len:%d\n",
+		&mpIntInt2,
+		mpIntInt2,
+		mpIntInt2,
+		len(mpIntInt2)) // len 可以获取当前 map 存储的映射数量
 
 	fmt.Printf("\t---------------------\n")
 

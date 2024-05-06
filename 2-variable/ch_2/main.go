@@ -39,6 +39,7 @@ func Steps1() {
 	var h interface{} = "golang"
 	var i interface{} = true
 	var j, k = 1, "Golang Tutorial" // 多变量声明并赋值
+	var l = &k                      // 初始化一个指针
 
 	// 打印变量的 value, 通过 reflect.TypeOf 函数获取变量对应类型
 	fmt.Printf("\ta value:%d  a type:%s\n", a, reflect.TypeOf(a))
@@ -53,6 +54,7 @@ func Steps1() {
 	fmt.Printf("\ti value:%t  i type:%s\n", i, reflect.TypeOf(i))
 	fmt.Printf("\tj value:%d  j type:%s\n", j, reflect.TypeOf(j))
 	fmt.Printf("\tk value:%s  k type:%s\n", k, reflect.TypeOf(k))
+	fmt.Printf("\tl value:0x%d  l type:%s\n", l, reflect.TypeOf(l))
 }
 
 // Steps2 字符串
