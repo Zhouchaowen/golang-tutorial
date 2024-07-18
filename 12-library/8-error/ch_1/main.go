@@ -14,5 +14,8 @@ func func2() error {
 }
 
 func main() {
-	if err := func2();errors.Is()
+	err := func2()
+	if err != nil {
+		fmt.Println(err)
+	}
 }

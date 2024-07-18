@@ -71,7 +71,7 @@ func Steps1() {
 	fmt.Println("\tstring zero value: ", i)
 }
 
-// Steps2 不同数据类型在内存中的占用
+// Steps2 不同数据类型在内存中占用的字节
 func Steps2() {
 	var i int // 整型 uint8,int8,uint16,int16,uint32,int32,uint64,int64,uintptr
 	var ui8 uint8

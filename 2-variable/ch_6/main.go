@@ -80,7 +80,7 @@ func Steps3() {
 	fmt.Println("\tnew(int) value: ", a)
 	fmt.Println("\tnew(int) value over value: ", *a)
 	fmt.Println("\t*int value: ", b)
-	// 取空指针变量存储地址上的值会导致,这就是a := new(int)和var b *int创建指针的区别
+	// 取空指针变量存储地址上的值会导致 panic,这就是a := new(int)和var b *int创建指针的区别,new分配空间并赋值零值，定义指针并不会创建内存空间
 	//fmt.Println("\t*int value over value: ", *b)
 
 	c := new(string)
@@ -88,6 +88,10 @@ func Steps3() {
 	fmt.Println("\tnew(string) value: ", c)
 	fmt.Println("\tnew(string) value over value: ", *c)
 	fmt.Println("\t*string value: ", d)
+
+	e := new([]int)
+	fmt.Println("\tnew(string) value: ", e)
+	fmt.Println("\tnew(string) value over value: ", *e)
 }
 
 // Steps4 判断指针是否为nil
