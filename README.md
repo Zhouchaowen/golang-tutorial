@@ -23,7 +23,7 @@ git clone git@github.com:Zhouchaowen/golang-tutorial.git
 - [Package](https://github.com/Zhouchaowen/golang-tutorial/tree/master/1-package)
 - [Variable](https://github.com/Zhouchaowen/golang-tutorial/tree/master/2-variable)
 - [Function](https://github.com/Zhouchaowen/golang-tutorial/tree/master/3-function)
-- [Process](https://github.com/Zhouchaowen/golang-tutorial/tree/master/4-process)
+- [Process](https://github.com/Zhouchaowen/golang-tutorial/tree/master/4-process-control)
 - [Struct](https://github.com/Zhouchaowen/golang-tutorial/tree/master/5-struct)
 - [Array](https://github.com/Zhouchaowen/golang-tutorial/tree/master/6-array)
 - [Map](https://github.com/Zhouchaowen/golang-tutorial/tree/master/7-map)
